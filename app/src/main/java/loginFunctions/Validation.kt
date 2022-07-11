@@ -1,10 +1,9 @@
 package loginFunctions
 
     fun validateEmail(email: String) : Boolean {
-
         if (email.isEmpty()) return false
         else {
-            return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
         }
     }
 

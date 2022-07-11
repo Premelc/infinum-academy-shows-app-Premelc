@@ -29,11 +29,11 @@ lateinit var binding: ActivityLoginBinding
 
 
 
-            if(validateEmail(email)){
+            if(!validateEmail(email)){
                 binding.emailInput.error = "Invalid email address"
                 noErrors = false
             }
-            if(validatePassword(password)){
+            if(!validatePassword(password)){
                 binding.passwordInput.error = "Invalid password"
                 noErrors = false
             }
