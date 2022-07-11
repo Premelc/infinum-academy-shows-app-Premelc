@@ -1,12 +1,13 @@
 package com.premelc.shows_dominik_premelc
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Patterns
+import android.text.Editable
+import android.text.TextWatcher
+import androidx.appcompat.app.AppCompatActivity
 import com.premelc.shows_dominik_premelc.databinding.ActivityLoginBinding
-import com.premelc.shows_dominik_premelc.databinding.ActivityMainBinding
 import loginFunctions.validateEmail
+import loginFunctions.validateLoginData
 import loginFunctions.validatePassword
 
 
@@ -18,31 +19,56 @@ lateinit var binding: ActivityLoginBinding
         super.onCreate(savedInstanceState)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
-
         var loginButton = binding.loginButton
+        var emailTextView = binding.emailInput
+        var passwordTextView = binding.passwordInput
+
+        emailTextView.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+                if(!validateEmail(s.toString())){
+                    binding.emailInput.error = "Invalid email address"
+                }
+                loginButton.isEnabled = validateLoginData(emailTextView.text.toString() , passwordTextView.text.toString())
+            }
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+        }})
+
+        passwordTextView.addTextChangedListener(object : TextWatcher{
+            override fun afterTextChanged(s: Editable) {
+                if(!validatePassword(s.toString())){
+                    binding.passwordInput.error = "Invalid password"
+                }
+                loginButton.isEnabled = validateLoginData(emailTextView.text.toString() , passwordTextView.text.toString())
+            }
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+            }
+        })
+
         loginButton.setOnClickListener{
-            var noErrors = true
-            val email:String = binding.emailInput.text.toString();
-            val password:String = binding.passwordInput.text.toString();
+                val email = emailTextView.text.toString();
 
-
-
-            if(!validateEmail(email)){
-                binding.emailInput.error = "Invalid email address"
-                noErrors = false
-            }
-            if(!validatePassword(password)){
-                binding.passwordInput.error = "Invalid password"
-                noErrors = false
-            }
-
-            if (noErrors) {
                 val intent = Intent(this, WelcomeActivity::class.java)
                 intent.putExtra("username" , email.substringBefore('@'))
                 startActivity(intent)
-            }
         }
     }
 }

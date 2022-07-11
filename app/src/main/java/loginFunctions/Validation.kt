@@ -11,3 +11,7 @@ package loginFunctions
         if (password.length < 6)return false;
         return true;
     }
+
+fun validateLoginData(email:String,password:String): Boolean{
+    return validateEmail(email) && validatePassword(password)
+}
