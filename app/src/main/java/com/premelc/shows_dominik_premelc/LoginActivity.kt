@@ -3,8 +3,11 @@ package com.premelc.shows_dominik_premelc
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Patterns
 import com.premelc.shows_dominik_premelc.databinding.ActivityLoginBinding
 import com.premelc.shows_dominik_premelc.databinding.ActivityMainBinding
+import loginFunctions.validateEmail
+import loginFunctions.validatePassword
 
 
 class LoginActivity : AppCompatActivity() {
@@ -23,11 +26,14 @@ lateinit var binding: ActivityLoginBinding
             var noErrors = true
             val email:String = binding.emailInput.text.toString();
             val password:String = binding.passwordInput.text.toString();
-            if(!email.contains('@')){
+
+
+
+            if(validateEmail(email)){
                 binding.emailInput.error = "Invalid email address"
                 noErrors = false
             }
-            if(password.length < 5){
+            if(validatePassword(password)){
                 binding.passwordInput.error = "Invalid password"
                 noErrors = false
             }
