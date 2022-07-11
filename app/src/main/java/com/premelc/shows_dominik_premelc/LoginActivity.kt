@@ -1,5 +1,6 @@
 package com.premelc.shows_dominik_premelc
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -17,7 +18,6 @@ lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         var loginButton = binding.loginButton
@@ -36,13 +36,11 @@ lateinit var binding: ActivityLoginBinding
                 count: Int, after: Int
             ) {
             }
-
             override fun onTextChanged(
                 s: CharSequence, start: Int,
                 before: Int, count: Int
             ) {
         }})
-
         passwordTextView.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(s: Editable) {
                 if(!validatePassword(s.toString())){
@@ -55,20 +53,33 @@ lateinit var binding: ActivityLoginBinding
                 count: Int, after: Int
             ) {
             }
-
             override fun onTextChanged(
                 s: CharSequence, start: Int,
                 before: Int, count: Int
             ) {
             }
         })
-
         loginButton.setOnClickListener{
-                val email = emailTextView.text.toString();
+            val email = emailTextView.text.toString();
 
+            //EXPLICIT INTENT
+                /*
                 val intent = Intent(this, WelcomeActivity::class.java)
                 intent.putExtra("username" , email.substringBefore('@'))
                 startActivity(intent)
+                */
+
+            //IMPLICIT INTENT
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                putExtra("username", email.substringBefore('@'))
+                type = "text/plain"
+            }
+            try {
+                startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                //DEFAULT APP
+            }
+
         }
     }
 }
