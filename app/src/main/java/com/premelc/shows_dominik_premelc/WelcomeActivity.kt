@@ -11,14 +11,11 @@ class WelcomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
-        var username:String? = intent.extras?.getString("username")
-        var retString = "Welcome, $username!"
 
-        binding.userWelcome.text = retString
+        var username:String? = intent.extras?.getString("username")
+        binding.userWelcome.text = "Welcome, $username!"
 
         println(binding.userWelcome.text)
     }
