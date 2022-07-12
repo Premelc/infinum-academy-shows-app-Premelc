@@ -8,7 +8,7 @@ import loginFunctions.setupLoginValidation
 
 class LoginActivity : AppCompatActivity() {
 
-private lateinit var binding: ActivityLoginBinding
+    private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +19,7 @@ private lateinit var binding: ActivityLoginBinding
         val emailTextView = binding.emailInput
         val passwordTextView = binding.passwordInput
 
-        setupLoginValidation(emailTextView , passwordTextView, loginButton)
-        setupLoginButton(this ,loginButton,emailTextView)
+        setupLoginValidation(emailTextView, passwordTextView, loginButton)
+        setupLoginButton(this, loginButton, emailTextView)
     }
 }

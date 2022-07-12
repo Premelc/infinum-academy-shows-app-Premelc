@@ -14,7 +14,7 @@ class WelcomeActivity : AppCompatActivity() {
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        var username:String? = intent.extras?.getString("username")
+        var username: String? = intent.extras?.getString("username")
         binding.userWelcome.text = "Welcome, $username!"
 
         println(binding.userWelcome.text)
