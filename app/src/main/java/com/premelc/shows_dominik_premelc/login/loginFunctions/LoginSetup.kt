@@ -1,4 +1,4 @@
-package loginFunctions
+package com.premelc.shows_dominik_premelc.login.loginFunctions
 
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -8,7 +8,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 
 fun setupLoginValidation(emailTextView: TextView, passwordTextView: TextView, loginButton: View){
         emailTextView.addTextChangedListener(object : TextWatcher {

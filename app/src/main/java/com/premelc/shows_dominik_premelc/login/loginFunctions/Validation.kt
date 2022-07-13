@@ -1,4 +1,4 @@
-package loginFunctions
+package com.premelc.shows_dominik_premelc.login.loginFunctions
 
     fun validateEmail(email: String) : Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()

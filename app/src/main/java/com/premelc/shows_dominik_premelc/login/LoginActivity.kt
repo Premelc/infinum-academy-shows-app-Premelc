@@ -1,10 +1,10 @@
-package com.premelc.shows_dominik_premelc
+package com.premelc.shows_dominik_premelc.login
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.premelc.shows_dominik_premelc.databinding.ActivityLoginBinding
-import loginFunctions.setupLoginButton
-import loginFunctions.setupLoginValidation
+import com.premelc.shows_dominik_premelc.login.loginFunctions.setupLoginButton
+import com.premelc.shows_dominik_premelc.login.loginFunctions.setupLoginValidation
 
 class LoginActivity : AppCompatActivity() {
 
