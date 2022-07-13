@@ -80,8 +80,7 @@ class ShowsActivity : AppCompatActivity() {
     }
 
     private fun initShowsRecycler() {
-        adapter = ShowsAdapter(this, emptyList()) {
-        }
+        adapter = ShowsAdapter(this, emptyList())
         binding.showsRecycler.layoutManager = LinearLayoutManager(this)
         binding.showsRecycler.adapter = adapter
         /*binding.showsRecycler.addItemDecoration(

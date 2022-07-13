@@ -5,8 +5,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.annotation.DrawableRes
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.premelc.shows_dominik_premelc.databinding.ActivityShowDetailsBinding
+import com.premelc.shows_dominik_premelc.model.Review
 import com.premelc.shows_dominik_premelc.shows.ShowsActivity.Companion.buildShowsActivityIntent
+import java.io.Serializable
 
 class ShowDetailsActivity : AppCompatActivity() {
 
@@ -17,6 +21,7 @@ class ShowDetailsActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityShowDetailsBinding
+    private lateinit var adapter:ReviewsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,8 +31,19 @@ class ShowDetailsActivity : AppCompatActivity() {
         initDetails(
             intent.extras?.getString("name"),
             intent.extras?.getString("description"),
-            intent.extras?.getInt("img")
+            intent.extras?.getInt("img"),
         )
+        initReviewsRecycler(intent.extras?.getSerializable("reviews"))
+
+    }
+
+    private fun initReviewsRecycler(reviews: Serializable?) {
+        adapter = ReviewsAdapter(this, emptyList())
+        binding.reviewsRecycler.layoutManager = LinearLayoutManager(this)
+        binding.reviewsRecycler.adapter = adapter
+        adapter.addAllReviews(reviews as List<Review>)
+        if (adapter.getItemCount() > 0) toggleEmptyState(false) else toggleEmptyState(true)
+
     }
 
     private fun initDetails(name: String?, description: String?, @DrawableRes img: Int?) {
@@ -43,5 +59,10 @@ class ShowDetailsActivity : AppCompatActivity() {
             val intent = buildShowsActivityIntent(this)
             startActivity(intent)
         }
+    }
+
+    private fun toggleEmptyState(state:Boolean){
+        binding.emptyReview.isVisible = state
+        binding.reviewsRecycler.isVisible=!state
     }
 }
