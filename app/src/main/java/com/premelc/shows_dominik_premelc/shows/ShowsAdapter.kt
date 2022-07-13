@@ -1,15 +1,18 @@
 package com.premelc.shows_dominik_premelc.shows
 
+import android.app.Activity
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.AdapterView
 import androidx.recyclerview.widget.RecyclerView
 import com.premelc.shows_dominik_premelc.databinding.ViewShowItemBinding
 import com.premelc.shows_dominik_premelc.model.Show
+import com.premelc.shows_dominik_premelc.shows.ShowDetailsActivity.Companion.buildShowDetailsActivityIntent
 
 class ShowsAdapter(
+    private var context: Context,
     private var items: List<Show>,
-    private val onItemClickCallback: (Show) -> Unit
+    private val onItemClickCallback: (Show) -> Unit = { println("ne radi ovaj kurac")},
 ) : RecyclerView.Adapter<ShowsAdapter.ShowViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
@@ -34,8 +37,12 @@ class ShowsAdapter(
             binding.showName.text = item.name
             binding.showDescription.text = item.description
             binding.showImage.setImageResource(item.imageResourceId)
-            binding.cardContainer.setOnClickListener {
-                onItemClickCallback(item)
+            binding.cardContainer.setOnClickListener{
+                val intent = buildShowDetailsActivityIntent(context as Activity)
+                intent.putExtra("name" , item.name)
+                intent.putExtra("description" , item.description)
+                intent.putExtra("img" , item.imageResourceId)
+                context.startActivity(intent)
             }
         }
     }

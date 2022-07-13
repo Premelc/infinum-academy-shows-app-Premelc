@@ -1,15 +1,13 @@
 package com.premelc.shows_dominik_premelc.login
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.premelc.shows_dominik_premelc.databinding.ActivityWelcomeBinding
-import com.premelc.shows_dominik_premelc.shows.ShowsActivity
-
+import com.premelc.shows_dominik_premelc.shows.ShowsActivity.Companion.buildShowsActivityIntent
 
 class WelcomeActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityWelcomeBinding
+    private lateinit var binding: ActivityWelcomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,10 +20,9 @@ class WelcomeActivity : AppCompatActivity() {
         initElipseButton()
     }
 
-    private fun initElipseButton(){
-        //intent
-        binding.elipseImg.setOnClickListener{
-            val intent = Intent(this , ShowsActivity::class.java)
+    private fun initElipseButton() {
+        binding.elipseImg.setOnClickListener {
+            val intent = buildShowsActivityIntent(this)
             startActivity(intent)
         }
     }

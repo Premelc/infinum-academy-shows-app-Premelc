@@ -5,4 +5,5 @@
     <string name="ShowsTitle">Shows</string>
     <string name="emptyRecyclerButtonText">Empty shows</string>
     <string name="fillRecyclerButtonText">Refill shows</string>
+    <string name="reviewsTitle">Reviews</string>
 </resources>
