@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.premelc.shows_dominik_premelc.databinding.ViewItemReviewBinding
 import com.premelc.shows_dominik_premelc.model.Review
-import com.premelc.shows_dominik_premelc.model.Show
 
 class ReviewsAdapter(
     private var context: Context,

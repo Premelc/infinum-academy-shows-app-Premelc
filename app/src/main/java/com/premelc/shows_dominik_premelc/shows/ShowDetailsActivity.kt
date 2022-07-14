@@ -57,7 +57,7 @@ class ShowDetailsActivity : AppCompatActivity() {
             DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         )
         adapter.addAllReviews(reviews as List<Review>)
-        if (adapter.getItemCount() > 0) toggleEmptyState(false) else toggleEmptyState(true)
+        if (adapter.itemCount > 0) toggleEmptyState(false) else toggleEmptyState(true)
 
     }
 
@@ -70,7 +70,7 @@ class ShowDetailsActivity : AppCompatActivity() {
     }
 
     private fun initBackButton() {
-        binding.backArrow.setOnClickListener() {
+        binding.backArrow.setOnClickListener {
             val intent = buildShowsActivityIntent(this)
             startActivity(intent)
         }
@@ -117,8 +117,10 @@ class ShowDetailsActivity : AppCompatActivity() {
         for (item in list){
             sum+=item.grade
         }
+
+        val reviewText = "${list.count()} reviews ${df.format(sum/list.count())} average"
         binding.ratings.rating = sum/list.count()
-        binding.reviewsNumber.text = "${list.count()} reviews ${df.format(sum/list.count())} average"
+        binding.reviewsNumber.text = reviewText
     }
 
 }
