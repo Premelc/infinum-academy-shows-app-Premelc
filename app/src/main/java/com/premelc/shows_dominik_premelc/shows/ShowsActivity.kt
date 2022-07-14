@@ -79,8 +79,8 @@ class ShowsActivity : AppCompatActivity() {
         initRecyclerToggleButton()
     }
 
-    private fun initShowsRecycler(username :String?) {
-        adapter = ShowsAdapter(this, emptyList(),username)
+    private fun initShowsRecycler(username: String?) {
+        adapter = ShowsAdapter(this, emptyList(), username)
         binding.showsRecycler.layoutManager = LinearLayoutManager(this)
         binding.showsRecycler.adapter = adapter
         /*binding.showsRecycler.addItemDecoration(

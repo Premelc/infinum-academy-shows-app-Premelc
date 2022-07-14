@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -22,7 +23,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@drawable/topleftilustration" />
+            app:srcCompat="@drawable/topleftilustration"/>
 
         <ImageView
             android:id="@+id/topRightImg"
@@ -35,7 +36,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"/>
 
         <ImageView
             android:id="@+id/triangleImg"
@@ -50,7 +51,7 @@
             app:layout_constraintBottom_toTopOf="@+id/LoginText"
             app:layout_constraintEnd_toStartOf="@+id/titleText"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/titleText"
@@ -67,7 +68,7 @@
             app:layout_constraintBottom_toTopOf="@+id/LoginText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/triangleImg"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/LoginText"
@@ -84,7 +85,7 @@
             app:layout_constraintBottom_toTopOf="@+id/LoginCaption"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/LoginCaption"
@@ -98,7 +99,7 @@
             app:layout_constraintBottom_toBottomOf="@id/textField"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/LoginText" />
+            app:layout_constraintTop_toBottomOf="@+id/LoginText"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textField"
@@ -110,9 +111,9 @@
             android:layout_marginEnd="24dp"
             android:textColor="#ffffff"
             android:textColorHint="#FFFFFF"
+            app:boxStrokeColor="@color/edit_text_box_border"
             app:cornerRadius="20dp"
             app:hintTextColor="#FFFFFF"
-            app:boxStrokeColor="@color/edit_text_box_border"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/LoginCaption"
@@ -124,9 +125,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email"
-                app:boxStrokeColor="@color/white"
                 android:textColor="#FFFFFF"
-                android:textColorHint="@color/white" />
+                android:textColorHint="@color/white"
+                app:boxStrokeColor="@color/white"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -152,10 +153,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Password"
-                app:boxStrokeColor="@color/white"
                 android:inputType="textPassword"
                 android:textColor="#ffffff"
-                android:textColorHint="@color/white" />
+                android:textColorHint="@color/white"
+                app:boxStrokeColor="@color/white"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -163,9 +164,9 @@
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginStart="24dp"
+            android:layout_marginTop="151dp"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="32dp"
-            android:layout_marginTop="151dp"
             android:backgroundTint="#ffffff"
             android:enabled="false"
             android:text="Login"
@@ -174,7 +175,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textField2" />
+            app:layout_constraintTop_toBottomOf="@+id/textField2"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

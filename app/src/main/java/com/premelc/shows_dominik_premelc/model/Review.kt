@@ -9,4 +9,4 @@ data class Review(
     val grade: Float,
     val text: String,
     @DrawableRes val profilePic: Int
-):Serializable
+) : Serializable

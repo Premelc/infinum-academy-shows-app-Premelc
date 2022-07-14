@@ -86,10 +86,10 @@ class ShowDetailsActivity : AppCompatActivity() {
             btnClose.setOnClickListener {
                 dialog.dismiss()
             }
-            btnSubmit.setOnClickListener{
+            btnSubmit.setOnClickListener {
                 val comment = view.findViewById<TextInputEditText>(R.id.reviewInput).text.toString()
                 val rating = view.findViewById<RatingBar>(R.id.ratingBar).rating
-                addReviewToList(username , username ,comment ,rating)
+                addReviewToList(username, username, comment, rating)
                 Toast.makeText(this, "Submited review successfully", Toast.LENGTH_SHORT).show()
                 initRatingDisplay()
                 dialog.dismiss()
@@ -106,20 +106,20 @@ class ShowDetailsActivity : AppCompatActivity() {
         binding.reviewsRecycler.isVisible = !state
     }
 
-    private fun addReviewToList(id:String? = "placeholder",username:String? = "placeholder" , text:String , rating: Float){
-        adapter.addItem(Review(id , username , rating , text , R.mipmap.pfp))
+    private fun addReviewToList(id: String? = "placeholder", username: String? = "placeholder", text: String, rating: Float) {
+        adapter.addItem(Review(id, username, rating, text, R.mipmap.pfp))
     }
 
-    private fun initRatingDisplay(){
+    private fun initRatingDisplay() {
         val list = adapter.getAllReviews()
         var sum = 0F
         val df = DecimalFormat("#.##")
-        for (item in list){
-            sum+=item.grade
+        for (item in list) {
+            sum += item.grade
         }
 
-        val reviewText = "${list.count()} reviews ${df.format(sum/list.count())} average"
-        binding.ratings.rating = sum/list.count()
+        val reviewText = "${list.count()} reviews ${df.format(sum / list.count())} average"
+        binding.ratings.rating = sum / list.count()
         binding.reviewsNumber.text = reviewText
     }
 

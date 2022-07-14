@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Shows-dominik-premelc</string>
     <string name="emptyStateText">Your shows are not showing. Get it?</string>
     <string name="ShowsTitle">Shows</string>
-    <string name="emptyRecyclerButtonText">Empty shows</string>
-    <string name="fillRecyclerButtonText">Refill shows</string>
+    <string name="toggleRecyclerButtonText">Toggle Recycler</string>
+    <string name="reviewsEmptyText">No reviews yet.</string>
     <string name="reviewsTitle">Reviews</string>
+    <string name="reviewSubmitButtonText">Write a review</string>
     <string name="ShowDetailsBottomSheetTitleText">Write a review</string>
     <string name="reviewEntryHintTexr">Comment</string>
     <string name="submitReviewButtonText">Submit</string>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="400dp"
     android:clipToPadding="false"
     android:padding="8dp">
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
             android:scaleType="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@mipmap/pfp" />
+            tools:src="@mipmap/pfp"/>
 
         <TextView
             android:id="@+id/username"
@@ -32,20 +32,20 @@
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@id/profilePic"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="premone123" />
+            tools:text="premone123"/>
 
         <TextView
             android:id="@+id/gradeValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#3D1D72"
-            android:textSize="16sp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="8dp"
+            android:textColor="#3D1D72"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@id/gradeImg"
             app:layout_constraintStart_toEndOf="@id/username"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/gradeImg"
-            tools:text="3" />
+            tools:text="3"/>
 
         <ImageView
             android:id="@+id/gradeImg"
@@ -55,8 +55,8 @@
             android:layout_marginEnd="12dp"
             android:src="@drawable/star"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/gradeValue"
+            app:layout_constraintTop_toTopOf="parent"
             />
 
         <TextView
@@ -65,8 +65,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/username"
-            tools:text="Ne svidja mi se ova serija uopce uzasno je bezveze neznam sta pisem placeholder text i guess" />
+            tools:text="Ne svidja mi se ova serija uopce uzasno je bezveze neznam sta pisem placeholder text i guess"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </FrameLayout>

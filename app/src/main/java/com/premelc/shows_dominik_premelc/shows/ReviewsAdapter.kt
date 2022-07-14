@@ -12,28 +12,28 @@ class ReviewsAdapter(
     private var items: List<Review>
 ) : RecyclerView.Adapter<ReviewsAdapter.ReviewViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup , viewType: Int): ReviewViewHolder{
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
         val binding = ViewItemReviewBinding.inflate(LayoutInflater.from(parent.context))
         return ReviewViewHolder(binding)
     }
 
     override fun getItemCount() = items.count()
 
-    override fun onBindViewHolder(holder: ReviewViewHolder , position: Int) {
+    override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
         holder.bind(items[position])
     }
 
-    inner class ReviewViewHolder(private val binding: ViewItemReviewBinding):
-            RecyclerView.ViewHolder(binding.root) {
-                fun bind(item: Review){
-                    binding.username.text = item.username
-                    binding.reviewMsg.text = item.text
-                    binding.gradeValue.text = item.grade.toString()
-                    binding.profilePic.setImageResource(item.profilePic)
-                }
+    inner class ReviewViewHolder(private val binding: ViewItemReviewBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: Review) {
+            binding.username.text = item.username
+            binding.reviewMsg.text = item.text
+            binding.gradeValue.text = item.grade.toString()
+            binding.profilePic.setImageResource(item.profilePic)
+        }
     }
 
-    fun getAllReviews():List<Review>{
+    fun getAllReviews(): List<Review> {
         return items
     }
 
@@ -42,8 +42,8 @@ class ReviewsAdapter(
         notifyDataSetChanged()
     }
 
-    fun addItem(review: Review){
-        items = items+review
+    fun addItem(review: Review) {
+        items = items + review
         notifyItemInserted(items.lastIndex)
     }
 }

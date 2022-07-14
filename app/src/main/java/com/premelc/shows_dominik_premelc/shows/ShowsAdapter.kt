@@ -38,12 +38,12 @@ class ShowsAdapter(
             binding.showName.text = item.name
             binding.showDescription.text = item.description
             binding.showImage.setImageResource(item.imageResourceId)
-            binding.cardContainer.setOnClickListener{
+            binding.cardContainer.setOnClickListener {
                 val intent = buildShowDetailsActivityIntent(context as Activity)
-                intent.putExtra("username" , username)
-                intent.putExtra("name" , item.name)
-                intent.putExtra("description" , item.description)
-                intent.putExtra("img" , item.imageResourceId)
+                intent.putExtra("username", username)
+                intent.putExtra("name", item.name)
+                intent.putExtra("description", item.description)
+                intent.putExtra("img", item.imageResourceId)
                 intent.putExtra("reviews", item.reviews as Serializable)
                 context.startActivity(intent)
             }
