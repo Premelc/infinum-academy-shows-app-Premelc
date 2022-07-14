@@ -63,7 +63,7 @@ class ShowDetailsActivity : AppCompatActivity() {
 
     private fun initDetails(name: String?, description: String?, @DrawableRes img: Int?) {
         if (img != null) {
-            binding.showImage.setImageResource(img)
+            binding.img.setImageResource(img)
         }
         binding.showTitle.text = name
         binding.showDescription.text = description
@@ -107,7 +107,7 @@ class ShowDetailsActivity : AppCompatActivity() {
     }
 
     private fun addReviewToList(id:String? = "placeholder",username:String? = "placeholder" , text:String , rating: Float){
-        adapter.addItem(Review(id , username , rating , text , R.drawable.pfp))
+        adapter.addItem(Review(id , username , rating , text , R.mipmap.pfp))
     }
 
     private fun initRatingDisplay(){

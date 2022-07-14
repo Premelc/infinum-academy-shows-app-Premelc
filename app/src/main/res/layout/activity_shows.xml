@@ -6,29 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/emptyRecyclerButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/emptyRecyclerButtonText"
-        app:cornerRadius="40dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_goneMarginTop="0dp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/fillRecyclerButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="48dp"
-        android:text="@string/fillRecyclerButtonText"
-        app:cornerRadius="40dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/emptyRecyclerButton" />
-
     <TextView
         android:id="@+id/showsTitle"
         android:layout_width="wrap_content"
@@ -39,17 +16,19 @@
         android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fillRecyclerButton" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/showsRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="200dp"
         android:visibility="gone"
+        android:layout_marginTop="100dp"
+        android:paddingBottom="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/showsTitle"
+        app:layout_constraintBottom_toTopOf="@id/RecyclerToggleButton"
         tools:listitem="@layout/view_show_item" />
 
     <ImageView
@@ -79,9 +58,19 @@
         android:layout_margin="40dp"
         android:text="@string/emptyStateText"
         android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintLeft_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/showsTitle" />
+        app:layout_constraintTop_toBottomOf="@id/emptyStateElipse" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/RecyclerToggleButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/toggleRecyclerButtonText"
+        app:cornerRadius="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

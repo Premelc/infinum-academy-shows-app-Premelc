@@ -8,5 +8,5 @@ data class Show(
     val name: String,
     val description: String,
     val reviews: List<Review>,
-    @DrawableRes val imageResourceId: Int = R.drawable.pfp
+    @DrawableRes val imageResourceId: Int = R.mipmap.pfp
 )

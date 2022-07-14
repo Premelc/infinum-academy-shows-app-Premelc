@@ -25,21 +25,21 @@ class ShowsActivity : AppCompatActivity() {
             "Petra Benjak",
             5F,
             "Najbolja stvar koju sam ikad gledala",
-            R.drawable.pfp
+            R.mipmap.pfp
         ),
         Review(
             "premo",
             "Premo",
             4F,
             "Najbolja stvar koju sam ikad gledao",
-            R.drawable.pfp
+            R.mipmap.pfp
         ),
         Review(
             "zigmund123",
             "zigmund123",
             2F,
             "ne kuzim",
-            R.drawable.pfp
+            R.mipmap.pfp
         )
     )
 
@@ -49,21 +49,21 @@ class ShowsActivity : AppCompatActivity() {
             "The Office",
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
             reviews,
-            R.drawable.the_office
+            R.mipmap.the_office
         ),
         Show(
             "stranger_things",
             "Stranger Things",
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
             reviews,
-            R.drawable.stranger_things
+            R.mipmap.stranger_things
         ),
         Show(
             "krv_nije_voda",
             "Krv nije voda",
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
             reviews,
-            R.drawable.krv_nije_voda
+            R.mipmap.krv_nije_voda
         )
     )
 
@@ -76,8 +76,7 @@ class ShowsActivity : AppCompatActivity() {
         setContentView(binding.root)
         val username = intent.extras?.getString("username")
         initShowsRecycler(username)
-        initEmptyRecyclerButton()
-        initFillRecyclerButton()
+        initRecyclerToggleButton()
     }
 
     private fun initShowsRecycler(username :String?) {
@@ -88,27 +87,19 @@ class ShowsActivity : AppCompatActivity() {
             DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         )*/
         adapter.addAllShows(shows)
-        toggleEmptyState(false)
+        toggleRecycler(true)
     }
 
-    private fun initFillRecyclerButton() {
-        binding.fillRecyclerButton.setOnClickListener {
-            adapter.addAllShows(shows)
-            toggleEmptyState(false)
+    private fun initRecyclerToggleButton() {
+        binding.RecyclerToggleButton.setOnClickListener {
+            toggleRecycler(binding.emptyState.isVisible)
         }
     }
 
-    private fun initEmptyRecyclerButton() {
-        binding.emptyRecyclerButton.setOnClickListener {
-            adapter.addAllShows(emptyList())
-            toggleEmptyState(true)
-        }
-    }
-
-    private fun toggleEmptyState(state: Boolean) {
-        binding.showsRecycler.isVisible = !state
-        binding.emptyStateElipse.isVisible = state
-        binding.emptyStateIcon.isVisible = state
-        binding.emptyState.isVisible = state
+    private fun toggleRecycler(state: Boolean) {
+        binding.showsRecycler.isVisible = state
+        binding.emptyStateElipse.isVisible = !state
+        binding.emptyStateIcon.isVisible = !state
+        binding.emptyState.isVisible = !state
     }
 }
