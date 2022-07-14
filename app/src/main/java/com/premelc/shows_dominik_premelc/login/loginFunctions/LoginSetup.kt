@@ -1,5 +1,6 @@
 package com.premelc.shows_dominik_premelc.login.loginFunctions
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -8,6 +9,9 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
+import com.premelc.shows_dominik_premelc.R
+import com.premelc.shows_dominik_premelc.shows.ShowsActivity
 
 fun setupLoginValidation(emailTextView: TextView, passwordTextView: TextView, loginButton: View){
         emailTextView.addTextChangedListener(object : TextWatcher {
@@ -49,21 +53,15 @@ fun setupLoginValidation(emailTextView: TextView, passwordTextView: TextView, lo
 
 fun setupLoginButton(context:Context ,loginButton: View , emailTextView: TextView) {
     loginButton.setOnClickListener {
-        //EXPLICIT INTENT
         /*
-        val intent = Intent(this, WelcomeActivity::class.java)
-        intent.putExtra("username" , email.substringBefore('@'))
-        startActivity(intent)
-        */
-        //IMPLICIT INTENT
         val intent = Intent(ACTION_SEND).apply {
             putExtra("username", emailTextView.text.toString().substringBefore('@'))
             type = "text/plain"
         }
-        try {
-            context.startActivity(intent)
-        } catch (e: ActivityNotFoundException) {
-            //DEFAULT APP
-        }
+        */
+        val user = R.id.emailInput.toString().substringBefore('@')
+        val intent = ShowsActivity.buildShowsActivityIntent(context as Activity)
+        intent.putExtra("username" ,user)
+        context.startActivity(intent)
     }
 }
