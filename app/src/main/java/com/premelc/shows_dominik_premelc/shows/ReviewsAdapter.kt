@@ -34,10 +34,17 @@ class ReviewsAdapter(
                 }
     }
 
+    fun getAllReviews():List<Review>{
+        return items
+    }
+
     fun addAllReviews(reviews: List<Review>) {
         items = reviews
         notifyDataSetChanged()
     }
 
-
+    fun addItem(review: Review){
+        items = items+review
+        notifyItemInserted(items.lastIndex)
+    }
 }

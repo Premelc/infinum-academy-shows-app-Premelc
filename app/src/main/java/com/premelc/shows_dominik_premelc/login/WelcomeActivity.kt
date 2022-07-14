@@ -13,16 +13,18 @@ class WelcomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val user = intent.extras?.getString("username")
 
-        val username: String = "Welcome, " + intent.extras?.getString("username")
+        val username: String = "Welcome, " + user
         binding.userWelcome.text = username
 
-        initElipseButton()
+        initElipseButton(user)
     }
 
-    private fun initElipseButton() {
+    private fun initElipseButton(user: String?) {
         binding.elipseImg.setOnClickListener {
             val intent = buildShowsActivityIntent(this)
+            intent.putExtra("username" ,user)
             startActivity(intent)
         }
     }

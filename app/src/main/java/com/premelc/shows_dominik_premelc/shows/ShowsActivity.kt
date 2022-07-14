@@ -23,21 +23,21 @@ class ShowsActivity : AppCompatActivity() {
         Review(
             "petra_benjak",
             "Petra Benjak",
-            5,
+            5F,
             "Najbolja stvar koju sam ikad gledala",
             R.drawable.pfp
         ),
         Review(
             "premo",
             "Premo",
-            4,
+            4F,
             "Najbolja stvar koju sam ikad gledao",
             R.drawable.pfp
         ),
         Review(
             "zigmund123",
             "zigmund123",
-            2,
+            2F,
             "ne kuzim",
             R.drawable.pfp
         )
@@ -74,13 +74,14 @@ class ShowsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityShowsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initShowsRecycler()
+        val username = intent.extras?.getString("username")
+        initShowsRecycler(username)
         initEmptyRecyclerButton()
         initFillRecyclerButton()
     }
 
-    private fun initShowsRecycler() {
-        adapter = ShowsAdapter(this, emptyList())
+    private fun initShowsRecycler(username :String?) {
+        adapter = ShowsAdapter(this, emptyList(),username)
         binding.showsRecycler.layoutManager = LinearLayoutManager(this)
         binding.showsRecycler.adapter = adapter
         /*binding.showsRecycler.addItemDecoration(

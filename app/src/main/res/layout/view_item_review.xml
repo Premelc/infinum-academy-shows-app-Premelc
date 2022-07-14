@@ -24,7 +24,7 @@
 
         <TextView
             android:id="@+id/username"
-            android:layout_width="0dp"
+            android:layout_width="240dp"
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:textColor="#757575"
@@ -39,12 +39,13 @@
             android:id="@+id/gradeValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="128dp"
-            android:layout_marginTop="15dp"
             android:textColor="#757575"
             android:textSize="16sp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="8dp"
             app:layout_constraintStart_toEndOf="@id/username"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/gradeImg"
             tools:text="3" />
 
         <ImageView
@@ -55,7 +56,9 @@
             android:layout_marginEnd="12dp"
             android:src="@drawable/star"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/gradeValue"
+            />
 
         <TextView
             android:id="@+id/reviewMsg"

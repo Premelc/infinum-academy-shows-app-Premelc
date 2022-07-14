@@ -28,7 +28,8 @@
                 android:id="@+id/backArrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/arrow" />
+                android:src="@drawable/arrow"
+                android:padding="10dp"/>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -37,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="?attr/actionBarSize"
-       android:paddingBottom="56dp"
+       android:paddingBottom="80dp"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -52,7 +53,7 @@
                 android:textSize="36sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="The Office" />
 
 
@@ -105,6 +106,7 @@
                 android:id="@+id/ratings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:isIndicator="true"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="6dp"
                 android:scaleX=".7"
@@ -138,10 +140,11 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/writeReviewButton"
+        android:layout_margin="10dp"
+        android:elevation="4dp"
         android:layout_width="0dp"
-        android:layout_height="52dp"
+        android:layout_height="60dp"
         android:backgroundTint="#3D1D72"
-        android:enabled="false"
         android:text="@string/reviewSubmitButtonText"
         android:textColor="#FFFFFF"
         app:cornerRadius="20dp"
