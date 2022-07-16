@@ -37,7 +37,7 @@ class ShowDetailsActivity : AppCompatActivity() {
         binding = ActivityShowDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val username = intent.extras?.getString("username")
+        val username = intent.extras?.getString("username").toString()
         initBackButton()
         initDetails(
             intent.extras?.getString("name"),
@@ -76,7 +76,7 @@ class ShowDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun initReviewDialogButton(username: String?) {
+    private fun initReviewDialogButton(username: String) {
         binding.writeReviewButton.setOnClickListener {
             val dialog = BottomSheetDialog(this)
             val view = layoutInflater.inflate(R.layout.show_details_bottom_sheet, null)
@@ -106,7 +106,7 @@ class ShowDetailsActivity : AppCompatActivity() {
         binding.reviewsRecycler.isVisible = !state
     }
 
-    private fun addReviewToList(id: String? = "placeholder", username: String? = "placeholder", text: String, rating: Float) {
+    private fun addReviewToList(id: String = "placeholder", username: String = "placeholder", text: String, rating: Float) {
         adapter.addItem(Review(id, username, rating, text, R.mipmap.pfp))
     }
 
