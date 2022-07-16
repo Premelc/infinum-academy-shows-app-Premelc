@@ -3,11 +3,10 @@ package com.premelc.shows_dominik_premelc.login
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 import com.premelc.shows_dominik_premelc.databinding.ActivityLoginBinding
 import com.premelc.shows_dominik_premelc.login.loginFunctions.*
 import com.premelc.shows_dominik_premelc.shows.ShowsActivity
@@ -29,67 +28,38 @@ class LoginActivity : AppCompatActivity() {
         setupLoginButton(this, loginButton)
     }
 
+    private fun checkEmailRegex(emailTextView: TextView, passwordTextView: TextView, loginButton: View) {
+        if (!validateEmail(emailTextView.text.toString())) {
+            emailTextView.error = "Invalid email address"
+        }
+        loginButton.isEnabled = validateLoginData(
+            emailTextView.text.toString(),
+            passwordTextView.text.toString()
+        )
+    }
+
+    private fun checkPassword(emailTextView: TextView, passwordTextView: TextView, loginButton: View) {
+        if (!validatePassword(passwordTextView.text.toString())) {
+            passwordTextView.error = "Invalid password"
+        }
+        loginButton.isEnabled = validateLoginData(
+            emailTextView.text.toString(),
+            passwordTextView.text.toString()
+        )
+    }
+
     private fun setupLoginValidation(
         emailTextView: TextView,
         passwordTextView: TextView,
         loginButton: View
     ) {
-        emailTextView.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {
-                if (!validateEmail(s.toString())) {
-                    emailTextView.error = "Invalid email address"
-                }
-                loginButton.isEnabled = validateLoginData(
-                    emailTextView.text.toString(),
-                    passwordTextView.text.toString()
-                )
-            }
 
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                s: CharSequence, start: Int,
-                before: Int, count: Int
-            ) {
-            }
-        })
-        passwordTextView.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {
-                if (!validatePassword(s.toString())) {
-                    passwordTextView.error = "Invalid password"
-                }
-                loginButton.isEnabled = validateLoginData(
-                    emailTextView.text.toString(),
-                    passwordTextView.text.toString()
-                )
-            }
-
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                s: CharSequence, start: Int,
-                before: Int, count: Int
-            ) {
-            }
-        })
+        emailTextView.doOnTextChanged { text, start, before, count -> checkEmailRegex(emailTextView, passwordTextView, loginButton) }
+        passwordTextView.doOnTextChanged { text, start, before, count -> checkPassword(emailTextView, passwordTextView, loginButton) }
     }
 
     private fun setupLoginButton(context: Context, loginButton: View) {
         loginButton.setOnClickListener {
-            /*
-            val intent = Intent(ACTION_SEND).apply {
-                putExtra("username", emailTextView.text.toString().substringBefore('@'))
-                type = "text/plain"
-            }
-            */
             val user = binding.emailInput.text.toString().substringBefore('@')
             val intent = ShowsActivity.buildShowsActivityIntent(context as Activity)
             intent.putExtra("username", user)
