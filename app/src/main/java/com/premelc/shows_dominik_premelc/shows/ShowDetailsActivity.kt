@@ -50,7 +50,7 @@ class ShowDetailsActivity : AppCompatActivity() {
     }
 
     private fun initReviewsRecycler(reviews: Serializable?) {
-        adapter = ReviewsAdapter(this, emptyList())
+        adapter = ReviewsAdapter(emptyList())
         binding.reviewsRecycler.layoutManager = LinearLayoutManager(this)
         binding.reviewsRecycler.adapter = adapter
         binding.reviewsRecycler.addItemDecoration(

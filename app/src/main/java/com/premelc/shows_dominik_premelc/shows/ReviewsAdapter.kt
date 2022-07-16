@@ -8,7 +8,6 @@ import com.premelc.shows_dominik_premelc.databinding.ViewItemReviewBinding
 import com.premelc.shows_dominik_premelc.model.Review
 
 class ReviewsAdapter(
-    private var context: Context,
     private var items: List<Review>
 ) : RecyclerView.Adapter<ReviewsAdapter.ReviewViewHolder>() {
 
@@ -26,10 +25,12 @@ class ReviewsAdapter(
     inner class ReviewViewHolder(private val binding: ViewItemReviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Review) {
-            binding.username.text = item.username
-            binding.reviewMsg.text = item.text
-            binding.gradeValue.text = item.grade.toString()
-            binding.profilePic.setImageResource(item.profilePic)
+            with(binding) {
+                username.text = item.username
+                reviewMsg.text = item.text
+                gradeValue.text = item.grade.toString()
+                profilePic.setImageResource(item.profilePic)
+            }
         }
     }
 
