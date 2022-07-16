@@ -20,14 +20,15 @@
             android:scaleType="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@mipmap/pfp"/>
+            tools:src="@mipmap/pfp"
+            android:contentDescription="@string/profile_picture"/>
 
         <TextView
             android:id="@+id/username"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:textColor="#3D1D72"
+            android:textColor="@color/defaultPurple"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@id/profilePic"
@@ -40,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="8dp"
-            android:textColor="#3D1D72"
+            android:textColor="@color/defaultPurple"
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@id/gradeImg"
             app:layout_constraintStart_toEndOf="@id/username"
@@ -57,7 +58,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/gradeValue"
             app:layout_constraintTop_toTopOf="parent"
-            />
+            android:contentDescription="@string/star"/>
 
         <TextView
             android:id="@+id/reviewMsg"

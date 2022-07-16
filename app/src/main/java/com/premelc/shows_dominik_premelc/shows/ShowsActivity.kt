@@ -83,20 +83,17 @@ class ShowsActivity : AppCompatActivity() {
         adapter = ShowsAdapter(this, emptyList(), username)
         binding.showsRecycler.layoutManager = LinearLayoutManager(this)
         binding.showsRecycler.adapter = adapter
-        /*binding.showsRecycler.addItemDecoration(
-            DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        )*/
         adapter.addAllShows(shows)
-        toggleRecycler(true)
+        togggleShowsRecyclerFullOrEmpty(true)
     }
 
     private fun initRecyclerToggleButton() {
-        binding.RecyclerToggleButton.setOnClickListener {
-            toggleRecycler(binding.emptyState.isVisible)
+        binding.recyclerToggleButton.setOnClickListener {
+            togggleShowsRecyclerFullOrEmpty(binding.emptyState.isVisible)
         }
     }
 
-    private fun toggleRecycler(state: Boolean) {
+    private fun togggleShowsRecyclerFullOrEmpty(state: Boolean) {
         binding.showsRecycler.isVisible = state
         binding.emptyStateElipse.isVisible = !state
         binding.emptyStateIcon.isVisible = !state

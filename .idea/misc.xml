@@ -5,7 +5,12 @@
       <map>
         <entry key="..\:/Users/Dominik/AndroidStudioProjects/infinum-academy-shows-app-Premelc/app/src/main/res/layout/activity_login.xml" value="0.33" />
         <entry key="..\:/Users/Dominik/AndroidStudioProjects/infinum-academy-shows-app-Premelc/app/src/main/res/layout/activity_welcome.xml" value="0.3927083333333333" />
-        <entry key="..\:/Users/domin/OneDrive/Documents/INFINUM/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/activity_shows.xml" value="0.25" />
+        <entry key="..\:/Users/domin/OneDrive/Documents/INFINUM/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/activity_login.xml" value="0.25" />
+        <entry key="..\:/Users/domin/OneDrive/Documents/INFINUM/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/activity_show_details.xml" value="0.15677083333333333" />
+        <entry key="..\:/Users/domin/OneDrive/Documents/INFINUM/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/activity_shows.xml" value="0.1" />
+        <entry key="..\:/Users/domin/OneDrive/Documents/INFINUM/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/show_details_bottom_sheet.xml" value="0.15677083333333333" />
+        <entry key="..\:/Users/domin/OneDrive/Documents/INFINUM/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/view_item_review.xml" value="0.15677083333333333" />
+        <entry key="..\:/Users/domin/OneDrive/Documents/INFINUM/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/view_show_item.xml" value="0.15677083333333333" />
       </map>
     </option>
   </component>

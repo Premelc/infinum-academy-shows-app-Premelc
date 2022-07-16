@@ -29,7 +29,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:src="@drawable/arrow"/>
+                android:src="@drawable/arrow"
+                android:contentDescription="@string/arrow"/>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -42,7 +43,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/showTitle"
@@ -78,7 +79,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="350dp"
                         android:scaleType="centerCrop"
-                        tools:src="@mipmap/the_office"/>
+                        tools:src="@mipmap/the_office"
+                        android:contentDescription="@string/profile_picture"/>
 
                 </FrameLayout>
 
@@ -114,7 +116,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
-                android:text="3 Reviews, 3.66 average"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -164,10 +165,10 @@
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_margin="10dp"
-        android:backgroundTint="#3D1D72"
+        android:backgroundTint="@color/defaultPurple"
         android:elevation="4dp"
         android:text="@string/reviewSubmitButtonText"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/white"
         app:cornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

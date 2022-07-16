@@ -38,7 +38,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.88"
                 app:layout_constraintStart_toEndOf="@id/bottomSheetTitle"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/close_button"/>
 
             <RatingBar
                 android:id="@+id/ratingBar"
@@ -60,11 +61,11 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="24dp"
                 android:minHeight="150dp"
-                android:textColor="#3D1D72"
-                android:textColorHint="#3D1D72"
-                app:boxStrokeColor="#3D1D72"
+                android:textColor="@color/defaultPurple"
+                android:textColorHint="@color/defaultPurple"
+                app:boxStrokeColor="@color/defaultPurple"
                 app:cornerRadius="20dp"
-                app:hintTextColor="#3D1D72"
+                app:hintTextColor="@color/defaultPurple"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ratingBar">
 
@@ -74,8 +75,8 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/reviewEntryHintTexr"
                     android:minHeight="150dp"
-                    android:textColor="#3D1D72"
-                    android:textColorHint="#3D1D72"/>
+                    android:textColor="@color/defaultPurple"
+                    android:textColorHint="@color/defaultPurple"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton

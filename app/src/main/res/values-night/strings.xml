@@ -9,4 +9,19 @@
     <string name="ShowDetailsBottomSheetTitleText">Write a review</string>
     <string name="reviewEntryHintTexr">Comment</string>
     <string name="submitReviewButtonText">Submit</string>
+    <string name="leftImgDescText">leftimage</string>
+    <string name="rightImgDescText">rightimage</string>
+    <string name="triangleDescText">triangle</string>
+    <string name="loginTitleText">Shows</string>
+    <string name="loginText">Login</string>
+    <string name="in_order_to_continue_please_log_in">In order to continue please log in</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="elipse">elipse</string>
+    <string name="empty_icon">empty icon</string>
+    <string name="arrow">arrow</string>
+    <string name="profile_picture">profile picture</string>
+    <string name="close_button">close button</string>
+    <string name="star">star</string>
 </resources>
