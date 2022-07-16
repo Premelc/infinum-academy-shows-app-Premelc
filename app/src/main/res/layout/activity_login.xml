@@ -145,7 +145,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textField"
-            app:passwordToggleEnabled="false"
+            app:passwordToggleEnabled="true"
             app:passwordToggleTint="@color/white">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -160,6 +160,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
+            style="@style/MaterialButtonStyle"
             android:id="@+id/loginButton"
             android:layout_width="0dp"
             android:layout_height="48dp"
@@ -167,15 +168,15 @@
             android:layout_marginTop="151dp"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="32dp"
-            android:backgroundTint="@color/white"
             android:enabled="false"
             android:text="@string/login"
-            android:textColor="@color/grey"
             app:cornerRadius="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textField2"/>
+            app:layout_constraintTop_toBottomOf="@+id/textField2"
+            app:layout_constraintVertical_bias="0.0"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

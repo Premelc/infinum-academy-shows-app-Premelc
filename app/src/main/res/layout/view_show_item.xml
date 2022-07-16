@@ -27,7 +27,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:scaleType="centerCrop"
-                tools:src="@mipmap/krv_nije_voda"/>
+                tools:src="@mipmap/krv_nije_voda"
+                android:contentDescription="@string/show_image"/>
 
             <View
                 android:layout_width="match_parent"

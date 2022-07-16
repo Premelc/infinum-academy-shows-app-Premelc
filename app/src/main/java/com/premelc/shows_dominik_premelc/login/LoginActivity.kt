@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
+import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.ActivityLoginBinding
 import com.premelc.shows_dominik_premelc.login.loginFunctions.*
 import com.premelc.shows_dominik_premelc.shows.ShowsActivity

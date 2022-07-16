@@ -24,4 +24,5 @@
     <string name="profile_picture">profile picture</string>
     <string name="close_button">close button</string>
     <string name="star">star</string>
+    <string name="show_image">show image</string>
 </resources>
