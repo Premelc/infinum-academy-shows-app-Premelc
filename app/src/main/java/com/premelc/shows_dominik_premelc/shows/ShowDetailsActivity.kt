@@ -63,7 +63,7 @@ class ShowDetailsActivity : AppCompatActivity() {
     }
 
     private fun initBackButton() {
-        binding.backArrow.setOnClickListener {
+        binding.toolbar.setNavigationOnClickListener {
             finish()
         }
     }
