@@ -16,6 +16,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.ActivityShowDetailsBinding
+import com.premelc.shows_dominik_premelc.databinding.ShowDetailsBottomSheetBinding
 import com.premelc.shows_dominik_premelc.model.Review
 import com.premelc.shows_dominik_premelc.shows.ShowsActivity.Companion.buildShowsActivityIntent
 import java.io.Serializable
@@ -30,6 +31,7 @@ class ShowDetailsActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityShowDetailsBinding
+    private lateinit var bindingBottomSheetDialog: ShowDetailsBottomSheetBinding
     private lateinit var adapter: ReviewsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,19 +46,19 @@ class ShowDetailsActivity : AppCompatActivity() {
             intent.extras?.getString("description"),
             intent.extras?.getInt("img"),
         )
-        initReviewsRecycler(intent.extras?.getSerializable("reviews"))
+        initReviewsRecycler(intent.extras?.getSerializable("reviews") as List<Review>)
         initRatingDisplay()
         initReviewDialogButton(username)
     }
 
-    private fun initReviewsRecycler(reviews: Serializable?) {
+    private fun initReviewsRecycler(reviews: List<Review>) {
         adapter = ReviewsAdapter(emptyList())
         binding.reviewsRecycler.layoutManager = LinearLayoutManager(this)
         binding.reviewsRecycler.adapter = adapter
         binding.reviewsRecycler.addItemDecoration(
             DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         )
-        adapter.addAllReviews(reviews as List<Review>)
+        adapter.addAllReviews(reviews)
         if (adapter.itemCount > 0) toggleEmptyState(false) else toggleEmptyState(true)
 
     }
@@ -71,8 +73,7 @@ class ShowDetailsActivity : AppCompatActivity() {
 
     private fun initBackButton() {
         binding.backArrow.setOnClickListener {
-            val intent = buildShowsActivityIntent(this)
-            startActivity(intent)
+            finish()
         }
     }
 
@@ -80,17 +81,17 @@ class ShowDetailsActivity : AppCompatActivity() {
         binding.writeReviewButton.setOnClickListener {
             val dialog = BottomSheetDialog(this)
             val view = layoutInflater.inflate(R.layout.show_details_bottom_sheet, null)
-            val btnClose = view.findViewById<ImageView>(R.id.closeButton)
-            val btnSubmit = view.findViewById<MaterialButton>(R.id.submitReviewButton)
+            val btnClose = bindingBottomSheetDialog.closeButton
+            val btnSubmit = bindingBottomSheetDialog.submitReviewButton
 
             btnClose.setOnClickListener {
                 dialog.dismiss()
             }
             btnSubmit.setOnClickListener {
-                val comment = view.findViewById<TextInputEditText>(R.id.reviewInput).text.toString()
-                val rating = view.findViewById<RatingBar>(R.id.ratingBar).rating
+                val comment = bindingBottomSheetDialog.reviewInput.text.toString()
+                val rating = bindingBottomSheetDialog.ratingBar.rating
                 addReviewToList(username, username, comment, rating)
-                Toast.makeText(this, "Submited review successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
                 initRatingDisplay()
                 dialog.dismiss()
             }
@@ -117,8 +118,11 @@ class ShowDetailsActivity : AppCompatActivity() {
         for (item in list) {
             sum += item.grade
         }
-
-        val reviewText = "${list.count()} reviews ${df.format(sum / list.count())} average"
+        val count = list.count()
+        val avg = df.format(sum / list.count())
+        val reviewText = R.string.toast_make_review.toString()
+        println(R.string.toast_make_review.toString())
+        println(reviewText)
         binding.ratings.rating = sum / list.count()
         binding.reviewsNumber.text = reviewText
     }

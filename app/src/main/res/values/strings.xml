@@ -25,4 +25,6 @@
     <string name="close_button">close button</string>
     <string name="star">star</string>
     <string name="show_image">show image</string>
+    <string name="toast_make_review">Submited review successfully</string>
+    <string name="reviewCount">"$count reviews $avg average"</string>
 </resources>
