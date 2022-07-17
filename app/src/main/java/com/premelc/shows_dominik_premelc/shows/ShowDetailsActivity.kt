@@ -5,7 +5,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import androidx.annotation.DrawableRes
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +13,7 @@ import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.ActivityShowDetailsBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowDetailsBottomSheetBinding
 import com.premelc.shows_dominik_premelc.model.Review
+import com.premelc.shows_dominik_premelc.model.Show
 import java.text.DecimalFormat
 
 class ShowDetailsActivity : AppCompatActivity() {
@@ -26,21 +26,20 @@ class ShowDetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityShowDetailsBinding
     private lateinit var adapter: ReviewsAdapter
+    private lateinit var show: Show
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityShowDetailsBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
-
+        val id = intent.extras?.getString("id")
+        for (item in ListOfShows().shows){
+            if (item.id == id)show=item; break
+        }
         val username = intent.extras?.getString("username").toString()
         initBackButton()
-        initDetails(
-            intent.extras?.getString("name"),
-            intent.extras?.getString("description"),
-            intent.extras?.getInt("img"),
-        )
-        initReviewsRecycler(intent.extras?.getSerializable("reviews") as List<Review>)
+        initDetails()
+        initReviewsRecycler(show.reviews)
         initRatingDisplay()
         initReviewDialogButton(username)
     }
@@ -57,12 +56,10 @@ class ShowDetailsActivity : AppCompatActivity() {
 
     }
 
-    private fun initDetails(name: String?, description: String?, @DrawableRes img: Int?) {
-        if (img != null) {
-            binding.img.setImageResource(img)
-        }
-        binding.showTitle.text = name
-        binding.showDescription.text = description
+    private fun initDetails() {
+            binding.img.setImageResource(show.imageResourceId)
+            binding.showTitle.text = show.name
+            binding.showDescription.text = show.description
     }
 
     private fun initBackButton() {

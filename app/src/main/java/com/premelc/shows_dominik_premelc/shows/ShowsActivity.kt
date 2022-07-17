@@ -18,69 +18,22 @@ class ShowsActivity : AppCompatActivity() {
             return Intent(activity, ShowsActivity::class.java)
         }
     }
-
-    private val reviews = listOf(
-        Review(
-            "petra_benjak",
-            "Petra Benjak",
-            5F,
-            "Najbolja stvar koju sam ikad gledala",
-            R.mipmap.pfp
-        ),
-        Review(
-            "premo",
-            "Premo",
-            4F,
-            "Najbolja stvar koju sam ikad gledao",
-            R.mipmap.pfp
-        ),
-        Review(
-            "zigmund123",
-            "zigmund123",
-            2F,
-            "ne kuzim",
-            R.mipmap.pfp
-        )
-    )
-
-    private val shows = listOf(
-        Show(
-            "the_office",
-            "The Office",
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
-            reviews,
-            R.mipmap.the_office
-        ),
-        Show(
-            "stranger_things",
-            "Stranger Things",
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
-            reviews,
-            R.mipmap.stranger_things
-        ),
-        Show(
-            "krv_nije_voda",
-            "Krv nije voda",
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
-            reviews,
-            R.mipmap.krv_nije_voda
-        )
-    )
-
     private lateinit var binding: ActivityShowsBinding
     private lateinit var adapter: ShowsAdapter
+    private lateinit var shows: List<Show>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityShowsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        shows = ListOfShows().shows
         val username = intent.extras?.getString("username")
         initShowsRecycler(username)
         initRecyclerToggleButton()
     }
 
     private fun initShowsRecycler(username: String?) {
-        adapter = ShowsAdapter(this, emptyList(), username)
+        adapter = ShowsAdapter(emptyList(),username.toString())
         binding.showsRecycler.layoutManager = LinearLayoutManager(this)
         binding.showsRecycler.adapter = adapter
         adapter.addAllShows(shows)

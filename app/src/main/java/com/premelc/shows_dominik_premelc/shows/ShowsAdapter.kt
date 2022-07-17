@@ -1,8 +1,10 @@
 package com.premelc.shows_dominik_premelc.shows
 
+import CustomOnClickHandler
 import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.premelc.shows_dominik_premelc.databinding.ViewShowItemBinding
@@ -11,9 +13,8 @@ import com.premelc.shows_dominik_premelc.shows.ShowDetailsActivity.Companion.bui
 import java.io.Serializable
 
 class ShowsAdapter(
-    private var context: Context,
     private var items: List<Show>,
-    private var username: String?
+    private val username: String = "MISSING_USERNAME"
 ) : RecyclerView.Adapter<ShowsAdapter.ShowViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
@@ -38,15 +39,8 @@ class ShowsAdapter(
             binding.showName.text = item.name
             binding.showDescription.text = item.description
             binding.showImage.setImageResource(item.imageResourceId)
-            binding.cardContainer.setOnClickListener {
-                val intent = buildShowDetailsActivityIntent(context as Activity)
-                intent.putExtra("username", username)
-                intent.putExtra("name", item.name)
-                intent.putExtra("description", item.description)
-                intent.putExtra("img", item.imageResourceId)
-                intent.putExtra("reviews", item.reviews as Serializable)
-                context.startActivity(intent)
+            val clickListener = CustomOnClickHandler(item.id , username)
+            binding.cardContainer.setOnClickListener(clickListener)
             }
         }
     }
-}
