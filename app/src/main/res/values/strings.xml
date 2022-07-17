@@ -26,5 +26,5 @@
     <string name="star">star</string>
     <string name="show_image">show image</string>
     <string name="toast_make_review">Submited review successfully</string>
-    <string name="reviewCount">"$count reviews $avg average"</string>
+    <string name="reviewCount">"%d reviews %s average"</string>
 </resources>

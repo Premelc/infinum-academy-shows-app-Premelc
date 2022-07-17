@@ -4,22 +4,16 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.RatingBar
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.textfield.TextInputEditText
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.ActivityShowDetailsBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowDetailsBottomSheetBinding
 import com.premelc.shows_dominik_premelc.model.Review
-import com.premelc.shows_dominik_premelc.shows.ShowsActivity.Companion.buildShowsActivityIntent
-import java.io.Serializable
 import java.text.DecimalFormat
 
 class ShowDetailsActivity : AppCompatActivity() {
@@ -31,12 +25,12 @@ class ShowDetailsActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityShowDetailsBinding
-    private lateinit var bindingBottomSheetDialog: ShowDetailsBottomSheetBinding
     private lateinit var adapter: ReviewsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityShowDetailsBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
 
         val username = intent.extras?.getString("username").toString()
@@ -80,24 +74,25 @@ class ShowDetailsActivity : AppCompatActivity() {
     private fun initReviewDialogButton(username: String) {
         binding.writeReviewButton.setOnClickListener {
             val dialog = BottomSheetDialog(this)
-            val view = layoutInflater.inflate(R.layout.show_details_bottom_sheet, null)
-            val btnClose = bindingBottomSheetDialog.closeButton
-            val btnSubmit = bindingBottomSheetDialog.submitReviewButton
+            val bottomSheetBinding :ShowDetailsBottomSheetBinding = ShowDetailsBottomSheetBinding.inflate(layoutInflater)
+            dialog.setContentView(bottomSheetBinding.root)
+            val btnClose = bottomSheetBinding.closeButton
+            val btnSubmit = bottomSheetBinding.submitReviewButton
 
             btnClose.setOnClickListener {
+
                 dialog.dismiss()
             }
             btnSubmit.setOnClickListener {
-                val comment = bindingBottomSheetDialog.reviewInput.text.toString()
-                val rating = bindingBottomSheetDialog.ratingBar.rating
+                val comment = bottomSheetBinding.reviewInput.text.toString()
+                val rating = bottomSheetBinding.ratingBar.rating
                 addReviewToList(username, username, comment, rating)
                 Toast.makeText(this, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
                 initRatingDisplay()
                 dialog.dismiss()
             }
 
-            dialog.setCancelable(false)
-            dialog.setContentView(view)
+            dialog.setContentView(bottomSheetBinding.root)
             dialog.show()
         }
     }
@@ -120,8 +115,8 @@ class ShowDetailsActivity : AppCompatActivity() {
         }
         val count = list.count()
         val avg = df.format(sum / list.count())
-        val reviewText = R.string.toast_make_review.toString()
-        println(R.string.toast_make_review.toString())
+        val reviewText = String.format(this.getString(R.string.reviewCount) , count , avg)
+        println(this.getString(R.string.reviewCount))
         println(reviewText)
         binding.ratings.rating = sum / list.count()
         binding.reviewsNumber.text = reviewText
