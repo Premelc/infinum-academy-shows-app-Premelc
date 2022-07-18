@@ -34,8 +34,7 @@ class ShowDetailsActivity : AppCompatActivity() {
         setContentView(binding.root)
         val id = intent.extras?.getString("id")
         for (item in ListOfShows().shows) {
-            println(item.id)
-            if (item.id == id) show = item;println("found: " + id)
+            if (item.id == id) show = item;
         }
         val username = intent.extras?.getString("username").toString()
         initBackButton()
@@ -78,7 +77,6 @@ class ShowDetailsActivity : AppCompatActivity() {
             val btnSubmit = bottomSheetBinding.submitReviewButton
 
             btnClose.setOnClickListener {
-
                 dialog.dismiss()
             }
             btnSubmit.setOnClickListener {
@@ -89,7 +87,6 @@ class ShowDetailsActivity : AppCompatActivity() {
                 initRatingDisplay()
                 dialog.dismiss()
             }
-
             dialog.setContentView(bottomSheetBinding.root)
             dialog.show()
         }
@@ -114,8 +111,6 @@ class ShowDetailsActivity : AppCompatActivity() {
         val count = list.count()
         val avg = df.format(sum / list.count())
         val reviewText = String.format(this.getString(R.string.reviewCount), count, avg)
-        println(this.getString(R.string.reviewCount))
-        println(reviewText)
         binding.ratings.rating = sum / list.count()
         binding.reviewsNumber.text = reviewText
     }

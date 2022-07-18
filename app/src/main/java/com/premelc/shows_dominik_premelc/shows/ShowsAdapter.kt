@@ -1,16 +1,11 @@
 package com.premelc.shows_dominik_premelc.shows
 
-import CustomOnClickHandler
-import android.app.Activity
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.premelc.shows_dominik_premelc.databinding.ViewShowItemBinding
 import com.premelc.shows_dominik_premelc.model.Show
-import com.premelc.shows_dominik_premelc.shows.ShowDetailsActivity.Companion.buildShowDetailsActivityIntent
-import java.io.Serializable
 
 class ShowsAdapter(
     private var items: List<Show>,

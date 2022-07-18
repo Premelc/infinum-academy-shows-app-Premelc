@@ -37,7 +37,6 @@ class ShowsActivity : AppCompatActivity() {
     private fun initShowsRecycler(username: String?) {
         val clickHandler: (v: View, id: String, username: String) -> Unit = { view: View, id: String, username: String ->
             val intent = ShowDetailsActivity.buildShowDetailsActivityIntent(view.context as Activity)
-            println("IDDEEEEEEE: " + id)
             intent.putExtra("id", id)
             intent.putExtra("username", username)
             view.context.startActivity(intent)
