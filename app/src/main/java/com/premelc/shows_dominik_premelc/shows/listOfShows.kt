@@ -4,7 +4,7 @@ import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.model.Review
 import com.premelc.shows_dominik_premelc.model.Show
 
-class ListOfShows (
+class ListOfShows(
     val reviews: List<Review> = listOf(
         Review(
             "petra_benjak",
@@ -52,6 +52,6 @@ class ListOfShows (
             R.mipmap.krv_nije_voda
         )
     )
-    ){
+) {
 
 }

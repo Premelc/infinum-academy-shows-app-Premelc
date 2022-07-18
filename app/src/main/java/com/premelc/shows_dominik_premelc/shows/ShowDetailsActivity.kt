@@ -33,9 +33,9 @@ class ShowDetailsActivity : AppCompatActivity() {
         binding = ActivityShowDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val id = intent.extras?.getString("id")
-        for (item in ListOfShows().shows){
+        for (item in ListOfShows().shows) {
             println(item.id)
-            if (item.id == id)show=item;println("found: " + id)
+            if (item.id == id) show = item;println("found: " + id)
         }
         val username = intent.extras?.getString("username").toString()
         initBackButton()
@@ -58,9 +58,9 @@ class ShowDetailsActivity : AppCompatActivity() {
     }
 
     private fun initDetails() {
-            binding.img.setImageResource(show.imageResourceId)
-            binding.showTitle.text = show.name
-            binding.showDescription.text = show.description
+        binding.img.setImageResource(show.imageResourceId)
+        binding.showTitle.text = show.name
+        binding.showDescription.text = show.description
     }
 
     private fun initBackButton() {
@@ -72,7 +72,7 @@ class ShowDetailsActivity : AppCompatActivity() {
     private fun initReviewDialogButton(username: String) {
         binding.writeReviewButton.setOnClickListener {
             val dialog = BottomSheetDialog(this)
-            val bottomSheetBinding :ShowDetailsBottomSheetBinding = ShowDetailsBottomSheetBinding.inflate(layoutInflater)
+            val bottomSheetBinding: ShowDetailsBottomSheetBinding = ShowDetailsBottomSheetBinding.inflate(layoutInflater)
             dialog.setContentView(bottomSheetBinding.root)
             val btnClose = bottomSheetBinding.closeButton
             val btnSubmit = bottomSheetBinding.submitReviewButton
@@ -113,7 +113,7 @@ class ShowDetailsActivity : AppCompatActivity() {
         }
         val count = list.count()
         val avg = df.format(sum / list.count())
-        val reviewText = String.format(this.getString(R.string.reviewCount) , count , avg)
+        val reviewText = String.format(this.getString(R.string.reviewCount), count, avg)
         println(this.getString(R.string.reviewCount))
         println(reviewText)
         binding.ratings.rating = sum / list.count()
