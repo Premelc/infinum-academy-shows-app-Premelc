@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.premelc.shows_dominik_premelc.R
@@ -18,6 +19,7 @@ class ShowsActivity : AppCompatActivity() {
             return Intent(activity, ShowsActivity::class.java)
         }
     }
+
     private lateinit var binding: ActivityShowsBinding
     private lateinit var adapter: ShowsAdapter
     private lateinit var shows: List<Show>
@@ -33,20 +35,27 @@ class ShowsActivity : AppCompatActivity() {
     }
 
     private fun initShowsRecycler(username: String?) {
-        adapter = ShowsAdapter(emptyList(),username.toString())
+        val clickHandler: (v: View , id:String , username:String ) -> Unit = { view: View, id: String, username: String ->
+            val intent = ShowDetailsActivity.buildShowDetailsActivityIntent(view.context as Activity)
+            println("IDDEEEEEEE: "+id)
+            intent.putExtra("id", id)
+            intent.putExtra("username" , username)
+            view.context.startActivity(intent)
+        }
+        adapter = ShowsAdapter(emptyList(), username.toString() ,clickHandler)
         binding.showsRecycler.layoutManager = LinearLayoutManager(this)
         binding.showsRecycler.adapter = adapter
         adapter.addAllShows(shows)
-        togggleShowsRecyclerFullOrEmpty(true)
+        setShowsRecyclerFullOrEmpty(true)
     }
 
     private fun initRecyclerToggleButton() {
         binding.recyclerToggleButton.setOnClickListener {
-            togggleShowsRecyclerFullOrEmpty(binding.emptyState.isVisible)
+            setShowsRecyclerFullOrEmpty(binding.emptyState.isVisible)
         }
     }
 
-    private fun togggleShowsRecyclerFullOrEmpty(isEmpty: Boolean) {
+    private fun setShowsRecyclerFullOrEmpty(isEmpty: Boolean) {
         binding.showsRecycler.isVisible = isEmpty
         binding.emptyStateElipse.isVisible = !isEmpty
         binding.emptyStateIcon.isVisible = !isEmpty

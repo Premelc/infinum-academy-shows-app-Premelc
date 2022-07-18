@@ -14,7 +14,8 @@ import java.io.Serializable
 
 class ShowsAdapter(
     private var items: List<Show>,
-    private val username: String = "MISSING_USERNAME"
+    private val username: String = "MISSING_USERNAME",
+    private val handleClick: (View , String, String) -> Unit
 ) : RecyclerView.Adapter<ShowsAdapter.ShowViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
@@ -39,8 +40,8 @@ class ShowsAdapter(
             binding.showName.text = item.name
             binding.showDescription.text = item.description
             binding.showImage.setImageResource(item.imageResourceId)
-            val clickListener = CustomOnClickHandler(item.id , username)
-            binding.cardContainer.setOnClickListener(clickListener)
+            //val clickListener = CustomOnClickHandler(item.id , username)
+            binding.cardContainer.setOnClickListener{handleClick(it , item.id , username)}
             }
         }
     }

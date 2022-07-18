@@ -34,7 +34,8 @@ class ShowDetailsActivity : AppCompatActivity() {
         setContentView(binding.root)
         val id = intent.extras?.getString("id")
         for (item in ListOfShows().shows){
-            if (item.id == id)show=item; break
+            println(item.id)
+            if (item.id == id)show=item;println("found: " + id)
         }
         val username = intent.extras?.getString("username").toString()
         initBackButton()
