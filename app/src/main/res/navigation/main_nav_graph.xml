@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav_graph">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.premelc.shows_dominik_premelc.login.LoginFragment"
+        tools:layout="@layout/fragment_login">
+        <action android:id="@+id/action_loginFragment_to_ShowsFragment" app:destination="@id/ShowsFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/ShowsFragment"
+        android:name="com.premelc.shows_dominik_premelc.shows.ShowsFragment"
+        tools:layout="@layout/fragment_shows">
+        <argument
+            android:name="username"
+            app:argType="string"/>
+        <action android:id="@+id/action_ShowsFragment_to_ShowDetailsFragment" app:destination="@id/ShowDetailsFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/ShowDetailsFragment"
+        android:name="com.premelc.shows_dominik_premelc.shows.ShowDetailsFragment"
+        tools:layout="@layout/fragment_show_details">
+        <argument
+            android:name="id"
+            app:argType="string"/>
+        <argument
+            android:name="username"
+            app:argType="string"/>
+    </fragment>
+
+</navigation>
