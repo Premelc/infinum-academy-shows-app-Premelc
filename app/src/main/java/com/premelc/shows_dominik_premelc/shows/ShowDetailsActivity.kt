@@ -52,7 +52,7 @@ class ShowDetailsActivity : AppCompatActivity() {
             DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         )
         adapter.addAllReviews(reviews)
-        if (adapter.itemCount > 0) toggleEmptyState(false) else toggleEmptyState(true)
+        if (adapter.itemCount > 0) togggleReviewsRecyclerFullOrEmpty(false) else togggleReviewsRecyclerFullOrEmpty(true)
 
     }
 
@@ -94,9 +94,9 @@ class ShowDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun toggleEmptyState(state: Boolean) {
-        binding.emptyReview.isVisible = state
-        binding.reviewsRecycler.isVisible = !state
+    private fun togggleReviewsRecyclerFullOrEmpty(isEmpty: Boolean) {
+        binding.emptyReview.isVisible = isEmpty
+        binding.reviewsRecycler.isVisible = !isEmpty
     }
 
     private fun addReviewToList(id: String = "placeholder", username: String = "placeholder", text: String, rating: Float) {

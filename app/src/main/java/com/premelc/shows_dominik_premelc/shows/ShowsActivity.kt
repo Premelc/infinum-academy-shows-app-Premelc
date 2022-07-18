@@ -46,10 +46,10 @@ class ShowsActivity : AppCompatActivity() {
         }
     }
 
-    private fun togggleShowsRecyclerFullOrEmpty(state: Boolean) {
-        binding.showsRecycler.isVisible = state
-        binding.emptyStateElipse.isVisible = !state
-        binding.emptyStateIcon.isVisible = !state
-        binding.emptyState.isVisible = !state
+    private fun togggleShowsRecyclerFullOrEmpty(isEmpty: Boolean) {
+        binding.showsRecycler.isVisible = isEmpty
+        binding.emptyStateElipse.isVisible = !isEmpty
+        binding.emptyStateIcon.isVisible = !isEmpty
+        binding.emptyState.isVisible = !isEmpty
     }
 }
