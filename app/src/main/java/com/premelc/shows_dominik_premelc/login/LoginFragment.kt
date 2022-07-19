@@ -7,9 +7,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import androidx.navigation.fragment.findNavController
+import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.FragmentLoginBinding
 import com.premelc.shows_dominik_premelc.login.loginFunctions.*
+import com.premelc.shows_dominik_premelc.shows.ShowsFragment
 
 class LoginFragment : Fragment() {
 
@@ -40,6 +44,14 @@ class LoginFragment : Fragment() {
     private fun setupLoginButton(loginButton: View) {
         loginButton.setOnClickListener {
             val user = binding.emailInput.text.toString().substringBefore('@')
+            /*var arguments = Bundle()
+            arguments.putString("username" , user)
+            var showsFragment = ShowsFragment()
+            showsFragment.arguments=arguments
+            activity?.supportFragmentManager?.commit {
+                setReorderingAllowed(true)
+                replace(R.id.nav_host_fragment,showsFragment)
+            }*/
             val directions = LoginFragmentDirections.actionLoginFragmentToShowsFragment(user)
             findNavController().navigate(directions)
         }

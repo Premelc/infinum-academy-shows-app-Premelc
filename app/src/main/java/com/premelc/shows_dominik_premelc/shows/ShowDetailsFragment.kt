@@ -8,6 +8,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -70,9 +74,22 @@ class ShowDetailsFragment : Fragment() {
 
     private fun initBackButton() {
         binding.toolbar.setNavigationIcon(R.drawable.arrow)
+        /*
+        var showsFragment = ShowsFragment()
+        var arguments = Bundle()
+        arguments.putString("username" , args.username)
+        showsFragment.arguments = arguments
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
+            activity?.supportFragmentManager?.commit {
+                setReorderingAllowed(true)
+                replace(R.id.main_container,showsFragment)
+            }
+        }*/
+        binding.toolbar.setNavigationOnClickListener {
+            val directions = ShowDetailsFragmentDirections.actionShowDetailsFragmentToShowsFragment(args.username)
+            findNavController().navigate(directions)
         }
+
     }
 
     private fun initReviewDialogButton(username: String) {
