@@ -1,6 +1,5 @@
 package com.premelc.shows_dominik_premelc.shows
 
-import androidx.navigation.fragment.navArgs
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +7,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -44,7 +40,7 @@ class ShowDetailsFragment : Fragment() {
     private fun initializeFragment() {
         val id = args.id
         for (item in ListOfShows().shows) {
-            if (item.id == id) show = item;
+            if (item.id == id) show = item
         }
         val username = args.username
         initBackButton()

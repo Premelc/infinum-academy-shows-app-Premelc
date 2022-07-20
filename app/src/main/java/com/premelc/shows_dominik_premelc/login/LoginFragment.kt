@@ -7,13 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import androidx.navigation.fragment.findNavController
-import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.FragmentLoginBinding
-import com.premelc.shows_dominik_premelc.login.loginFunctions.*
-import com.premelc.shows_dominik_premelc.shows.ShowsFragment
+import com.premelc.shows_dominik_premelc.login.loginFunctions.validateEmail
+import com.premelc.shows_dominik_premelc.login.loginFunctions.validateLoginData
+import com.premelc.shows_dominik_premelc.login.loginFunctions.validatePassword
 
 class LoginFragment : Fragment() {
 
