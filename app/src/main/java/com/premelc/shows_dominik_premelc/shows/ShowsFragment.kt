@@ -6,26 +6,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowsBinding
-import com.premelc.shows_dominik_premelc.login.LoginFragment
 import com.premelc.shows_dominik_premelc.model.Show
 
 class ShowsFragment : Fragment() {
 
     private var _binding: FragmentShowsBinding? = null
-    private  val binding get() = _binding!!
+    private val binding get() = _binding!!
     private val args by navArgs<ShowsFragmentArgs>()
 
     private lateinit var adapter: ShowsAdapter
     private lateinit var shows: List<Show>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentShowsBinding.inflate(inflater,container,false)
+        _binding = FragmentShowsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -34,28 +31,17 @@ class ShowsFragment : Fragment() {
         initializeFragment()
     }
 
-    private fun initializeFragment(){
+    private fun initializeFragment() {
         shows = ListOfShows().shows
         val username = args.username
         initRecyclerToggleButton()
-        initLogoutButton()
         initShowsRecycler(username)
+        initLogout()
     }
 
     private fun initShowsRecycler(username: String?) {
         val clickHandler: (id: String, username: String) -> Unit = { id: String, username: String ->
-            /*
-            var arguments = Bundle()
-            arguments.putString("id" , id)
-            arguments.putString("username",username)
-            val showDetailsFragment = ShowDetailsFragment()
-            showDetailsFragment.arguments = arguments
-            activity?.supportFragmentManager?.commit {
-                setReorderingAllowed(true)
-                replace(R.id.main_container , showDetailsFragment)
-                addToBackStack("Shows Fragment")
-            }*/
-            val directions = ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(id , username)
+            val directions = ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(id, username)
             findNavController().navigate(directions)
         }
         adapter = ShowsAdapter(emptyList(), username.toString(), clickHandler)
@@ -71,18 +57,6 @@ class ShowsFragment : Fragment() {
         }
     }
 
-    private fun initLogoutButton(){
-        binding.logoutButton.setOnClickListener{
-            /*activity?.supportFragmentManager?.commit {
-                var loginFragment = LoginFragment()
-                setReorderingAllowed(true)
-                replace(R.id.nav_host_fragment , loginFragment)
-            }*/
-            val directions = ShowsFragmentDirections.actionShowsFragmentToLoginFragment()
-            findNavController().navigate(directions)
-        }
-    }
-
     private fun setShowsRecyclerFullOrEmpty(isEmpty: Boolean) {
         binding.showsRecycler.isVisible = isEmpty
         binding.emptyStateElipse.isVisible = !isEmpty
@@ -94,4 +68,12 @@ class ShowsFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+   private fun initLogout(){
+       binding.logout.setOnClickListener{
+           val directions = ShowsFragmentDirections.actionShowsFragmentToLoginFragment()
+           findNavController().navigate(directions)
+       }
+   }
+
 }

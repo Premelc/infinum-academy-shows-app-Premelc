@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/defaultPurple"
-    tools:context=".login.LoginActivity">
+    android:background="@color/defaultPurple">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -160,8 +159,8 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
-            style="@style/MaterialButtonStyle"
             android:id="@+id/loginButton"
+            style="@style/MaterialButtonStyle"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginStart="24dp"

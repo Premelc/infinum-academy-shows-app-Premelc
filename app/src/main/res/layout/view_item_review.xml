@@ -18,10 +18,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="center"
+            android:contentDescription="@string/profile_picture"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@mipmap/pfp"
-            android:contentDescription="@string/profile_picture"/>
+            tools:src="@mipmap/pfp"/>
 
         <TextView
             android:id="@+id/username"
@@ -55,10 +55,10 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="12dp"
             android:src="@drawable/star"
+            android:contentDescription="@string/star"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/gradeValue"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/star"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/reviewMsg"

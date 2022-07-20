@@ -41,7 +41,7 @@ class ShowDetailsFragment : Fragment() {
         initializeFragment()
     }
 
-    private fun initializeFragment(){
+    private fun initializeFragment() {
         val id = args.id
         for (item in ListOfShows().shows) {
             if (item.id == id) show = item;
