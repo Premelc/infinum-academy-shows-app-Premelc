@@ -1,7 +1,6 @@
 package com.premelc.shows_dominik_premelc.shows
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.premelc.shows_dominik_premelc.databinding.ViewShowItemBinding
@@ -9,12 +8,11 @@ import com.premelc.shows_dominik_premelc.model.Show
 
 class ShowsAdapter(
     private var items: List<Show>,
-    private val username: String = "MISSING_USERNAME",
-    private val handleClick: (View, String, String) -> Unit
+    private val handleClick: (id: String) -> Unit
 ) : RecyclerView.Adapter<ShowsAdapter.ShowViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
-        val binding = ViewShowItemBinding.inflate(LayoutInflater.from(parent.context))
+        val binding = ViewShowItemBinding.inflate(LayoutInflater.from(parent.context),parent, false)
         return ShowViewHolder(binding)
     }
 
@@ -24,18 +22,13 @@ class ShowsAdapter(
         holder.bind(items[position])
     }
 
-    fun addAllShows(shows: List<Show>) {
-        items = shows
-        notifyDataSetChanged()
-    }
-
     inner class ShowViewHolder(private val binding: ViewShowItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Show) {
             binding.showName.text = item.name
             binding.showDescription.text = item.description
             binding.showImage.setImageResource(item.imageResourceId)
-            binding.cardContainer.setOnClickListener { handleClick(it, item.id, username) }
+            binding.cardContainer.setOnClickListener { handleClick(item.id) }
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.premelc.shows_dominik_premelc.shows
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +11,7 @@ class ReviewsAdapter(
 ) : RecyclerView.Adapter<ReviewsAdapter.ReviewViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
-        val binding = ViewItemReviewBinding.inflate(LayoutInflater.from(parent.context))
+        val binding = ViewItemReviewBinding.inflate(LayoutInflater.from(parent.context),parent, false)
         return ReviewViewHolder(binding)
     }
 

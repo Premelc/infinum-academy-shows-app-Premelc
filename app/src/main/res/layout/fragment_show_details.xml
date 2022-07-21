@@ -5,32 +5,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".shows.ShowDetailsActivity">
+    >
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:minHeight="?attr/actionBarSize"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/scrollview"
-            android:layout_margin="24dp">
-        </com.google.android.material.appbar.MaterialToolbar>
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_constraintBottom_toBottomOf="@id/scrollview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+    </com.google.android.material.appbar.MaterialToolbar>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
         android:paddingBottom="80dp"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintBottom_toTopOf="@+id/writeReviewButton">
+        app:layout_constraintBottom_toTopOf="@+id/writeReviewButton"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -70,8 +69,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="350dp"
                         android:scaleType="centerCrop"
-                        tools:src="@mipmap/the_office"
-                        android:contentDescription="@string/profile_picture"/>
+                        android:contentDescription="@string/profile_picture"
+                        tools:src="@mipmap/the_office"/>
 
                 </FrameLayout>
 
@@ -149,7 +148,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/ratings"
                 tools:listitem="@layout/view_item_review"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/writeReviewButton"

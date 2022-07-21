@@ -1,32 +1,47 @@
 package com.premelc.shows_dominik_premelc.login
 
-import android.app.Activity
-import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
-import com.premelc.shows_dominik_premelc.R
-import com.premelc.shows_dominik_premelc.databinding.ActivityLoginBinding
-import com.premelc.shows_dominik_premelc.login.loginFunctions.*
-import com.premelc.shows_dominik_premelc.shows.ShowsActivity
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.premelc.shows_dominik_premelc.databinding.FragmentLoginBinding
+import com.premelc.shows_dominik_premelc.login.loginFunctions.validateEmail
+import com.premelc.shows_dominik_premelc.login.loginFunctions.validateLoginData
+import com.premelc.shows_dominik_premelc.login.loginFunctions.validatePassword
 
-class LoginActivity : AppCompatActivity() {
+class LoginFragment : Fragment() {
+    private var _binding: FragmentLoginBinding? = null
+    private val binding get() = _binding!!
 
-    private lateinit var binding: ActivityLoginBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
         super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initializeUI()
+    }
+
+    private fun initializeUI() {
         val loginButton = binding.loginButton
         val emailTextView = binding.emailInput
         val passwordTextView = binding.passwordInput
-
         setupLoginValidation(emailTextView, passwordTextView, loginButton)
-        setupLoginButton(this, loginButton)
+        setupLoginButton(loginButton)
+    }
+
+    private fun setupLoginButton(loginButton: View) {
+        loginButton.setOnClickListener {
+            val user = binding.emailInput.text.toString().substringBefore('@')
+            val directions = LoginFragmentDirections.actionLoginFragmentToShowsFragment(user)
+            findNavController().navigate(directions)
+        }
     }
 
     private fun checkEmailRegex(emailTextView: TextView, passwordTextView: TextView, loginButton: View) {
@@ -54,17 +69,12 @@ class LoginActivity : AppCompatActivity() {
         passwordTextView: TextView,
         loginButton: View
     ) {
-
         emailTextView.doOnTextChanged { text, start, before, count -> checkEmailRegex(emailTextView, passwordTextView, loginButton) }
         passwordTextView.doOnTextChanged { text, start, before, count -> checkPassword(emailTextView, passwordTextView, loginButton) }
     }
 
-    private fun setupLoginButton(context: Context, loginButton: View) {
-        loginButton.setOnClickListener {
-            val user = binding.emailInput.text.toString().substringBefore('@')
-            val intent = ShowsActivity.buildShowsActivityIntent(context as Activity)
-            intent.putExtra("username", user)
-            context.startActivity(intent)
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

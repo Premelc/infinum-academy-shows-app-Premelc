@@ -1,42 +1,47 @@
 package com.premelc.shows_dominik_premelc.shows
 
-import android.app.Activity
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.premelc.shows_dominik_premelc.R
-import com.premelc.shows_dominik_premelc.databinding.ActivityShowDetailsBinding
+import com.premelc.shows_dominik_premelc.databinding.FragmentShowDetailsBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowDetailsBottomSheetBinding
 import com.premelc.shows_dominik_premelc.model.Review
 import com.premelc.shows_dominik_premelc.model.Show
 import java.text.DecimalFormat
 
-class ShowDetailsActivity : AppCompatActivity() {
-
-    companion object {
-        fun buildShowDetailsActivityIntent(activity: Activity): Intent {
-            return Intent(activity, ShowDetailsActivity::class.java)
-        }
-    }
-
-    private lateinit var binding: ActivityShowDetailsBinding
+class ShowDetailsFragment : Fragment() {
+    private var _binding: FragmentShowDetailsBinding? = null
+    private val binding get() = _binding!!
+    private val args by navArgs<ShowDetailsFragmentArgs>()
     private lateinit var adapter: ReviewsAdapter
     private lateinit var show: Show
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityShowDetailsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        val id = intent.extras?.getString("id")
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentShowDetailsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initializeUI()
+    }
+
+    private fun initializeUI() {
+        val id = args.id
         for (item in ListOfShows().shows) {
-            if (item.id == id) show = item;
+            if (item.id == id) show = item
         }
-        val username = intent.extras?.getString("username").toString()
+        val username = args.username
         initBackButton()
         initDetails()
         initReviewsRecycler(show.reviews)
@@ -46,10 +51,10 @@ class ShowDetailsActivity : AppCompatActivity() {
 
     private fun initReviewsRecycler(reviews: List<Review>) {
         adapter = ReviewsAdapter(emptyList())
-        binding.reviewsRecycler.layoutManager = LinearLayoutManager(this)
+        binding.reviewsRecycler.layoutManager = LinearLayoutManager(context)
         binding.reviewsRecycler.adapter = adapter
         binding.reviewsRecycler.addItemDecoration(
-            DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+            DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
         )
         adapter.addAllReviews(reviews)
         if (adapter.itemCount > 0) togggleReviewsRecyclerFullOrEmpty(false) else togggleReviewsRecyclerFullOrEmpty(true)
@@ -65,31 +70,30 @@ class ShowDetailsActivity : AppCompatActivity() {
     private fun initBackButton() {
         binding.toolbar.setNavigationIcon(R.drawable.arrow)
         binding.toolbar.setNavigationOnClickListener {
-            finish()
+            findNavController().popBackStack()
         }
     }
 
     private fun initReviewDialogButton(username: String) {
         binding.writeReviewButton.setOnClickListener {
-            val dialog = BottomSheetDialog(this)
+            val dialog = BottomSheetDialog(requireContext())
             val bottomSheetBinding: ShowDetailsBottomSheetBinding = ShowDetailsBottomSheetBinding.inflate(layoutInflater)
-            dialog.setContentView(bottomSheetBinding.root)
+            dialog?.setContentView(bottomSheetBinding.root)
             val btnClose = bottomSheetBinding.closeButton
             val btnSubmit = bottomSheetBinding.submitReviewButton
-
             btnClose.setOnClickListener {
-                dialog.dismiss()
+                dialog?.dismiss()
             }
             btnSubmit.setOnClickListener {
                 val comment = bottomSheetBinding.reviewInput.text.toString()
                 val rating = bottomSheetBinding.ratingBar.rating
                 addReviewToList(username, username, comment, rating)
-                Toast.makeText(this, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
                 initRatingDisplay()
-                dialog.dismiss()
+                dialog?.dismiss()
             }
-            dialog.setContentView(bottomSheetBinding.root)
-            dialog.show()
+            dialog?.setContentView(bottomSheetBinding.root)
+            dialog?.show()
         }
     }
 
@@ -115,5 +119,4 @@ class ShowDetailsActivity : AppCompatActivity() {
         binding.ratings.rating = sum / list.count()
         binding.reviewsNumber.text = reviewText
     }
-
 }
