@@ -71,7 +71,7 @@ class ShowDetailsFragment : Fragment() {
         binding.toolbar.setNavigationIcon(R.drawable.arrow)
         binding.toolbar.setNavigationOnClickListener {
             val directions = ShowDetailsFragmentDirections.actionShowDetailsFragmentToShowsFragment(args.username)
-            findNavController().navigate(directions)
+            findNavController().popBackStack()
         }
     }
 
