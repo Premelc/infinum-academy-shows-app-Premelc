@@ -43,10 +43,9 @@ class ShowsFragment : Fragment() {
             val directions = ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(id, username)
             findNavController().navigate(directions)
         }
-        adapter = ShowsAdapter(emptyList(), username.toString(), clickHandler)
+        adapter = ShowsAdapter(shows, username.toString(), clickHandler)
         binding.showsRecycler.layoutManager = LinearLayoutManager(context)
         binding.showsRecycler.adapter = adapter
-        adapter.addAllShows(shows)
         setShowsRecyclerFullOrEmpty(true)
     }
 

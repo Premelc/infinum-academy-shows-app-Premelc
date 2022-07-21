@@ -77,7 +77,7 @@ class ShowDetailsFragment : Fragment() {
 
     private fun initReviewDialogButton(username: String) {
         binding.writeReviewButton.setOnClickListener {
-            val dialog = context?.let { it1 -> BottomSheetDialog(it1) }
+            val dialog = BottomSheetDialog(requireContext())
             val bottomSheetBinding: ShowDetailsBottomSheetBinding = ShowDetailsBottomSheetBinding.inflate(layoutInflater)
             dialog?.setContentView(bottomSheetBinding.root)
             val btnClose = bottomSheetBinding.closeButton
