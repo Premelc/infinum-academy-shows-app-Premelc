@@ -124,6 +124,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/email"
+                android:singleLine="true"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
                 app:boxStrokeColor="@color/white"/>
@@ -152,6 +153,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
+                android:singleLine="true"
                 android:inputType="textPassword"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
