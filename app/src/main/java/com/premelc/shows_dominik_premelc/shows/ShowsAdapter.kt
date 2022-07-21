@@ -8,8 +8,7 @@ import com.premelc.shows_dominik_premelc.model.Show
 
 class ShowsAdapter(
     private var items: List<Show>,
-    private val username: String = "MISSING_USERNAME",
-    private val handleClick: (id: String, username: String) -> Unit
+    private val handleClick: (id: String) -> Unit
 ) : RecyclerView.Adapter<ShowsAdapter.ShowViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
@@ -23,18 +22,13 @@ class ShowsAdapter(
         holder.bind(items[position])
     }
 
-    fun addAllShows(shows: List<Show>) {
-        items = shows
-        notifyDataSetChanged()
-    }
-
     inner class ShowViewHolder(private val binding: ViewShowItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Show) {
             binding.showName.text = item.name
             binding.showDescription.text = item.description
             binding.showImage.setImageResource(item.imageResourceId)
-            binding.cardContainer.setOnClickListener { handleClick(item.id, username) }
+            binding.cardContainer.setOnClickListener { handleClick(item.id) }
         }
     }
 }

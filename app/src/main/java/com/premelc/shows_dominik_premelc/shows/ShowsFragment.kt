@@ -32,18 +32,17 @@ class ShowsFragment : Fragment() {
 
     private fun initializeUI() {
         shows = ListOfShows().shows
-        val username = args.username
         initRecyclerToggleButton()
-        initShowsRecycler(username)
+        initShowsRecycler()
         initLogout()
     }
 
-    private fun initShowsRecycler(username: String?) {
-        val clickHandler: (id: String, username: String) -> Unit = { id: String, username: String ->
-            val directions = ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(id, username)
+    private fun initShowsRecycler() {
+        val clickHandler: (id: String) -> Unit = { id: String ->
+            val directions = ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(id, args.username)
             findNavController().navigate(directions)
         }
-        adapter = ShowsAdapter(shows, username.toString(), clickHandler)
+        adapter = ShowsAdapter(shows, clickHandler)
         binding.showsRecycler.layoutManager = LinearLayoutManager(context)
         binding.showsRecycler.adapter = adapter
         setShowsRecyclerFullOrEmpty(true)
