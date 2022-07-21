@@ -28,7 +28,6 @@ class ListOfShows(
             R.mipmap.pfp
         )
     ),
-
     val shows: List<Show> = listOf(
         Show(
             "the_office",

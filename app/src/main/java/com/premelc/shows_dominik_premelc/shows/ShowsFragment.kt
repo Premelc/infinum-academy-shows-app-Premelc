@@ -17,7 +17,6 @@ class ShowsFragment : Fragment() {
     private var _binding: FragmentShowsBinding? = null
     private val binding get() = _binding!!
     private val args by navArgs<ShowsFragmentArgs>()
-
     private lateinit var adapter: ShowsAdapter
     private lateinit var shows: List<Show>
 
@@ -28,10 +27,10 @@ class ShowsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initializeFragment()
+        initializeUI()
     }
 
-    private fun initializeFragment() {
+    private fun initializeUI() {
         shows = ListOfShows().shows
         val username = args.username
         initRecyclerToggleButton()
@@ -69,11 +68,10 @@ class ShowsFragment : Fragment() {
         _binding = null
     }
 
-   private fun initLogout(){
-       binding.logout.setOnClickListener{
-           val directions = ShowsFragmentDirections.actionShowsFragmentToLoginFragment()
-           findNavController().navigate(directions)
-       }
-   }
-
+    private fun initLogout() {
+        binding.logout.setOnClickListener {
+            val directions = ShowsFragmentDirections.actionShowsFragmentToLoginFragment()
+            findNavController().navigate(directions)
+        }
+    }
 }

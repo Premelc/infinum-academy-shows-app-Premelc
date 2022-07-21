@@ -20,7 +20,6 @@ import com.premelc.shows_dominik_premelc.model.Show
 import java.text.DecimalFormat
 
 class ShowDetailsFragment : Fragment() {
-
     private var _binding: FragmentShowDetailsBinding? = null
     private val binding get() = _binding!!
     private val args by navArgs<ShowDetailsFragmentArgs>()
@@ -34,10 +33,10 @@ class ShowDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initializeFragment()
+        initializeUI()
     }
 
-    private fun initializeFragment() {
+    private fun initializeUI() {
         val id = args.id
         for (item in ListOfShows().shows) {
             if (item.id == id) show = item
@@ -70,22 +69,10 @@ class ShowDetailsFragment : Fragment() {
 
     private fun initBackButton() {
         binding.toolbar.setNavigationIcon(R.drawable.arrow)
-        /*
-        var showsFragment = ShowsFragment()
-        var arguments = Bundle()
-        arguments.putString("username" , args.username)
-        showsFragment.arguments = arguments
-        binding.toolbar.setNavigationOnClickListener {
-            activity?.supportFragmentManager?.commit {
-                setReorderingAllowed(true)
-                replace(R.id.main_container,showsFragment)
-            }
-        }*/
         binding.toolbar.setNavigationOnClickListener {
             val directions = ShowDetailsFragmentDirections.actionShowDetailsFragmentToShowsFragment(args.username)
             findNavController().navigate(directions)
         }
-
     }
 
     private fun initReviewDialogButton(username: String) {
@@ -95,7 +82,6 @@ class ShowDetailsFragment : Fragment() {
             dialog?.setContentView(bottomSheetBinding.root)
             val btnClose = bottomSheetBinding.closeButton
             val btnSubmit = bottomSheetBinding.submitReviewButton
-
             btnClose.setOnClickListener {
                 dialog?.dismiss()
             }
@@ -134,5 +120,4 @@ class ShowDetailsFragment : Fragment() {
         binding.ratings.rating = sum / list.count()
         binding.reviewsNumber.text = reviewText
     }
-
 }

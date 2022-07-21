@@ -14,7 +14,6 @@ import com.premelc.shows_dominik_premelc.login.loginFunctions.validateLoginData
 import com.premelc.shows_dominik_premelc.login.loginFunctions.validatePassword
 
 class LoginFragment : Fragment() {
-
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
@@ -26,15 +25,13 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        initializeFragment()
+        initializeUI()
     }
 
-    private fun initializeFragment() {
+    private fun initializeUI() {
         val loginButton = binding.loginButton
         val emailTextView = binding.emailInput
         val passwordTextView = binding.passwordInput
-
         setupLoginValidation(emailTextView, passwordTextView, loginButton)
         setupLoginButton(loginButton)
     }
@@ -42,14 +39,6 @@ class LoginFragment : Fragment() {
     private fun setupLoginButton(loginButton: View) {
         loginButton.setOnClickListener {
             val user = binding.emailInput.text.toString().substringBefore('@')
-            /*var arguments = Bundle()
-            arguments.putString("username" , user)
-            var showsFragment = ShowsFragment()
-            showsFragment.arguments=arguments
-            activity?.supportFragmentManager?.commit {
-                setReorderingAllowed(true)
-                replace(R.id.nav_host_fragment,showsFragment)
-            }*/
             val directions = LoginFragmentDirections.actionLoginFragmentToShowsFragment(user)
             findNavController().navigate(directions)
         }
@@ -80,7 +69,6 @@ class LoginFragment : Fragment() {
         passwordTextView: TextView,
         loginButton: View
     ) {
-
         emailTextView.doOnTextChanged { text, start, before, count -> checkEmailRegex(emailTextView, passwordTextView, loginButton) }
         passwordTextView.doOnTextChanged { text, start, before, count -> checkPassword(emailTextView, passwordTextView, loginButton) }
     }
