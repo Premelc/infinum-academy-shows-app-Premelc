@@ -8,9 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowsBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowsBottomSheetBinding
@@ -22,12 +24,12 @@ class ShowsFragment : Fragment() {
     private val binding get() = _binding!!
     private val args by navArgs<ShowsFragmentArgs>()
     private lateinit var adapter: ShowsAdapter
-    private lateinit var shows: List<Show>
     private lateinit var sharedPreferences: SharedPreferences
+    private var showsList: List<Show> = emptyList()
+    private val viewModel by viewModels<ShowsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         sharedPreferences = requireContext().getSharedPreferences("SHOWS", Context.MODE_PRIVATE)
     }
 
@@ -38,11 +40,13 @@ class ShowsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.shows.observe(viewLifecycleOwner) { shows ->
+            showsList = shows
+        }
         initializeUI()
     }
 
     private fun initializeUI() {
-        shows = ListOfShows().shows
         initShowsRecycler()
         initProfileButton()
     }
@@ -52,9 +56,10 @@ class ShowsFragment : Fragment() {
             val directions = ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(id, args.username)
             findNavController().navigate(directions)
         }
-        adapter = ShowsAdapter(shows, clickHandler)
+        showsList = viewModel.fetchShows()
+        this.adapter = ShowsAdapter(showsList, clickHandler)
         binding.showsRecycler.layoutManager = LinearLayoutManager(context)
-        binding.showsRecycler.adapter = adapter
+        binding.showsRecycler.adapter = this.adapter
         setShowsRecyclerFullOrEmpty(true)
     }
 

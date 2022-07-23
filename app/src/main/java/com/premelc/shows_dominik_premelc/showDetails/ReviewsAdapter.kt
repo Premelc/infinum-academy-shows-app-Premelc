@@ -1,4 +1,4 @@
-package com.premelc.shows_dominik_premelc.shows
+package com.premelc.shows_dominik_premelc.showDetails
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

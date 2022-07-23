@@ -7,6 +7,6 @@ data class Show(
     val id: String,
     val name: String,
     val description: String,
-    val reviews: List<Review>,
+    var reviews: List<Review>,
     @DrawableRes val imageResourceId: Int = R.mipmap.pfp
 )
