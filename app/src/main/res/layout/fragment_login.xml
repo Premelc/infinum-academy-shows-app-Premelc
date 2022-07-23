@@ -160,6 +160,18 @@
                 app:boxStrokeColor="@color/white"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/rememberMeCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="@string/remember_me"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textField2"
+            android:buttonTint="@color/white"
+            />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/loginButton"
             style="@style/MaterialButtonStyle"

@@ -25,4 +25,6 @@
     <string name="close_button">close button</string>
     <string name="star">star</string>
     <string name="show_image">show image</string>
+    <string name="remember_me">Remember me</string>
+    <string name="change_profile_photo">Change profile photo</string>
 </resources>
