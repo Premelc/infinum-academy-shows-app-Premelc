@@ -6,18 +6,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clipToPadding="false"
-    android:padding="8dp">
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="24dp">
+        android:layout_margin="24dp"
+        >
 
         <ImageView
             android:id="@+id/profilePic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="center"
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:layout_marginTop="40dp"
             android:contentDescription="@string/profile_picture"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,17 +27,17 @@
 
         <TextView
             android:id="@+id/email"
-            android:layout_width="240dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:layout_marginTop="32dp"
             android:textColor="@color/defaultPurple"
-            android:textSize="16sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/profilePic"
-            tools:text="example@example.com"/>
+            tools:text="ruler_of_assignments@hotmail.com"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/changePhotoButton"

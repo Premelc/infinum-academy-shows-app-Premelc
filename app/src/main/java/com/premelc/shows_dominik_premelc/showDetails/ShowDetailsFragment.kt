@@ -19,7 +19,6 @@ import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowDetailsBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowDetailsBottomSheetBinding
 import com.premelc.shows_dominik_premelc.model.Review
-import com.premelc.shows_dominik_premelc.shows.ShowsViewModel
 
 class ShowDetailsFragment : Fragment() {
     private var _binding: FragmentShowDetailsBinding? = null
@@ -29,11 +28,6 @@ class ShowDetailsFragment : Fragment() {
     private lateinit var sharedPreferences: SharedPreferences
     private val viewModel by viewModels<ShowDetailsViewModel>()
     private lateinit var reviewsList: List<Review>
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        viewModel.setId(args.id)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +41,7 @@ class ShowDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.setId(args.id)
         viewModel.show.observe(viewLifecycleOwner) { show ->
             binding.showTitle.text = show.name
             binding.showDescription.text = show.description

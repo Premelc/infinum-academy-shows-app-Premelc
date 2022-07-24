@@ -14,6 +14,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowsBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowsBottomSheetBinding
 import com.premelc.shows_dominik_premelc.model.Show
@@ -77,6 +78,8 @@ class ShowsFragment : Fragment() {
             dialog.setContentView(bottomSheetBinding.root)
             val btnChangePhoto = bottomSheetBinding.changePhotoButton
             val btnLogout = bottomSheetBinding.logoutButton
+            bottomSheetBinding.profilePic.setImageResource(R.mipmap.pfp)
+            bottomSheetBinding.email.text = sharedPreferences.getString("EMAIL" , "example@example.com")
             btnLogout.setOnClickListener {
                 sharedPreferences.edit().clear().commit()
                 val directions = ShowsFragmentDirections.actionShowsFragmentToLoginFragment()
