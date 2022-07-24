@@ -39,7 +39,8 @@ class ReviewsAdapter(
                     .load(ShowsFragment().getFileUri(getImageFile(context, item.username), context))
                     .override(52, 52).error(
                         R.mipmap.pfp
-                    ).into(profilePic)
+                    ).skipMemoryCache(true)
+                    .into(profilePic)
                 else profilePic.setImageResource(item.profilePic)
             }
         }

@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.premelc.shows_dominik_premelc.BuildConfig.APPLICATION_ID
 import com.premelc.shows_dominik_premelc.FileUtil.createImageFile
@@ -45,13 +46,14 @@ class ShowsFragment : Fragment() {
                 Glide.with(requireContext())
                     .load(
                         ShowsFragment().getFileUri(
-                            createImageFile(requireContext(), args.username),
+                            getImageFile(requireContext(), args.username),
                             requireContext()
                         )
                     )
                     .override(30, 30).error(
                         R.mipmap.pfp
-                    ).into(binding.profileButton)
+                    ).skipMemoryCache(true)
+                    .into(binding.profileButton)
             }
         }
 
@@ -112,7 +114,8 @@ class ShowsFragment : Fragment() {
             )
             .override(30, 30).error(
                 R.mipmap.pfp
-            ).into(binding.profileButton)
+            ).skipMemoryCache(true)
+            .into(binding.profileButton)
         binding.profileButton.setOnClickListener {
             val dialog = BottomSheetDialog(requireContext())
             initProfileBottomSheet(dialog)
@@ -132,7 +135,8 @@ class ShowsFragment : Fragment() {
             )
             .override(100, 100).error(
                 R.mipmap.pfp
-            ).into(bottomSheetBinding.profilePic)
+            ).skipMemoryCache(true)
+            .into(bottomSheetBinding.profilePic)
         bottomSheetBinding.email.text = sharedPreferences.getString("EMAIL", "example@example.com")
         bottomSheetBinding.logoutButton.setOnClickListener {
             initLogoutButton(dialog)
