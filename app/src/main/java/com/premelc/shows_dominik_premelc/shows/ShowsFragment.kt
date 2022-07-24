@@ -74,20 +74,20 @@ class ShowsFragment : Fragment() {
         binding.profileButton.setOnClickListener {
             val dialog = BottomSheetDialog(requireContext())
             val bottomSheetBinding: ShowsBottomSheetBinding = ShowsBottomSheetBinding.inflate(layoutInflater)
-            dialog?.setContentView(bottomSheetBinding.root)
+            dialog.setContentView(bottomSheetBinding.root)
             val btnChangePhoto = bottomSheetBinding.changePhotoButton
             val btnLogout = bottomSheetBinding.logoutButton
             btnLogout.setOnClickListener {
                 sharedPreferences.edit().clear().commit()
                 val directions = ShowsFragmentDirections.actionShowsFragmentToLoginFragment()
                 findNavController().navigate(directions)
-                dialog?.dismiss()
+                dialog.dismiss()
             }
             btnChangePhoto.setOnClickListener {
                 TODO()
             }
-            dialog?.setContentView(bottomSheetBinding.root)
-            dialog?.show()
+            dialog.setContentView(bottomSheetBinding.root)
+            dialog.show()
         }
     }
 

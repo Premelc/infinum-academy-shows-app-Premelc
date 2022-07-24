@@ -28,7 +28,12 @@ class ShowDetailsFragment : Fragment() {
     private lateinit var adapter: ReviewsAdapter
     private lateinit var sharedPreferences: SharedPreferences
     private val viewModel by viewModels<ShowDetailsViewModel>()
-    private val showsViewModel by viewModels<ShowsViewModel>()
+    private lateinit var reviewsList: List<Review>
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        viewModel.setId(args.id)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,14 +58,19 @@ class ShowDetailsFragment : Fragment() {
         viewModel.rating.observe(viewLifecycleOwner) { rating ->
             binding.ratings.rating = rating
         }
-        viewModel.setShow(showsViewModel.findShowById(args.id)!!)
+        viewModel.reviews.observe(viewLifecycleOwner) { reviews ->
+            reviewsList = reviews
+            adapter.addAllReviews(reviews)
+            adapter.notifyDataSetChanged()
+        }
+        reviewsList = viewModel.reviews.value!!
         initializeUI()
     }
 
     private fun initializeUI() {
         initBackButton()
         initDetails()
-        initReviewsRecycler(viewModel.show.value!!.reviews)
+        initReviewsRecycler(reviewsList)
         initRatingDisplay()
         initReviewDialogButton(args.username)
     }
@@ -88,7 +98,11 @@ class ShowDetailsFragment : Fragment() {
         binding.showDescription.text = viewModel.show.value!!.description
     }
 
-    private fun initReviewDialogButton(username: String) {
+    private fun initReviewDialogButton(usr: String) {
+        val username = when (usr) {
+            "" -> sharedPreferences.getString("USERNAME", "placeholder")
+            else -> usr
+        }
         binding.writeReviewButton.setOnClickListener {
             val dialog = BottomSheetDialog(requireContext())
             val bottomSheetBinding: ShowDetailsBottomSheetBinding = ShowDetailsBottomSheetBinding.inflate(layoutInflater)
@@ -101,7 +115,8 @@ class ShowDetailsFragment : Fragment() {
             btnSubmit.setOnClickListener {
                 val comment = bottomSheetBinding.reviewInput.text.toString()
                 val rating = bottomSheetBinding.ratingBar.rating
-                addReviewToList(username, username, comment, rating)
+                val review = Review(username!!, username, rating, comment, R.mipmap.pfp)
+                addReviewToList(review)
                 Toast.makeText(context, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
                 initRatingDisplay()
                 dialog.dismiss()
@@ -116,12 +131,12 @@ class ShowDetailsFragment : Fragment() {
         binding.reviewsRecycler.isVisible = !isEmpty
     }
 
-    private fun addReviewToList(id: String = "placeholder", username: String = "placeholder", text: String, rating: Float) {
-        adapter.addItem(Review(id, username, rating, text, R.mipmap.pfp))
-        adapter.notifyDataSetChanged()
+    private fun addReviewToList(review: Review) {
+        viewModel.addReview(review)
+        adapter.notifyItemInserted(viewModel.reviews.value!!.size)
     }
 
     private fun initRatingDisplay() {
-        viewModel.initRatingDisplay(adapter.getAllReviews(), binding.ratings, binding.reviewsNumber)
+        viewModel.initRatingDisplay()
     }
 }

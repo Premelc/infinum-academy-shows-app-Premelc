@@ -7,7 +7,7 @@ import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.model.Review
 import com.premelc.shows_dominik_premelc.model.Show
 
-class ShowsViewModel: ViewModel() {
+class ShowsViewModel : ViewModel() {
     private val reviews: List<Review> = listOf(
         Review(
             "petra_benjak",
@@ -55,21 +55,25 @@ class ShowsViewModel: ViewModel() {
             R.mipmap.krv_nije_voda
         )
     )
+
     private val _shows = MutableLiveData(showsList)
     val shows: LiveData<List<Show>> = _shows
 
-    fun fetchShows(): List<Show>{
+    init {
         _shows.value = showsList
-        return _shows.value!!
     }
 
-   fun findShowById(id: String): Show? {
-       var retval: Show? = null
-       for (item in _shows.value!!) {
-           if (item.id == id) {
-               retval = item
-           }
-       }
-       return retval
-   }
+    fun fetchShows(): List<Show> {
+        return shows.value!!
+    }
+
+    fun findShowById(id: String): Show? {
+        var retval: Show? = null
+        for (item in _shows.value!!) {
+            if (item.id == id) {
+                retval = item
+            }
+        }
+        return retval
+    }
 }
