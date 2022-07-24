@@ -8,18 +8,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.premelc.shows_dominik_premelc.BuildConfig
+import com.premelc.shows_dominik_premelc.FileUtil.createImageFile
+import com.premelc.shows_dominik_premelc.FileUtil.getImageFile
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.CameraGaleryBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowsBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowsBottomSheetBinding
 import com.premelc.shows_dominik_premelc.model.Show
+import java.io.File
 
 class ShowsFragment : Fragment() {
 
@@ -34,12 +40,14 @@ class ShowsFragment : Fragment() {
     private val takeImageResult = registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
         if (isSuccess) {
             latestTmpUri?.let { uri ->
-                binding.profileButton.setImageURI(uri)
+                binding.profileButton.setBackgroundResource(0)
+                binding.profileButton.setImageURI(getFileUri(getImageFile(requireContext(),args.username)))
             }
         }
     }
 
     private val selectImageFromGalleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        binding.profileButton.setBackgroundResource(0)
         uri?.let { binding.profileButton.setImageURI(uri) }
     }
 
@@ -88,6 +96,11 @@ class ShowsFragment : Fragment() {
     }
 
     private fun initProfileButton() {
+        if(getImageFile(requireContext(),args.username) != null){
+            println("username:" + args.username)
+            binding.profileButton.setBackgroundResource(0)
+            binding.profileButton.setImageURI(getFileUri(getImageFile(requireContext(),args.username)))
+        }
         binding.profileButton.setOnClickListener {
             val dialog = BottomSheetDialog(requireContext())
             val bottomSheetBinding: ShowsBottomSheetBinding = ShowsBottomSheetBinding.inflate(layoutInflater)
@@ -95,9 +108,13 @@ class ShowsFragment : Fragment() {
             dialog.setContentView(bottomSheetBinding.root)
             val btnChangePhoto = bottomSheetBinding.changePhotoButton
             val btnLogout = bottomSheetBinding.logoutButton
-            bottomSheetBinding.profilePic.setImageResource(R.mipmap.pfp)
+            if(getImageFile(requireContext(),args.username) != null){
+                bottomSheetBinding.profilePic.setBackgroundResource(0)
+                bottomSheetBinding.profilePic.setImageURI(getFileUri(getImageFile(requireContext(),args.username)))
+            }
             bottomSheetBinding.email.text = sharedPreferences.getString("EMAIL", "example@example.com")
             btnLogout.setOnClickListener {
+                //getImageFile(requireContext(),args.username)?.delete()
                 sharedPreferences.edit().clear().commit()
                 val directions = ShowsFragmentDirections.actionShowsFragmentToLoginFragment()
                 findNavController().navigate(directions)
@@ -105,10 +122,32 @@ class ShowsFragment : Fragment() {
             }
             btnChangePhoto.setOnClickListener {
                 dialog.setContentView(bottomSheetBinding2.root)
+                bottomSheetBinding2.cameraButton.setOnClickListener{
+                    takeImage()
+                }
+                bottomSheetBinding2.galleryButton.setOnClickListener(){
+                    selectImageFromGallery()
+                }
             }
             dialog.setContentView(bottomSheetBinding.root)
             dialog.show()
         }
+    }
+
+    private fun takeImage(){
+        lifecycleScope.launchWhenStarted {
+            getFileUri(createImageFile(requireContext() , args.username)).let { uri ->
+                sharedPreferences.edit().putString("PFP_URI" , uri.toString())
+                latestTmpUri = uri
+                takeImageResult.launch(uri)
+            }
+        }
+    }
+
+    private fun selectImageFromGallery() = selectImageFromGalleryResult.launch("image/*")
+
+    private fun getFileUri(file: File?): Uri {
+        return FileProvider.getUriForFile(requireContext(), "${BuildConfig.APPLICATION_ID}.provider", file!!)
     }
 
     override fun onDestroyView() {

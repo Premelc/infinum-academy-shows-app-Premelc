@@ -98,11 +98,7 @@ class ShowDetailsFragment : Fragment() {
         binding.showDescription.text = viewModel.show.value!!.description
     }
 
-    private fun initReviewDialogButton(usr: String) {
-        val username = when (usr) {
-            "" -> sharedPreferences.getString("USERNAME", "placeholder")
-            else -> usr
-        }
+    private fun initReviewDialogButton(username: String) {
         binding.writeReviewButton.setOnClickListener {
             val dialog = BottomSheetDialog(requireContext())
             val bottomSheetBinding: ShowDetailsBottomSheetBinding = ShowDetailsBottomSheetBinding.inflate(layoutInflater)
@@ -115,7 +111,7 @@ class ShowDetailsFragment : Fragment() {
             btnSubmit.setOnClickListener {
                 val comment = bottomSheetBinding.reviewInput.text.toString()
                 val rating = bottomSheetBinding.ratingBar.rating
-                val review = Review(username!!, username, rating, comment, R.mipmap.pfp)
+                val review = Review(username, username, rating, comment, R.mipmap.pfp)
                 addReviewToList(review)
                 Toast.makeText(context, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
                 initRatingDisplay()

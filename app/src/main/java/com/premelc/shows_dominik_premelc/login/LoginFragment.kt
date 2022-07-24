@@ -22,13 +22,13 @@ class LoginFragment : Fragment() {
         super.onCreate(savedInstanceState)
         sharedPreferences = requireContext().getSharedPreferences("SHOWS", Context.MODE_PRIVATE)
         if (sharedPreferences.getBoolean("REMEMBER_ME", false)) {
-            val user = sharedPreferences.getString("USERNAME", "placeholder").toString()
-            val directions = LoginFragmentDirections.actionLoginFragmentToShowsFragment(user)
+            val user = sharedPreferences.getString("EMAIL", "placeholder")?.substringBefore('@')
+            val directions = LoginFragmentDirections.actionLoginFragmentToShowsFragment(user!!)
             findNavController().navigate(directions)
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         super.onCreate(savedInstanceState)
         return binding.root
@@ -52,14 +52,12 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupLoginButton(loginButton: View) {
-        val user = binding.emailInput.text.toString().substringBefore('@')
         loginButton.setOnClickListener {
             sharedPreferences.edit {
                 putBoolean("REMEMBER_ME", binding.rememberMeCheckbox.isChecked)
                 putString("EMAIL", binding.emailInput.text.toString())
-                putString("USERNAME", user)
             }
-            val directions = LoginFragmentDirections.actionLoginFragmentToShowsFragment(user)
+            val directions = LoginFragmentDirections.actionLoginFragmentToShowsFragment(binding.emailInput.text.toString().substringBefore('@'))
             findNavController().navigate(directions)
         }
     }

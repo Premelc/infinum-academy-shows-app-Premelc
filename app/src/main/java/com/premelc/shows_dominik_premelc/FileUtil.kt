@@ -12,7 +12,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-private const val AVATAR_FILENAME = "avatar.jpg"
 private const val COMPRESSED_IMAGE_QUALITY_PERCENTAGE = 15
 
 /**
@@ -25,10 +24,10 @@ private const val COMPRESSED_IMAGE_QUALITY_PERCENTAGE = 15
  */
 object FileUtil {
 
-    fun getImageFile(context: Context?): File? {
+    fun getImageFile(context: Context? , username:String): File? {
         if (context == null) return null
 
-        val file = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), AVATAR_FILENAME)
+        val file = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), username+"_avatar.jpg" )
         if (file.exists().not()) {
             Log.e("FileUtil", "Image file does not exist.")
             return null
@@ -67,12 +66,11 @@ object FileUtil {
         }
     }
 
-    fun createImageFile(context: Context): File? {
+    fun createImageFile(context: Context , username:String): File? {
         try {
-            val file = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), AVATAR_FILENAME)
+            val file = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), username+"_avatar.jpg")
             if (file.exists().not() && file.createNewFile().not()) {
                 Log.e("FileUtil", "Failed to create image file.")
-
                 return null
             }
             return file

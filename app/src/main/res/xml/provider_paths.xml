@@ -5,5 +5,9 @@
         path="."/>
     <files-path
         name="images"
-        path="."/>
+        path="/"/>
+    <external-files-path
+        name="my_images"
+        path="/"
+        />
 </paths>
