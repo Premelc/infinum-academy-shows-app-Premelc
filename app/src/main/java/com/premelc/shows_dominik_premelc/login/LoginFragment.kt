@@ -28,7 +28,11 @@ class LoginFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         super.onCreate(savedInstanceState)
         return binding.root
@@ -57,7 +61,9 @@ class LoginFragment : Fragment() {
                 putBoolean("REMEMBER_ME", binding.rememberMeCheckbox.isChecked)
                 putString("EMAIL", binding.emailInput.text.toString())
             }
-            val directions = LoginFragmentDirections.actionLoginFragmentToShowsFragment(binding.emailInput.text.toString().substringBefore('@'))
+            val directions = LoginFragmentDirections.actionLoginFragmentToShowsFragment(
+                binding.emailInput.text.toString().substringBefore('@')
+            )
             findNavController().navigate(directions)
         }
     }

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
@@ -16,8 +17,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.premelc.shows_dominik_premelc.BuildConfig
+import com.premelc.shows_dominik_premelc.BuildConfig.APPLICATION_ID
 import com.premelc.shows_dominik_premelc.FileUtil.createImageFile
 import com.premelc.shows_dominik_premelc.FileUtil.getImageFile
 import com.premelc.shows_dominik_premelc.R
@@ -37,19 +39,26 @@ class ShowsFragment : Fragment() {
     private var showsList: List<Show> = emptyList()
     private val viewModel by viewModels<ShowsViewModel>()
 
-    private val takeImageResult = registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
-        if (isSuccess) {
-            latestTmpUri?.let { uri ->
+    private val takeImageResult =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
+            if (isSuccess) {
                 binding.profileButton.setBackgroundResource(0)
-                binding.profileButton.setImageURI(getFileUri(getImageFile(requireContext(),args.username)))
+                binding.profileButton.setImageURI(
+                    getFileUri(
+                        getImageFile(
+                            requireContext(),
+                            args.username
+                        ), requireContext()
+                    )
+                )
             }
         }
-    }
 
-    private val selectImageFromGalleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        binding.profileButton.setBackgroundResource(0)
-        uri?.let { binding.profileButton.setImageURI(uri) }
-    }
+    private val selectImageFromGalleryResult =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            binding.profileButton.setBackgroundResource(0)
+            uri?.let { binding.profileButton.setImageURI(uri) }
+        }
 
     private var latestTmpUri: Uri? = null
 
@@ -58,7 +67,11 @@ class ShowsFragment : Fragment() {
         sharedPreferences = requireContext().getSharedPreferences("SHOWS", Context.MODE_PRIVATE)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentShowsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -78,7 +91,8 @@ class ShowsFragment : Fragment() {
 
     private fun initShowsRecycler() {
         val clickHandler: (id: String) -> Unit = { id: String ->
-            val directions = ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(id, args.username)
+            val directions =
+                ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(id, args.username)
             findNavController().navigate(directions)
         }
         showsList = viewModel.fetchShows()
@@ -96,58 +110,83 @@ class ShowsFragment : Fragment() {
     }
 
     private fun initProfileButton() {
-        if(getImageFile(requireContext(),args.username) != null){
-            println("username:" + args.username)
-            binding.profileButton.setBackgroundResource(0)
-            binding.profileButton.setImageURI(getFileUri(getImageFile(requireContext(),args.username)))
-        }
+        Glide.with(requireContext())
+            .load(
+                ShowsFragment().getFileUri(
+                    getImageFile(requireContext(), args.username),
+                    requireContext()
+                )
+            )
+            .override(30, 30).error(
+                R.mipmap.pfp
+            ).into(binding.profileButton)
         binding.profileButton.setOnClickListener {
             val dialog = BottomSheetDialog(requireContext())
-            val bottomSheetBinding: ShowsBottomSheetBinding = ShowsBottomSheetBinding.inflate(layoutInflater)
-            val bottomSheetBinding2: CameraGaleryBottomSheetBinding = CameraGaleryBottomSheetBinding.inflate(layoutInflater)
-            dialog.setContentView(bottomSheetBinding.root)
-            val btnChangePhoto = bottomSheetBinding.changePhotoButton
-            val btnLogout = bottomSheetBinding.logoutButton
-            if(getImageFile(requireContext(),args.username) != null){
-                bottomSheetBinding.profilePic.setBackgroundResource(0)
-                bottomSheetBinding.profilePic.setImageURI(getFileUri(getImageFile(requireContext(),args.username)))
-            }
-            bottomSheetBinding.email.text = sharedPreferences.getString("EMAIL", "example@example.com")
-            btnLogout.setOnClickListener {
-                //getImageFile(requireContext(),args.username)?.delete()
-                sharedPreferences.edit().clear().commit()
-                val directions = ShowsFragmentDirections.actionShowsFragmentToLoginFragment()
-                findNavController().navigate(directions)
-                dialog.dismiss()
-            }
-            btnChangePhoto.setOnClickListener {
-                dialog.setContentView(bottomSheetBinding2.root)
-                bottomSheetBinding2.cameraButton.setOnClickListener{
-                    takeImage()
-                }
-                bottomSheetBinding2.galleryButton.setOnClickListener(){
-                    selectImageFromGallery()
-                }
-            }
-            dialog.setContentView(bottomSheetBinding.root)
-            dialog.show()
+            initProfileBottomSheet(dialog)
         }
     }
 
-    private fun takeImage(){
+    private fun initProfileBottomSheet(dialog: BottomSheetDialog) {
+        val bottomSheetBinding: ShowsBottomSheetBinding =
+            ShowsBottomSheetBinding.inflate(layoutInflater)
+        dialog.setContentView(bottomSheetBinding.root)
+        Glide.with(requireContext())
+            .load(
+                ShowsFragment().getFileUri(
+                    getImageFile(requireContext(), args.username),
+                    requireContext()
+                )
+            )
+            .override(100, 100).error(
+                R.mipmap.pfp
+            ).into(bottomSheetBinding.profilePic)
+        bottomSheetBinding.email.text = sharedPreferences.getString("EMAIL", "example@example.com")
+        bottomSheetBinding.logoutButton.setOnClickListener {
+            initLogoutButton(dialog)
+        }
+        bottomSheetBinding.changePhotoButton.setOnClickListener {
+            initChangePhotoButtons(dialog)
+        }
+        dialog.setContentView(bottomSheetBinding.root)
+        dialog.show()
+    }
+
+    private fun initChangePhotoButtons(dialog: BottomSheetDialog) {
+        val bottomSheetBinding2: CameraGaleryBottomSheetBinding =
+            CameraGaleryBottomSheetBinding.inflate(layoutInflater)
+        dialog.setContentView(bottomSheetBinding2.root)
+        bottomSheetBinding2.cameraButton.setOnClickListener {
+            takeImage()
+            dialog.dismiss()
+        }
+        bottomSheetBinding2.galleryButton.setOnClickListener {
+            Toast.makeText(context, R.string.wip, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun initLogoutButton(dialog: BottomSheetDialog) {
+        sharedPreferences.edit().clear().commit()
+        val directions = ShowsFragmentDirections.actionShowsFragmentToLoginFragment()
+        findNavController().navigate(directions)
+        dialog.dismiss()
+    }
+
+    private fun takeImage() {
         lifecycleScope.launchWhenStarted {
-            getFileUri(createImageFile(requireContext() , args.username)).let { uri ->
-                sharedPreferences.edit().putString("PFP_URI" , uri.toString())
+            getFileUri(
+                createImageFile(requireContext(), args.username),
+                requireContext()
+            ).let { uri ->
+                sharedPreferences.edit().putString("PFP_URI", uri.toString())
                 latestTmpUri = uri
                 takeImageResult.launch(uri)
             }
         }
     }
 
-    private fun selectImageFromGallery() = selectImageFromGalleryResult.launch("image/*")
-
-    private fun getFileUri(file: File?): Uri {
-        return FileProvider.getUriForFile(requireContext(), "${BuildConfig.APPLICATION_ID}.provider", file!!)
+    fun getFileUri(file: File?, context: Context): Uri? {
+        if (file == null) return null
+        return FileProvider.getUriForFile(context, "${APPLICATION_ID}.provider", file)
     }
 
     override fun onDestroyView() {

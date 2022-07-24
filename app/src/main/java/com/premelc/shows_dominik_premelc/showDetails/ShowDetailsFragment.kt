@@ -39,7 +39,11 @@ class ShowDetailsFragment : Fragment() {
         sharedPreferences = requireContext().getSharedPreferences("SHOWS", Context.MODE_PRIVATE)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentShowDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -53,7 +57,11 @@ class ShowDetailsFragment : Fragment() {
             binding.img.setImageResource(show.imageResourceId)
         }
         viewModel.reviewCount.observe(viewLifecycleOwner) { reviewCount ->
-            binding.reviewsNumber.text = String.format(this.getString(R.string.reviewCount), reviewCount, viewModel.reviewAvg.value)
+            binding.reviewsNumber.text = String.format(
+                this.getString(R.string.reviewCount),
+                reviewCount,
+                viewModel.reviewAvg.value
+            )
         }
         viewModel.rating.observe(viewLifecycleOwner) { rating ->
             binding.ratings.rating = rating
@@ -83,13 +91,15 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun initReviewsRecycler(reviews: List<Review>) {
-        adapter = ReviewsAdapter(reviews)
+        adapter = ReviewsAdapter(reviews, requireContext())
         binding.reviewsRecycler.layoutManager = LinearLayoutManager(context)
         binding.reviewsRecycler.adapter = adapter
         binding.reviewsRecycler.addItemDecoration(
             DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
         )
-        if (adapter.itemCount > 0) toggleReviewsRecyclerFullOrEmpty(false) else toggleReviewsRecyclerFullOrEmpty(true)
+        if (adapter.itemCount > 0) toggleReviewsRecyclerFullOrEmpty(false) else toggleReviewsRecyclerFullOrEmpty(
+            true
+        )
     }
 
     private fun initDetails() {
@@ -101,7 +111,8 @@ class ShowDetailsFragment : Fragment() {
     private fun initReviewDialogButton(username: String) {
         binding.writeReviewButton.setOnClickListener {
             val dialog = BottomSheetDialog(requireContext())
-            val bottomSheetBinding: ShowDetailsBottomSheetBinding = ShowDetailsBottomSheetBinding.inflate(layoutInflater)
+            val bottomSheetBinding: ShowDetailsBottomSheetBinding =
+                ShowDetailsBottomSheetBinding.inflate(layoutInflater)
             dialog.setContentView(bottomSheetBinding.root)
             val btnClose = bottomSheetBinding.closeButton
             val btnSubmit = bottomSheetBinding.submitReviewButton

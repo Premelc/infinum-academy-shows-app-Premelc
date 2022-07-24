@@ -1,17 +1,24 @@
 package com.premelc.shows_dominik_premelc.showDetails
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.premelc.shows_dominik_premelc.FileUtil.getImageFile
+import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.ViewItemReviewBinding
 import com.premelc.shows_dominik_premelc.model.Review
+import com.premelc.shows_dominik_premelc.shows.ShowsFragment
 
 class ReviewsAdapter(
-    private var items: List<Review>
+    private var items: List<Review>,
+    private var context: Context
 ) : RecyclerView.Adapter<ReviewsAdapter.ReviewViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
-        val binding = ViewItemReviewBinding.inflate(LayoutInflater.from(parent.context),parent, false)
+        val binding =
+            ViewItemReviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ReviewViewHolder(binding)
     }
 
@@ -28,13 +35,14 @@ class ReviewsAdapter(
                 username.text = item.username
                 reviewMsg.text = item.text
                 gradeValue.text = item.grade.toString()
-                profilePic.setImageResource(item.profilePic)
+                if (getImageFile(context, item.username) != null) Glide.with(context)
+                    .load(ShowsFragment().getFileUri(getImageFile(context, item.username), context))
+                    .override(52, 52).error(
+                        R.mipmap.pfp
+                    ).into(profilePic)
+                else profilePic.setImageResource(item.profilePic)
             }
         }
-    }
-
-    fun getAllReviews(): List<Review> {
-        return items
     }
 
     fun addAllReviews(reviews: List<Review>) {
@@ -42,8 +50,4 @@ class ReviewsAdapter(
         notifyDataSetChanged()
     }
 
-    fun addItem(review: Review) {
-        items = items + review
-        notifyItemInserted(items.lastIndex)
-    }
 }

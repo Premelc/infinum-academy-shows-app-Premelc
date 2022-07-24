@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -18,15 +17,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/profileButton"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+        <androidx.cardview.widget.CardView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_gravity="end"
-            android:scaleType="fitCenter"
             android:layout_marginEnd="24dp"
-            android:background="@mipmap/pfp"
-            />
+            android:backgroundTint="@color/defaultPurple"
+            app:cardCornerRadius="100dp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                app:cardCornerRadius="100dp">
+
+                <ImageView
+                    android:id="@+id/profileButton"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    tools:src="@mipmap/pfp" />
+            </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
     </com.google.android.material.appbar.MaterialToolbar>
 
     <TextView
@@ -35,12 +46,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="36dp"
         android:text="@string/ShowsTitle"
+        android:textColor="@color/black"
         android:textSize="34sp"
         android:textStyle="bold"
-        android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@id/showsRecycler"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"/>
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/showsRecycler"
@@ -52,29 +63,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        tools:listitem="@layout/view_show_item"/>
+        tools:listitem="@layout/view_show_item" />
 
     <ImageView
         android:id="@+id/emptyStateElipse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/elipse"
         android:contentDescription="@string/elipse"
+        android:src="@drawable/elipse"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/emptyStateIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/empty_state_img"
         android:contentDescription="@string/empty_icon"
+        android:src="@drawable/empty_state_img"
         app:layout_constraintBottom_toBottomOf="@id/emptyStateElipse"
         app:layout_constraintEnd_toEndOf="@id/emptyStateElipse"
         app:layout_constraintStart_toStartOf="@id/emptyStateElipse"
-        app:layout_constraintTop_toTopOf="@id/emptyStateElipse"/>
+        app:layout_constraintTop_toTopOf="@id/emptyStateElipse" />
 
     <TextView
         android:id="@+id/emptyState"
@@ -85,6 +96,5 @@
         android:textAlignment="center"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintLeft_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emptyStateElipse"/>
-
+        app:layout_constraintTop_toBottomOf="@id/emptyStateElipse" />
 </androidx.constraintlayout.widget.ConstraintLayout>
