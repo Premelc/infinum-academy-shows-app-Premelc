@@ -42,25 +42,18 @@ class ShowsFragment : Fragment() {
     private val takeImageResult =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
             if (isSuccess) {
-                binding.profileButton.setBackgroundResource(0)
-                binding.profileButton.setImageURI(
-                    getFileUri(
-                        getImageFile(
-                            requireContext(),
-                            args.username
-                        ), requireContext()
+                Glide.with(requireContext())
+                    .load(
+                        ShowsFragment().getFileUri(
+                            createImageFile(requireContext(), args.username),
+                            requireContext()
+                        )
                     )
-                )
+                    .override(30, 30).error(
+                        R.mipmap.pfp
+                    ).into(binding.profileButton)
             }
         }
-
-    private val selectImageFromGalleryResult =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            binding.profileButton.setBackgroundResource(0)
-            uri?.let { binding.profileButton.setImageURI(uri) }
-        }
-
-    private var latestTmpUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -177,8 +170,6 @@ class ShowsFragment : Fragment() {
                 createImageFile(requireContext(), args.username),
                 requireContext()
             ).let { uri ->
-                sharedPreferences.edit().putString("PFP_URI", uri.toString())
-                latestTmpUri = uri
                 takeImageResult.launch(uri)
             }
         }
