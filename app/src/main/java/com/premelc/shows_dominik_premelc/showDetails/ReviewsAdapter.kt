@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.premelc.shows_dominik_premelc.FileUtil.getImageFile
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.ViewItemReviewBinding
@@ -39,7 +40,8 @@ class ReviewsAdapter(
                     .load(ShowsFragment().getFileUri(getImageFile(context, item.username), context))
                     .override(52, 52).error(
                         R.mipmap.pfp
-                    ).skipMemoryCache(true)
+                    )
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(profilePic)
                 else profilePic.setImageResource(item.profilePic)
             }

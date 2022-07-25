@@ -53,6 +53,7 @@ class ShowsFragment : Fragment() {
                     .override(30, 30).error(
                         R.mipmap.pfp
                     ).skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(binding.profileButton)
             }
         }
@@ -114,7 +115,8 @@ class ShowsFragment : Fragment() {
             )
             .override(30, 30).error(
                 R.mipmap.pfp
-            ).skipMemoryCache(true)
+            )
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
             .into(binding.profileButton)
         binding.profileButton.setOnClickListener {
             val dialog = BottomSheetDialog(requireContext())
@@ -135,7 +137,8 @@ class ShowsFragment : Fragment() {
             )
             .override(100, 100).error(
                 R.mipmap.pfp
-            ).skipMemoryCache(true)
+            )
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
             .into(bottomSheetBinding.profilePic)
         bottomSheetBinding.email.text = sharedPreferences.getString("EMAIL", "example@example.com")
         bottomSheetBinding.logoutButton.setOnClickListener {
