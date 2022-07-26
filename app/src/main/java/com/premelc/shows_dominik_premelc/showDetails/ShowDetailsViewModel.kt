@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.fragment.navArgs
+import com.premelc.shows_dominik_premelc.ShowsObject.findShowById
+import com.premelc.shows_dominik_premelc.ShowsObject.showsList
 import com.premelc.shows_dominik_premelc.model.Review
 import com.premelc.shows_dominik_premelc.model.Show
 import com.premelc.shows_dominik_premelc.shows.ShowsViewModel
@@ -28,8 +30,9 @@ class ShowDetailsViewModel() : ViewModel() {
     private var _rating = MutableLiveData<Float>()
     val rating: LiveData<Float> = _rating
 
-    fun setId(id: String) {
-        if (show.value == null) setShow(ShowsViewModel().findShowById(id)!!)
+    fun initDetails(id: String){
+        val show = findShowById(id)
+        if (show != null)setShow(show)
     }
 
     fun setShow(show: Show) {
@@ -52,5 +55,9 @@ class ShowDetailsViewModel() : ViewModel() {
         _reviewAvg.value = avg.toFloat()
         _reviewCount.value = count
         _rating.value = sum / reviews.value!!.count()
+    }
+
+    fun reviewsRecyclerFullOrEmpty():Boolean{
+       return reviewCount.value!! <= 0
     }
 }

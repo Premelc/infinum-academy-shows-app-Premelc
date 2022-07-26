@@ -39,7 +39,7 @@ class ShowsFragment : Fragment() {
     private val args by navArgs<ShowsFragmentArgs>()
     private lateinit var adapter: ShowsAdapter
     private lateinit var sharedPreferences: SharedPreferences
-    private var showsList: List<Show> = emptyList()
+    private var showsList: List<Show> = listOf()
     private val viewModel by viewModels<ShowsViewModel>()
 
     private val takeImageResult =
@@ -78,6 +78,8 @@ class ShowsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.shows.observe(viewLifecycleOwner) { shows ->
             showsList = shows
+            adapter.addAllShows(shows)
+            adapter.notifyDataSetChanged()
         }
         initializeUI()
     }
@@ -93,8 +95,7 @@ class ShowsFragment : Fragment() {
                 ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(id, args.username)
             findNavController().navigate(directions)
         }
-        showsList = viewModel.fetchShows()
-        this.adapter = ShowsAdapter(showsList, clickHandler)
+        adapter = ShowsAdapter(showsList, clickHandler)
         binding.showsRecycler.layoutManager = LinearLayoutManager(context)
         binding.showsRecycler.adapter = this.adapter
         setShowsRecyclerFullOrEmpty(true)

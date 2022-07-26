@@ -28,7 +28,7 @@ class ShowDetailsFragment : Fragment() {
     private lateinit var adapter: ReviewsAdapter
     private lateinit var sharedPreferences: SharedPreferences
     private val viewModel by viewModels<ShowDetailsViewModel>()
-    private lateinit var reviewsList: List<Review>
+    private var reviewsList: List<Review> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +46,6 @@ class ShowDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.setId(args.id)
         viewModel.show.observe(viewLifecycleOwner) { show ->
             binding.showTitle.text = show.name
             binding.showDescription.text = show.description
@@ -58,6 +57,12 @@ class ShowDetailsFragment : Fragment() {
                 reviewCount,
                 viewModel.reviewAvg.value
             )
+            toggleReviewsRecyclerFullOrEmpty(viewModel.reviewsRecyclerFullOrEmpty())
+        }
+        viewModel.show.observe(viewLifecycleOwner){ show ->
+            binding.img.setImageResource(show.imageResourceId)
+            binding.showTitle.text = show.name
+            binding.showDescription.text = show.description
         }
         viewModel.rating.observe(viewLifecycleOwner) { rating ->
             binding.ratings.rating = rating
@@ -67,7 +72,6 @@ class ShowDetailsFragment : Fragment() {
             adapter.addAllReviews(reviews)
             adapter.notifyDataSetChanged()
         }
-        reviewsList = viewModel.reviews.value!!
         initializeUI()
     }
 
@@ -93,15 +97,10 @@ class ShowDetailsFragment : Fragment() {
         binding.reviewsRecycler.addItemDecoration(
             DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
         )
-        if (adapter.itemCount > 0) toggleReviewsRecyclerFullOrEmpty(false) else toggleReviewsRecyclerFullOrEmpty(
-            true
-        )
     }
 
     private fun initDetails() {
-        binding.img.setImageResource(viewModel.show.value!!.imageResourceId)
-        binding.showTitle.text = viewModel.show.value!!.name
-        binding.showDescription.text = viewModel.show.value!!.description
+        viewModel.initDetails(args.id)
     }
 
     private fun initReviewDialogButton(username: String) {

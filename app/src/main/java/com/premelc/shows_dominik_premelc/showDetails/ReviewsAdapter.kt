@@ -35,14 +35,13 @@ class ReviewsAdapter(
                 username.text = item.username
                 reviewMsg.text = item.text
                 gradeValue.text = item.grade.toString()
-                if (getImageFile(binding.root.context, item.username) != null) Glide.with(binding.root.context)
+                Glide.with(binding.root.context)
                     .load(ShowsFragment().getFileUri(getImageFile(binding.root.context, item.username), binding.root.context))
                     .error(
                         R.mipmap.pfp
                     )
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(profilePic)
-                else profilePic.setImageResource(item.profilePic)
             }
         }
     }

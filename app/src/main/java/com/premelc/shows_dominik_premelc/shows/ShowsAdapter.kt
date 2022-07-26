@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.premelc.shows_dominik_premelc.databinding.ViewShowItemBinding
+import com.premelc.shows_dominik_premelc.model.Review
 import com.premelc.shows_dominik_premelc.model.Show
 
 class ShowsAdapter(
@@ -32,4 +33,11 @@ class ShowsAdapter(
             binding.cardContainer.setOnClickListener { handleClick(item.id) }
         }
     }
+
+    fun addAllShows(shows: List<Show>) {
+        items = shows
+        notifyDataSetChanged()
+    }
+
+
 }
