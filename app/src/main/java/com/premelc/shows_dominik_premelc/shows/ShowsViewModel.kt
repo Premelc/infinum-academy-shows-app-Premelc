@@ -1,4 +1,4 @@
-package com.premelc. shows_dominik_premelc.shows
+package com.premelc.shows_dominik_premelc.shows
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,7 +12,7 @@ class ShowsViewModel : ViewModel() {
     val shows: LiveData<List<Show>> = _shows
 
     private val _showsRecyclerFullOrEmpty = MutableLiveData<Boolean>()
-    val showsRecyclerFullOrEmpty:LiveData<Boolean> = _showsRecyclerFullOrEmpty
+    val showsRecyclerFullOrEmpty: LiveData<Boolean> = _showsRecyclerFullOrEmpty
 
     init {
         _shows.value = showsList

@@ -58,7 +58,7 @@ class ShowDetailsFragment : Fragment() {
             )
             toggleReviewsRecyclerFullOrEmpty(viewModel.reviewsRecyclerFullOrEmpty())
         }
-        viewModel.show.observe(viewLifecycleOwner){ show ->
+        viewModel.show.observe(viewLifecycleOwner) { show ->
             binding.img.setImageResource(show.imageResourceId)
             binding.showTitle.text = show.name
             binding.showDescription.text = show.description

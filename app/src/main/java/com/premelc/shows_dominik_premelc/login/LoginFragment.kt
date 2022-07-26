@@ -12,7 +12,6 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment() {
@@ -71,22 +70,22 @@ class LoginFragment : Fragment() {
         }
     }
 
-    fun setupLoginValidation(
+    private fun setupLoginValidation(
         emailTextView: TextView,
         passwordTextView: TextView,
         loginButton: View
     ) {
         emailTextView.doOnTextChanged { text, start, before, count ->
-            var error = viewModel.checkEmailValidity(emailTextView.text.toString())
-            if(error != null)emailTextView.error = getString(error)
+            val error = viewModel.checkEmailValidity(emailTextView.text.toString())
+            if (error != null) emailTextView.error = getString(error)
             loginButton.isEnabled = viewModel.validateLoginData(
                 emailTextView.text.toString(),
                 passwordTextView.text.toString()
             )
         }
         passwordTextView.doOnTextChanged { text, start, before, count ->
-            var error = viewModel.checkPasswordValidity(passwordTextView.text.toString())
-            if(error!= null)passwordTextView.error = getString(error)
+            val error = viewModel.checkPasswordValidity(passwordTextView.text.toString())
+            if (error != null) passwordTextView.error = getString(error)
             loginButton.isEnabled = viewModel.validateLoginData(
                 emailTextView.text.toString(),
                 passwordTextView.text.toString()

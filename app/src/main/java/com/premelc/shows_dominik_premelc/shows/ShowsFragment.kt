@@ -69,7 +69,7 @@ class ShowsFragment : Fragment() {
             adapter.notifyDataSetChanged()
         }
 
-        viewModel.showsRecyclerFullOrEmpty.observe(viewLifecycleOwner){ fullOrEmpty ->
+        viewModel.showsRecyclerFullOrEmpty.observe(viewLifecycleOwner) { fullOrEmpty ->
             setShowsRecyclerFullOrEmpty(fullOrEmpty)
         }
         initializeUI()
@@ -158,7 +158,7 @@ class ShowsFragment : Fragment() {
         return FileProvider.getUriForFile(context, "${APPLICATION_ID}.provider", file)
     }
 
-    fun setProfilePicOnView(view: ImageView){
+    private fun setProfilePicOnView(view: ImageView) {
         Glide.with(requireContext())
             .load(
                 ShowsFragment().getFileUri(

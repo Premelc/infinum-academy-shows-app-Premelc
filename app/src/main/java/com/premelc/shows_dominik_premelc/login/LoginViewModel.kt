@@ -1,8 +1,5 @@
 package com.premelc.shows_dominik_premelc.login
 
-import android.view.View
-import android.widget.TextView
-import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,13 +21,13 @@ class LoginModelView : ViewModel() {
         }
     }
 
-    fun checkEmailValidity(emailtext: String): Int? {
-        return if (!validateEmail(emailtext)) R.string.invalidEmail
+    fun checkEmailValidity(emailText: String): Int? {
+        return if (!validateEmail(emailText)) R.string.invalidEmail
         else null
     }
 
-    fun checkPasswordValidity(passwordText: String): Int?{
-        return if(!validatePassword(passwordText)) R.string.invalidPassword
+    fun checkPasswordValidity(passwordText: String): Int? {
+        return if (!validatePassword(passwordText)) R.string.invalidPassword
         else null
     }
 

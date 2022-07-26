@@ -5,7 +5,7 @@ import com.premelc.shows_dominik_premelc.model.Show
 
 object ShowsObject {
 
-     val reviews: List<Review> = listOf(
+    private val reviews: List<Review> = listOf(
         Review(
             "petra_benjak",
             "Petra Benjak",
@@ -29,7 +29,7 @@ object ShowsObject {
         )
     )
 
-     val showsList: List<Show> = listOf(
+    val showsList: List<Show> = listOf(
         Show(
             "the_office",
             "The Office",

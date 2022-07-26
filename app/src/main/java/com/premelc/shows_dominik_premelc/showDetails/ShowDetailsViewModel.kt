@@ -1,20 +1,14 @@
 package com.premelc.shows_dominik_premelc.showDetails
 
-import android.security.identity.AccessControlProfileId
-import android.widget.RatingBar
-import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.navigation.fragment.navArgs
 import com.premelc.shows_dominik_premelc.ShowsObject.findShowById
-import com.premelc.shows_dominik_premelc.ShowsObject.showsList
 import com.premelc.shows_dominik_premelc.model.Review
 import com.premelc.shows_dominik_premelc.model.Show
-import com.premelc.shows_dominik_premelc.shows.ShowsViewModel
 import java.text.DecimalFormat
 
-class ShowDetailsViewModel() : ViewModel() {
+class ShowDetailsViewModel : ViewModel() {
     private var _show = MutableLiveData<Show>()
     val show: LiveData<Show> = _show
 
@@ -30,12 +24,12 @@ class ShowDetailsViewModel() : ViewModel() {
     private var _rating = MutableLiveData<Float>()
     val rating: LiveData<Float> = _rating
 
-    fun initDetails(id: String){
+    fun initDetails(id: String) {
         val show = findShowById(id)
-        if (show != null)setShow(show)
+        if (show != null) setShow(show)
     }
 
-    fun setShow(show: Show) {
+    private fun setShow(show: Show) {
         _show.value = show
         _reviews.value = show.reviews
     }
@@ -57,7 +51,7 @@ class ShowDetailsViewModel() : ViewModel() {
         _rating.value = sum / reviews.value!!.count()
     }
 
-    fun reviewsRecyclerFullOrEmpty():Boolean{
-       return reviewCount.value!! <= 0
+    fun reviewsRecyclerFullOrEmpty(): Boolean {
+        return reviewCount.value!! <= 0
     }
 }

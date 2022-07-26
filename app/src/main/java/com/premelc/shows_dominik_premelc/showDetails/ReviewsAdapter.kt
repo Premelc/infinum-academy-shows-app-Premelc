@@ -1,6 +1,5 @@
 package com.premelc.shows_dominik_premelc.showDetails
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
