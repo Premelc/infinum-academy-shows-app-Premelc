@@ -19,7 +19,7 @@ const val SHARED_PREFERENCES_EMAIL = "EMAIL"
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by viewModels<LoginModelView>()
+    private val viewModel by viewModels<LoginViewModel>()
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,14 +60,14 @@ class LoginFragment : Fragment() {
     }
 
     private fun initializeUI() {
-        val loginButton = binding.loginButton
         viewModel.initRememberMeCheckboxListener(binding.rememberMeCheckbox)
         setupLoginValidation()
-        setupLoginButton(loginButton)
+        setupLoginButton()
+        setupRegisterButton()
     }
 
-    private fun setupLoginButton(loginButton: View) {
-        loginButton.setOnClickListener {
+    private fun setupLoginButton() {
+        binding.loginButton.setOnClickListener {
             sharedPreferences.edit {
                 putBoolean(SHARED_PREFERENCES_REMEMBER_ME, binding.rememberMeCheckbox.isChecked)
                 putString(SHARED_PREFERENCES_EMAIL, binding.emailInput.text.toString())
@@ -75,6 +75,13 @@ class LoginFragment : Fragment() {
             val directions = LoginFragmentDirections.actionLoginFragmentToShowsFragment(
                 binding.emailInput.text.toString().substringBefore('@')
             )
+            findNavController().navigate(directions)
+        }
+    }
+
+    private fun setupRegisterButton() {
+        binding.registerButton.setOnClickListener {
+            val directions = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
             findNavController().navigate(directions)
         }
     }
