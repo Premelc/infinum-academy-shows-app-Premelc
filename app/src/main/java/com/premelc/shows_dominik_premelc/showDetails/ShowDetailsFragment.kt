@@ -87,7 +87,7 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun initReviewsRecycler(reviews: List<Review>) {
-        adapter = ReviewsAdapter(reviews, requireContext())
+        adapter = ReviewsAdapter(reviews)
         binding.reviewsRecycler.layoutManager = LinearLayoutManager(context)
         binding.reviewsRecycler.adapter = adapter
         binding.reviewsRecycler.addItemDecoration(

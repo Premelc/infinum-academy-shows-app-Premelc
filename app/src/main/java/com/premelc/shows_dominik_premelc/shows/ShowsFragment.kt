@@ -52,7 +52,7 @@ class ShowsFragment : Fragment() {
                             requireContext()
                         )
                     )
-                    .override(30, 30).error(
+                    .error(
                         R.mipmap.pfp
                     ).skipMemoryCache(true)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -115,7 +115,7 @@ class ShowsFragment : Fragment() {
                     requireContext()
                 )
             )
-            .override(30, 30).error(
+            .error(
                 R.mipmap.pfp
             )
             .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -137,7 +137,7 @@ class ShowsFragment : Fragment() {
                     requireContext()
                 )
             )
-            .override(100, 100).error(
+            .error(
                 R.mipmap.pfp
             )
             .diskCacheStrategy(DiskCacheStrategy.NONE)

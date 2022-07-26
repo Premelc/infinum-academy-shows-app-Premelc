@@ -14,7 +14,6 @@ import com.premelc.shows_dominik_premelc.shows.ShowsFragment
 
 class ReviewsAdapter(
     private var items: List<Review>,
-    private var context: Context
 ) : RecyclerView.Adapter<ReviewsAdapter.ReviewViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
@@ -36,9 +35,9 @@ class ReviewsAdapter(
                 username.text = item.username
                 reviewMsg.text = item.text
                 gradeValue.text = item.grade.toString()
-                if (getImageFile(context, item.username) != null) Glide.with(context)
-                    .load(ShowsFragment().getFileUri(getImageFile(context, item.username), context))
-                    .override(52, 52).error(
+                if (getImageFile(binding.root.context, item.username) != null) Glide.with(binding.root.context)
+                    .load(ShowsFragment().getFileUri(getImageFile(binding.root.context, item.username), binding.root.context))
+                    .error(
                         R.mipmap.pfp
                     )
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
