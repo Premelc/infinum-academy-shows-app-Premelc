@@ -27,6 +27,8 @@ import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.CameraGaleryBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowsBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowsBottomSheetBinding
+import com.premelc.shows_dominik_premelc.login.sharedPreferencesEmail
+import com.premelc.shows_dominik_premelc.login.sharedPreferencesFileName
 import com.premelc.shows_dominik_premelc.model.Show
 import java.io.File
 
@@ -60,7 +62,7 @@ class ShowsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedPreferences = requireContext().getSharedPreferences("SHOWS", Context.MODE_PRIVATE)
+        sharedPreferences = requireContext().getSharedPreferences(sharedPreferencesFileName, Context.MODE_PRIVATE)
     }
 
     override fun onCreateView(
@@ -140,7 +142,7 @@ class ShowsFragment : Fragment() {
             )
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .into(bottomSheetBinding.profilePic)
-        bottomSheetBinding.email.text = sharedPreferences.getString("EMAIL", "example@example.com")
+        bottomSheetBinding.email.text = sharedPreferences.getString(sharedPreferencesEmail, "example@example.com")
         bottomSheetBinding.logoutButton.setOnClickListener {
             initLogoutButton(dialog)
         }

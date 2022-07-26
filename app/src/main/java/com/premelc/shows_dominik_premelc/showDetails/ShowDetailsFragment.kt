@@ -3,7 +3,6 @@ package com.premelc.shows_dominik_premelc.showDetails
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,11 +18,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowDetailsBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowDetailsBottomSheetBinding
+import com.premelc.shows_dominik_premelc.login.sharedPreferencesFileName
 import com.premelc.shows_dominik_premelc.model.Review
-import java.io.File
-import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.Date
 
 class ShowDetailsFragment : Fragment() {
     private var _binding: FragmentShowDetailsBinding? = null
@@ -36,7 +32,7 @@ class ShowDetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedPreferences = requireContext().getSharedPreferences("SHOWS", Context.MODE_PRIVATE)
+        sharedPreferences = requireContext().getSharedPreferences(sharedPreferencesFileName, Context.MODE_PRIVATE)
     }
 
     override fun onCreateView(
