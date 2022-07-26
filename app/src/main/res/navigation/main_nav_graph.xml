@@ -21,6 +21,15 @@
             android:name="username"
             app:argType="string" />
         </action>
+        <action android:id="@+id/action_loginFragment_to_registerFragment" app:destination="@id/registerFragment"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.premelc.shows_dominik_premelc.register.RegisterFragment"
+        tools:layout="@layout/fragment_register">
+        <action android:id="@+id/action_registerFragment_to_loginFragment" app:destination="@id/loginFragment"/>
+    </fragment>
+
 <include app:graph="@navigation/shows_nav_graph"/>
 </navigation>

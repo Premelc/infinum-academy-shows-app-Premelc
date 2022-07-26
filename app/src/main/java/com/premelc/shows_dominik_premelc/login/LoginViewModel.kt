@@ -10,7 +10,7 @@ import com.premelc.shows_dominik_premelc.R
 
 const val PASSWORD_MIN_LENGTH = 6
 
-class LoginModelView : ViewModel() {
+class LoginViewModel : ViewModel() {
     private val _isRememberMeChecked = MutableLiveData(false)
     val isRememberMeChecked: LiveData<Boolean> = _isRememberMeChecked
 

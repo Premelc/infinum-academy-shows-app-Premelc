@@ -39,4 +39,8 @@
     <string name="invalidEmail">Invalid email address</string>
     <string name="invalidPassword">Invalid password</string>
     <string name="empty"/>
+    <string name="register">Register</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="passwords_dont_match">Passwords don\'t match</string>
+
 </resources>
