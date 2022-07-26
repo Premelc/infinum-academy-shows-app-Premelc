@@ -6,13 +6,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.content.edit
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.premelc.shows_dominik_premelc.databinding.FragmentLoginBinding
+
+const val SHARED_PREFERENCES_FILE_NAME = "SHOWS"
+const val SHARED_PREFERENCES_REMEMBER_ME = "REMEMBER_ME"
+const val SHARED_PREFERENCES_EMAIL = "EMAIL"
 
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
@@ -22,9 +24,9 @@ class LoginFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedPreferences = requireContext().getSharedPreferences(sharedPreferencesFileName, Context.MODE_PRIVATE)
-        if (sharedPreferences.getBoolean(sharedPreferencesRememberMe, false)) {
-            val user = sharedPreferences.getString(sharedPreferencesEmail, "placeholder").toString().substringBefore('@')
+        sharedPreferences = requireContext().getSharedPreferences(SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
+        if (sharedPreferences.getBoolean(SHARED_PREFERENCES_REMEMBER_ME, false)) {
+            val user = sharedPreferences.getString(SHARED_PREFERENCES_EMAIL, "placeholder").toString().substringBefore('@')
             val directions = LoginFragmentDirections.actionLoginFragmentToShowsFragment(user)
             findNavController().navigate(directions)
         }
@@ -45,23 +47,30 @@ class LoginFragment : Fragment() {
         viewModel.isRememberMeChecked.observe(viewLifecycleOwner) { isRememberMeChecked ->
             binding.rememberMeCheckbox.isChecked = isRememberMeChecked
         }
+        viewModel.emailValidityStringCode.observe(viewLifecycleOwner) { emailValidityStringCode ->
+            if (emailValidityStringCode != null) binding.emailInput.error = getString(emailValidityStringCode)
+        }
+        viewModel.passwordValidityStringCode.observe(viewLifecycleOwner) { passwordValidityStringCode ->
+            if (passwordValidityStringCode != null) binding.passwordInput.error = getString(passwordValidityStringCode)
+        }
+        viewModel.loginButtonIsEnabled.observe(viewLifecycleOwner) { loginButtonIsEnabled ->
+            binding.loginButton.isEnabled = loginButtonIsEnabled
+        }
         initializeUI()
     }
 
     private fun initializeUI() {
         val loginButton = binding.loginButton
-        val emailTextView = binding.emailInput
-        val passwordTextView = binding.passwordInput
         viewModel.initRememberMeCheckboxListener(binding.rememberMeCheckbox)
-        setupLoginValidation(emailTextView, passwordTextView, loginButton)
+        setupLoginValidation()
         setupLoginButton(loginButton)
     }
 
     private fun setupLoginButton(loginButton: View) {
         loginButton.setOnClickListener {
             sharedPreferences.edit {
-                putBoolean(sharedPreferencesRememberMe, binding.rememberMeCheckbox.isChecked)
-                putString(sharedPreferencesEmail, binding.emailInput.text.toString())
+                putBoolean(SHARED_PREFERENCES_REMEMBER_ME, binding.rememberMeCheckbox.isChecked)
+                putString(SHARED_PREFERENCES_EMAIL, binding.emailInput.text.toString())
             }
             val directions = LoginFragmentDirections.actionLoginFragmentToShowsFragment(
                 binding.emailInput.text.toString().substringBefore('@')
@@ -70,27 +79,8 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun setupLoginValidation(
-        emailTextView: TextView,
-        passwordTextView: TextView,
-        loginButton: View
-    ) {
-        emailTextView.doOnTextChanged { text, start, before, count ->
-            val error = viewModel.checkEmailValidity(emailTextView.text.toString())
-            if (error != null) emailTextView.error = getString(error)
-            loginButton.isEnabled = viewModel.validateLoginData(
-                emailTextView.text.toString(),
-                passwordTextView.text.toString()
-            )
-        }
-        passwordTextView.doOnTextChanged { text, start, before, count ->
-            val error = viewModel.checkPasswordValidity(passwordTextView.text.toString())
-            if (error != null) passwordTextView.error = getString(error)
-            loginButton.isEnabled = viewModel.validateLoginData(
-                emailTextView.text.toString(),
-                passwordTextView.text.toString()
-            )
-        }
+    private fun setupLoginValidation() {
+        viewModel.initLoginTextInputListeners(binding.emailInput, binding.passwordInput)
     }
 
     override fun onDestroyView() {

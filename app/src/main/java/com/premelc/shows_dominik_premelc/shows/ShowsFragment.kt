@@ -2,7 +2,6 @@ package com.premelc.shows_dominik_premelc.shows
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -21,16 +19,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.premelc.shows_dominik_premelc.BuildConfig.APPLICATION_ID
 import com.premelc.shows_dominik_premelc.FileUtil.createImageFile
+import com.premelc.shows_dominik_premelc.FileUtil.getFileUri
 import com.premelc.shows_dominik_premelc.FileUtil.getImageFile
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.CameraGaleryBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowsBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowsBottomSheetBinding
-import com.premelc.shows_dominik_premelc.login.sharedPreferencesEmail
-import com.premelc.shows_dominik_premelc.login.sharedPreferencesFileName
-import java.io.File
+import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_EMAIL
+import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_FILE_NAME
 
 class ShowsFragment : Fragment() {
 
@@ -50,7 +47,7 @@ class ShowsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedPreferences = requireContext().getSharedPreferences(sharedPreferencesFileName, Context.MODE_PRIVATE)
+        sharedPreferences = requireContext().getSharedPreferences(SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
     }
 
     override fun onCreateView(
@@ -111,7 +108,7 @@ class ShowsFragment : Fragment() {
             ShowsBottomSheetBinding.inflate(layoutInflater)
         dialog.setContentView(bottomSheetBinding.root)
         setProfilePicOnView(bottomSheetBinding.profilePic)
-        bottomSheetBinding.email.text = sharedPreferences.getString(sharedPreferencesEmail, "example@example.com")
+        bottomSheetBinding.email.text = sharedPreferences.getString(SHARED_PREFERENCES_EMAIL, "example@example.com")
         bottomSheetBinding.logoutButton.setOnClickListener {
             initLogoutButton(dialog)
         }
@@ -153,15 +150,10 @@ class ShowsFragment : Fragment() {
         }
     }
 
-    fun getFileUri(file: File?, context: Context): Uri? {
-        if (file == null) return null
-        return FileProvider.getUriForFile(context, "${APPLICATION_ID}.provider", file)
-    }
-
     private fun setProfilePicOnView(view: ImageView) {
         Glide.with(requireContext())
             .load(
-                ShowsFragment().getFileUri(
+                getFileUri(
                     getImageFile(requireContext(), args.username),
                     requireContext()
                 )

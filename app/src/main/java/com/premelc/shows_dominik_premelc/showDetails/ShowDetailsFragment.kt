@@ -1,7 +1,5 @@
 package com.premelc.shows_dominik_premelc.showDetails
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +16,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowDetailsBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowDetailsBottomSheetBinding
-import com.premelc.shows_dominik_premelc.login.sharedPreferencesFileName
 import com.premelc.shows_dominik_premelc.model.Review
 
 class ShowDetailsFragment : Fragment() {
@@ -26,13 +23,7 @@ class ShowDetailsFragment : Fragment() {
     private val binding get() = _binding!!
     private val args by navArgs<ShowDetailsFragmentArgs>()
     private lateinit var adapter: ReviewsAdapter
-    private lateinit var sharedPreferences: SharedPreferences
     private val viewModel by viewModels<ShowDetailsViewModel>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        sharedPreferences = requireContext().getSharedPreferences(sharedPreferencesFileName, Context.MODE_PRIVATE)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

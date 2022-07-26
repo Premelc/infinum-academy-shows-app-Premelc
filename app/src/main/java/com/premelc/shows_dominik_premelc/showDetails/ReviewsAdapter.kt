@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.premelc.shows_dominik_premelc.FileUtil.getFileUri
 import com.premelc.shows_dominik_premelc.FileUtil.getImageFile
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.ViewItemReviewBinding
 import com.premelc.shows_dominik_premelc.model.Review
-import com.premelc.shows_dominik_premelc.shows.ShowsFragment
 
 class ReviewsAdapter(
     private var items: List<Review>,
@@ -36,7 +36,7 @@ class ReviewsAdapter(
                 gradeValue.text = item.grade.toString()
 
                 Glide.with(binding.root.context)
-                    .load(ShowsFragment().getFileUri(getImageFile(binding.root.context, item.username), binding.root.context))
+                    .load(getFileUri(getImageFile(binding.root.context, item.username), binding.root.context))
                     .error(
                         R.mipmap.pfp
                     )
