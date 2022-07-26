@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
@@ -29,7 +30,6 @@ import com.premelc.shows_dominik_premelc.databinding.FragmentShowsBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowsBottomSheetBinding
 import com.premelc.shows_dominik_premelc.login.sharedPreferencesEmail
 import com.premelc.shows_dominik_premelc.login.sharedPreferencesFileName
-import com.premelc.shows_dominik_premelc.model.Show
 import java.io.File
 
 class ShowsFragment : Fragment() {
@@ -39,24 +39,12 @@ class ShowsFragment : Fragment() {
     private val args by navArgs<ShowsFragmentArgs>()
     private lateinit var adapter: ShowsAdapter
     private lateinit var sharedPreferences: SharedPreferences
-    private var showsList: List<Show> = listOf()
     private val viewModel by viewModels<ShowsViewModel>()
 
     private val takeImageResult =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
             if (isSuccess) {
-                Glide.with(requireContext())
-                    .load(
-                        ShowsFragment().getFileUri(
-                            getImageFile(requireContext(), args.username),
-                            requireContext()
-                        )
-                    )
-                    .error(
-                        R.mipmap.pfp
-                    ).skipMemoryCache(true)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .into(binding.profileButton)
+                setProfilePicOnView(binding.profileButton)
             }
         }
 
@@ -77,9 +65,12 @@ class ShowsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.shows.observe(viewLifecycleOwner) { shows ->
-            showsList = shows
             adapter.addAllShows(shows)
             adapter.notifyDataSetChanged()
+        }
+
+        viewModel.showsRecyclerFullOrEmpty.observe(viewLifecycleOwner){ fullOrEmpty ->
+            setShowsRecyclerFullOrEmpty(fullOrEmpty)
         }
         initializeUI()
     }
@@ -95,32 +86,20 @@ class ShowsFragment : Fragment() {
                 ShowsFragmentDirections.actionShowsFragmentToShowDetailsFragment(id, args.username)
             findNavController().navigate(directions)
         }
-        adapter = ShowsAdapter(showsList, clickHandler)
+        adapter = ShowsAdapter(emptyList(), clickHandler)
         binding.showsRecycler.layoutManager = LinearLayoutManager(context)
         binding.showsRecycler.adapter = this.adapter
-        setShowsRecyclerFullOrEmpty(true)
     }
 
-    private fun setShowsRecyclerFullOrEmpty(isEmpty: Boolean) {
-        binding.showsRecycler.isVisible = isEmpty
-        binding.emptyStateElipse.isVisible = !isEmpty
-        binding.emptyStateIcon.isVisible = !isEmpty
-        binding.emptyState.isVisible = !isEmpty
+    private fun setShowsRecyclerFullOrEmpty(isFull: Boolean) {
+        binding.showsRecycler.isVisible = isFull
+        binding.emptyStateElipse.isVisible = !isFull
+        binding.emptyStateIcon.isVisible = !isFull
+        binding.emptyState.isVisible = !isFull
     }
 
     private fun initProfileButton() {
-        Glide.with(requireContext())
-            .load(
-                ShowsFragment().getFileUri(
-                    getImageFile(requireContext(), args.username),
-                    requireContext()
-                )
-            )
-            .error(
-                R.mipmap.pfp
-            )
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .into(binding.profileButton)
+        setProfilePicOnView(binding.profileButton)
         binding.profileButton.setOnClickListener {
             val dialog = BottomSheetDialog(requireContext())
             initProfileBottomSheet(dialog)
@@ -131,18 +110,7 @@ class ShowsFragment : Fragment() {
         val bottomSheetBinding: ShowsBottomSheetBinding =
             ShowsBottomSheetBinding.inflate(layoutInflater)
         dialog.setContentView(bottomSheetBinding.root)
-        Glide.with(requireContext())
-            .load(
-                ShowsFragment().getFileUri(
-                    getImageFile(requireContext(), args.username),
-                    requireContext()
-                )
-            )
-            .error(
-                R.mipmap.pfp
-            )
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .into(bottomSheetBinding.profilePic)
+        setProfilePicOnView(bottomSheetBinding.profilePic)
         bottomSheetBinding.email.text = sharedPreferences.getString(sharedPreferencesEmail, "example@example.com")
         bottomSheetBinding.logoutButton.setOnClickListener {
             initLogoutButton(dialog)
@@ -155,14 +123,14 @@ class ShowsFragment : Fragment() {
     }
 
     private fun initChangePhotoButtons(dialog: BottomSheetDialog) {
-        val bottomSheetBinding2: CameraGaleryBottomSheetBinding =
+        val cameraGalleryBottomSheetBinding: CameraGaleryBottomSheetBinding =
             CameraGaleryBottomSheetBinding.inflate(layoutInflater)
-        dialog.setContentView(bottomSheetBinding2.root)
-        bottomSheetBinding2.cameraButton.setOnClickListener {
+        dialog.setContentView(cameraGalleryBottomSheetBinding.root)
+        cameraGalleryBottomSheetBinding.cameraButton.setOnClickListener {
             takeImage()
             dialog.dismiss()
         }
-        bottomSheetBinding2.galleryButton.setOnClickListener {
+        cameraGalleryBottomSheetBinding.galleryButton.setOnClickListener {
             Toast.makeText(context, R.string.wip, Toast.LENGTH_SHORT).show()
         }
     }
@@ -188,6 +156,21 @@ class ShowsFragment : Fragment() {
     fun getFileUri(file: File?, context: Context): Uri? {
         if (file == null) return null
         return FileProvider.getUriForFile(context, "${APPLICATION_ID}.provider", file)
+    }
+
+    fun setProfilePicOnView(view: ImageView){
+        Glide.with(requireContext())
+            .load(
+                ShowsFragment().getFileUri(
+                    getImageFile(requireContext(), args.username),
+                    requireContext()
+                )
+            )
+            .error(
+                R.mipmap.pfp
+            )
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .into(view)
     }
 
     override fun onDestroyView() {

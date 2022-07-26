@@ -35,6 +35,7 @@ class ReviewsAdapter(
                 username.text = item.username
                 reviewMsg.text = item.text
                 gradeValue.text = item.grade.toString()
+
                 Glide.with(binding.root.context)
                     .load(ShowsFragment().getFileUri(getImageFile(binding.root.context, item.username), binding.root.context))
                     .error(

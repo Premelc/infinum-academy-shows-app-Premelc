@@ -28,7 +28,6 @@ class ShowDetailsFragment : Fragment() {
     private lateinit var adapter: ReviewsAdapter
     private lateinit var sharedPreferences: SharedPreferences
     private val viewModel by viewModels<ShowDetailsViewModel>()
-    private var reviewsList: List<Review> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +67,6 @@ class ShowDetailsFragment : Fragment() {
             binding.ratings.rating = rating
         }
         viewModel.reviews.observe(viewLifecycleOwner) { reviews ->
-            reviewsList = reviews
             adapter.addAllReviews(reviews)
             adapter.notifyDataSetChanged()
         }
@@ -78,7 +76,7 @@ class ShowDetailsFragment : Fragment() {
     private fun initializeUI() {
         initBackButton()
         initDetails()
-        initReviewsRecycler(reviewsList)
+        initReviewsRecycler(emptyList())
         initRatingDisplay()
         initReviewDialogButton(args.username)
     }
