@@ -47,7 +47,6 @@ class ShowDetailsFragment : Fragment() {
                 reviewCount,
                 viewModel.reviewAvg.value
             )
-            toggleReviewsRecyclerFullOrEmpty(viewModel.reviewsRecyclerFullOrEmpty())
         }
         viewModel.show.observe(viewLifecycleOwner) { show ->
             binding.img.setImageResource(show.imageResourceId)
@@ -60,6 +59,9 @@ class ShowDetailsFragment : Fragment() {
         viewModel.reviews.observe(viewLifecycleOwner) { reviews ->
             adapter.addAllReviews(reviews)
             adapter.notifyDataSetChanged()
+        }
+        viewModel.reviewsRecyclerFullOrEmpty.observe(viewLifecycleOwner){ toggleReviewsRecyclerFullOrEmpty ->
+            toggleReviewsRecyclerFullOrEmpty(toggleReviewsRecyclerFullOrEmpty)
         }
         initializeUI()
     }

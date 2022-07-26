@@ -24,6 +24,9 @@ class ShowDetailsViewModel : ViewModel() {
     private var _rating = MutableLiveData<Float>()
     val rating: LiveData<Float> = _rating
 
+    private var _reviewsRecyclerFullOrEmpty = MutableLiveData<Boolean>()
+    val reviewsRecyclerFullOrEmpty: LiveData<Boolean> = _reviewsRecyclerFullOrEmpty
+
     fun initDetails(id: String) {
         val show = findShowById(id)
         if (show != null) setShow(show)
@@ -49,9 +52,12 @@ class ShowDetailsViewModel : ViewModel() {
         _reviewAvg.value = avg.toFloat()
         _reviewCount.value = count
         _rating.value = sum / reviews.value!!.count()
+        reviewsRecyclerFullOrEmpty()
     }
 
-    fun reviewsRecyclerFullOrEmpty(): Boolean {
-        return reviewCount.value!! <= 0
+    fun reviewsRecyclerFullOrEmpty(){
+        _reviewsRecyclerFullOrEmpty.value = reviewCount.value!! <= 0
     }
+
+
 }
