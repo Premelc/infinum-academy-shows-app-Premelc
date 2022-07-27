@@ -19,6 +19,7 @@ import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowDetailsBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowDetailsBottomSheetBinding
 import com.premelc.shows_dominik_premelc.model.Review
+import com.premelc.shows_dominik_premelc.model.User
 
 class ShowDetailsFragment : Fragment() {
     private var _binding: FragmentShowDetailsBinding? = null
@@ -41,24 +42,18 @@ class ShowDetailsFragment : Fragment() {
         viewModel.show.observe(viewLifecycleOwner) { show ->
             binding.showTitle.text = show.title
             binding.showDescription.text = show.description
-
-            println("average: " + show.average_rating)
-            println("count" + show.no_of_reviews)
-
             binding.reviewsNumber.text = String.format(
                 this.getString(R.string.reviewCount),
                 show.no_of_reviews.toString(),
                 show.average_rating.toString()
             )
+            binding.ratings.rating = show.average_rating?.toFloat()!!
             Glide.with(requireContext())
                 .load(show.image_url)
                 .placeholder(R.mipmap.ic_launcher)
                 .error(R.mipmap.ic_launcher)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .into(binding.img)
-        }
-        viewModel.rating.observe(viewLifecycleOwner) { rating ->
-            binding.ratings.rating = rating
         }
         viewModel.reviews.observe(viewLifecycleOwner) { reviews ->
             adapter.addAllReviews(reviews)
@@ -111,7 +106,7 @@ class ShowDetailsFragment : Fragment() {
             btnSubmit.setOnClickListener {
                 val comment = bottomSheetBinding.reviewInput.text.toString()
                 val rating = bottomSheetBinding.ratingBar.rating
-                val review = Review(username, username, rating, comment, R.mipmap.pfp)
+                val review = Review(System.currentTimeMillis().toString(), comment, rating.toInt(),args.id.toInt() , User(args.username , args.username , "default"))
                 addReviewToList(review)
                 Toast.makeText(context, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
@@ -122,8 +117,8 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun toggleReviewsRecyclerFullOrEmpty(isEmpty: Boolean) {
-        binding.emptyReview.isVisible = isEmpty
-        binding.reviewsRecycler.isVisible = !isEmpty
+        binding.emptyReview.isVisible = !isEmpty
+        binding.reviewsRecycler.isVisible = isEmpty
     }
 
     private fun addReviewToList(review: Review) {

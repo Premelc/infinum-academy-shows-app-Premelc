@@ -31,12 +31,15 @@ class ReviewsAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Review) {
             with(binding) {
-                username.text = item.username
-                reviewMsg.text = item.text
-                gradeValue.text = item.grade.toString()
+                username.text = item.user.email.substringBefore('@')
+                reviewMsg.text = item.comment
+                gradeValue.text = item.rating.toString()
 
                 Glide.with(binding.root.context)
-                    .load(getFileUri(getImageFile(binding.root.context, item.username), binding.root.context))
+                    .load(item.user.imageUrl)
+                    .placeholder(
+                        R.mipmap.pfp
+                    )
                     .error(
                         R.mipmap.pfp
                     )

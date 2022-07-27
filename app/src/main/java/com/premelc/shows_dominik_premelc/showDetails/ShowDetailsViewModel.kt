@@ -5,10 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import com.premelc.shows_dominik_premelc.model.Review
+import com.premelc.shows_dominik_premelc.model.ReviewsErrorResponse
+import com.premelc.shows_dominik_premelc.model.ReviewsResponse
 import com.premelc.shows_dominik_premelc.model.Show
 import com.premelc.shows_dominik_premelc.model.ShowDetailsErrorResponse
 import com.premelc.shows_dominik_premelc.model.ShowDetailsResponse
-import com.premelc.shows_dominik_premelc.model.ShowsErrorResponse
 import com.premelc.shows_dominik_premelc.networking.ApiModule
 import retrofit2.Call
 import retrofit2.Callback
@@ -33,17 +34,21 @@ class ShowDetailsViewModel : ViewModel() {
     private var _showsDetailResponse = MutableLiveData<String>()
     val showsDetailResponse: LiveData<String> = _showsDetailResponse
 
+    private var _reviewsResponse = MutableLiveData<String>()
+    val reviewsResponse: LiveData<String> = _reviewsResponse
+
     fun initDetails(id: String) {
+        fetchShow(id)
+        fetchReviews(id.toInt())
+    }
+
+    private fun fetchShow(id: String){
         ApiModule.retrofit.specificShow(id).enqueue(object:Callback<ShowDetailsResponse>{
             override fun onResponse(call: Call<ShowDetailsResponse>, response: Response<ShowDetailsResponse>) {
                 if(response.isSuccessful){
                     _show.value = response.body()?.show
-                    println("AVERAGE: " + _show.value?.average_rating)
-                    println("COUNT: " + _show.value?.no_of_reviews)
-                    println("AVERAGE: " + response.body()?.show?.average_rating)
-                    println("COUNT: " + response.body()?.show?.no_of_reviews)
-                    println(response.body()?.show)
                     _showsDetailResponse.value = response.isSuccessful.toString()
+                    _reviewsRecyclerFullOrEmpty.value = _showsDetailResponse.value!!.isNotEmpty()
                 }else{
                     val gson = Gson()
                     val showDetailsErrorResponse: ShowDetailsErrorResponse = gson.fromJson(response.errorBody()?.string() , ShowDetailsErrorResponse::class.java)
@@ -51,13 +56,27 @@ class ShowDetailsViewModel : ViewModel() {
                 }
             }
             override fun onFailure(call: Call<ShowDetailsResponse>, t: Throwable) {
-                TODO("Not yet implemented")
+                _showsDetailResponse.value = false.toString()
             }
         })
     }
 
-    private fun setShow(show: Show) {
-        _show.value = show
+    private fun fetchReviews(id: Int){
+        ApiModule.retrofit.showReviews(id).enqueue(object:Callback<ReviewsResponse>{
+            override fun onResponse(call: Call<ReviewsResponse>, response: Response<ReviewsResponse>) {
+                if(response.isSuccessful){
+                        _reviews.value = response.body()?.reviews
+                    _reviewsResponse.value = response.isSuccessful.toString()
+                }else{
+                    val gson = Gson()
+                    val reviewsErrorResponse: ReviewsErrorResponse = gson.fromJson(response.errorBody()?.string() , ReviewsErrorResponse::class.java)
+                    _reviewsResponse.value = reviewsErrorResponse.errors[0]
+                }
+            }
+            override fun onFailure(call: Call<ReviewsResponse>, t: Throwable) {
+                _reviewsResponse.value = false.toString()
+            }
+        })
     }
 
     fun addReview(review: Review) {

@@ -4,6 +4,7 @@ import com.premelc.shows_dominik_premelc.model.LoginRequest
 import com.premelc.shows_dominik_premelc.model.LoginResponse
 import com.premelc.shows_dominik_premelc.model.RegisterRequest
 import com.premelc.shows_dominik_premelc.model.RegisterResponse
+import com.premelc.shows_dominik_premelc.model.ReviewsResponse
 import com.premelc.shows_dominik_premelc.model.ShowDetailsRequest
 import com.premelc.shows_dominik_premelc.model.ShowDetailsResponse
 import com.premelc.shows_dominik_premelc.model.ShowsResponse
@@ -27,4 +28,7 @@ interface ShowsApiService {
 
     @GET("/shows/{id}")
     fun specificShow(@Path("id") id: String): Call<ShowDetailsResponse>
+
+    @GET("shows/{show_id}/reviews")
+    fun showReviews(@Path("show_id") show_id: Int): Call<ReviewsResponse>
 }
