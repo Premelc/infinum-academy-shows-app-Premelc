@@ -9,6 +9,10 @@
         android:id="@+id/loginFragment"
         android:name="com.premelc.shows_dominik_premelc.login.LoginFragment"
         tools:layout="@layout/fragment_login">
+        <argument
+            android:name="fromRegisterSuccessful"
+            app:argType="boolean"
+            android:defaultValue="false"/>
         <action android:id="@+id/action_loginFragment_to_ShowsFragment"
             app:destination="@id/shows_nav_graph"
             app:popUpTo="@+id/main_nav_graph"

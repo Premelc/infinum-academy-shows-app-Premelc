@@ -1,16 +1,20 @@
 package com.premelc.shows_dominik_premelc.register
 
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.login.PASSWORD_MIN_LENGTH
+import com.premelc.shows_dominik_premelc.model.RegisterErrorResponse
 import com.premelc.shows_dominik_premelc.model.RegisterRequest
 import com.premelc.shows_dominik_premelc.model.RegisterResponse
 import com.premelc.shows_dominik_premelc.networking.ApiModule
+import kotlinx.serialization.json.Json
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,11 +36,10 @@ class RegisterViewModel: ViewModel() {
     private val _passwordsMatchStringCode = MutableLiveData<Int>()
     val passwordsMatchStringCode: LiveData<Int> = _passwordsMatchStringCode
 
-    private val registrationResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    private val _registerResponse = MutableLiveData<String>()
+    val registerResponse: LiveData<String> = _registerResponse
 
-    fun getRegistrationResultLiveData(): LiveData<Boolean> {
-        return registrationResultLiveData
-    }
+    private val registrationResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     fun initRegisterTextInputListeners(emailTextView: TextView, passwordTextView: TextView , repeatPasswordTextView: TextView) {
         emailTextView.doOnTextChanged { text, start, before, count ->
@@ -78,7 +81,7 @@ class RegisterViewModel: ViewModel() {
         }
     }
 
-    private fun validateEmail(email: String): Boolean {
+    fun validateEmail(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
@@ -98,13 +101,17 @@ class RegisterViewModel: ViewModel() {
         )
         ApiModule.retrofit.register(registerRequest).enqueue(object:Callback<RegisterResponse>{
             override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
-                registrationResultLiveData.value = response.isSuccessful
+                if(response.isSuccessful){
+                    _registerResponse.value = response.body()?.user?.email
+                }else{
+                    val gson = Gson()
+                    val registerErrorResponse:RegisterErrorResponse = gson.fromJson(response.errorBody()?.string() , RegisterErrorResponse::class.java)
+                    _registerResponse.value = registerErrorResponse.errors[0]
+                }
             }
-
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
                 registrationResultLiveData.value = false
             }
-
         })
     }
 

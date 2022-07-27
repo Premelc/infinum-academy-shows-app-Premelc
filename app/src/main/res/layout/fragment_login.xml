@@ -71,7 +71,8 @@
 
         <TextView
             android:id="@+id/LoginText"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:maxWidth="250dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginBottom="16dp"

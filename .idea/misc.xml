@@ -5,12 +5,17 @@
       <map>
         <entry key="..\:/Users/Dominik/AndroidStudioProjects/infinum-academy-shows-app-Premelc/app/src/main/res/layout/activity_login.xml" value="0.33" />
         <entry key="..\:/Users/Dominik/AndroidStudioProjects/infinum-academy-shows-app-Premelc/app/src/main/res/layout/activity_welcome.xml" value="0.3927083333333333" />
+        <entry key="..\:/Users/Dominik/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/drawable/fail.xml" value="0.3265" />
+        <entry key="..\:/Users/Dominik/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/drawable/ic_launcher_background.xml" value="0.166" />
+        <entry key="..\:/Users/Dominik/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/drawable/success.xml" value="0.1485" />
         <entry key="..\:/Users/Dominik/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/activity_main.xml" value="0.3109375" />
         <entry key="..\:/Users/Dominik/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/camera_galery_bottom_sheet.xml" value="0.3109375" />
-        <entry key="..\:/Users/Dominik/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/fragment_login.xml" value="0.1" />
+        <entry key="..\:/Users/Dominik/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/fragment_login.xml" value="0.25" />
         <entry key="..\:/Users/Dominik/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/fragment_register.xml" value="0.11967545638945233" />
         <entry key="..\:/Users/Dominik/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/fragment_show_details.xml" value="0.3109375" />
         <entry key="..\:/Users/Dominik/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/fragment_shows.xml" value="0.9" />
+        <entry key="..\:/Users/Dominik/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/loading_bottom_sheet.xml" value="0.38425925925925924" />
+        <entry key="..\:/Users/Dominik/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/register_result_bottom_sheet.xml" value="0.33" />
         <entry key="..\:/Users/Dominik/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/show_details_bottom_sheet.xml" value="0.3109375" />
         <entry key="..\:/Users/Dominik/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/shows_bottom_sheet.xml" value="0.8100407055630936" />
         <entry key="..\:/Users/Dominik/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/view_item_review.xml" value="0.3109375" />
