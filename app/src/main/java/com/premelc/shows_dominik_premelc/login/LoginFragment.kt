@@ -39,7 +39,7 @@ class LoginFragment : Fragment() {
         ApiModule.initRetrofit(requireContext() , emptyList())
         sharedPreferences = requireContext().getSharedPreferences(SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
         if (sharedPreferences.getBoolean(SHARED_PREFERENCES_REMEMBER_ME, false)) {
-            val user = sharedPreferences.getString(SHARED_PREFERENCES_EMAIL, "placeholder").toString().substringBefore('@')
+            val user = sharedPreferences.getString(SHARED_PREFERENCES_EMAIL, "placeholder").toString()
             val directions = LoginFragmentDirections.actionLoginFragmentToShowsFragment(user)
             findNavController().navigate(directions)
         }
@@ -73,7 +73,7 @@ class LoginFragment : Fragment() {
         viewModel.loginResponse.observe(viewLifecycleOwner){ loginResponse ->
             if(viewModel.validateEmail(loginResponse)){
                 val directions = LoginFragmentDirections.actionLoginFragmentToShowsFragment(
-                    binding.emailInput.text.toString().substringBefore('@')
+                    binding.emailInput.text.toString()
                 )
                 dialog.dismiss()
                 findNavController().navigate(directions)
@@ -95,10 +95,6 @@ class LoginFragment : Fragment() {
                 putString(SHARED_PREFERENCES_ACCESS_TOKEN , headerValues[1])
                 putString(SHARED_PREFERENCES_CLIENT, headerValues[2]).commit()
             }
-            println("SAVING HEADER VALUES NOW!!!!!!!!!!!!!!!!!!!!!")
-            println(headerValues[0])
-            println(headerValues[1])
-            println(headerValues[2])
         }
         handleRegisterSuccessful()
         initializeUI()

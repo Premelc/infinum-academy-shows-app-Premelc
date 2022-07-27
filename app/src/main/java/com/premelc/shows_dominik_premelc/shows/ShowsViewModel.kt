@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
+import com.premelc.shows_dominik_premelc.model.ChangePhotoRequest
+import com.premelc.shows_dominik_premelc.model.LoginResponse
 import com.premelc.shows_dominik_premelc.model.Show
 import com.premelc.shows_dominik_premelc.model.ShowsErrorResponse
 import com.premelc.shows_dominik_premelc.model.ShowsResponse
@@ -22,6 +24,9 @@ class ShowsViewModel : ViewModel() {
 
     private val _showsResponse = MutableLiveData<String>()
     val showsResponse: LiveData<String> = _showsResponse
+
+    private val _changePhotoResponse = MutableLiveData<String>()
+    val changePhotoResponse: LiveData<String> = _changePhotoResponse
 
     init {
        fetchShowsFromServer()
@@ -44,6 +49,24 @@ class ShowsViewModel : ViewModel() {
                     _showsResponse.value = false.toString()
                 }
             })
-
     }
+
+    fun uploadImage(email:String){
+        val request = ChangePhotoRequest(
+            email = email
+        )
+        ApiModule.retrofit.changePhoto(request).enqueue(object:Callback<LoginResponse>{
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                if (response.isSuccessful){
+                    _changePhotoResponse.value = response.isSuccessful.toString()
+                }else{
+                    _changePhotoResponse.value = false.toString()
+                }
+            }
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                _changePhotoResponse.value = false.toString()
+            }
+        })
+    }
+
 }

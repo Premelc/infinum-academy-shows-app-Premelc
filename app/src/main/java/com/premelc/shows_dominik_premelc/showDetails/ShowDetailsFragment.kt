@@ -69,7 +69,7 @@ class ShowDetailsFragment : Fragment() {
         initBackButton()
         initDetails()
         initReviewsRecycler(emptyList())
-        initReviewDialogButton(args.username)
+        initReviewDialogButton()
     }
 
     private fun initBackButton() {
@@ -92,7 +92,7 @@ class ShowDetailsFragment : Fragment() {
         viewModel.initDetails(args.id)
     }
 
-    private fun initReviewDialogButton(username: String) {
+    private fun initReviewDialogButton() {
         binding.writeReviewButton.setOnClickListener {
             val dialog = BottomSheetDialog(requireContext())
             val bottomSheetBinding: ShowDetailsBottomSheetBinding =
@@ -105,9 +105,8 @@ class ShowDetailsFragment : Fragment() {
             }
             btnSubmit.setOnClickListener {
                 val comment = bottomSheetBinding.reviewInput.text.toString()
-                val rating = bottomSheetBinding.ratingBar.rating
-                val review = Review(System.currentTimeMillis().toString(), comment, rating.toInt(),args.id.toInt() , User(args.username , args.username , "default"))
-                addReviewToList(review)
+                val rating = bottomSheetBinding.ratingBar.rating.toInt()
+                viewModel.postReview(rating , comment , args.id.toInt())
                 Toast.makeText(context, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
             }
@@ -119,10 +118,5 @@ class ShowDetailsFragment : Fragment() {
     private fun toggleReviewsRecyclerFullOrEmpty(isEmpty: Boolean) {
         binding.emptyReview.isVisible = !isEmpty
         binding.reviewsRecycler.isVisible = isEmpty
-    }
-
-    private fun addReviewToList(review: Review) {
-        viewModel.addReview(review)
-        adapter.notifyItemInserted(viewModel.reviews.value!!.size)
     }
 }

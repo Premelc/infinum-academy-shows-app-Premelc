@@ -1,15 +1,20 @@
 package com.premelc.shows_dominik_premelc.showDetails
 
+import android.media.Rating
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
+import com.premelc.shows_dominik_premelc.model.PostReviewErrorResponse
+import com.premelc.shows_dominik_premelc.model.PostReviewRequest
+import com.premelc.shows_dominik_premelc.model.PostReviewResponse
 import com.premelc.shows_dominik_premelc.model.Review
 import com.premelc.shows_dominik_premelc.model.ReviewsErrorResponse
 import com.premelc.shows_dominik_premelc.model.ReviewsResponse
 import com.premelc.shows_dominik_premelc.model.Show
 import com.premelc.shows_dominik_premelc.model.ShowDetailsErrorResponse
 import com.premelc.shows_dominik_premelc.model.ShowDetailsResponse
+import com.premelc.shows_dominik_premelc.model.User
 import com.premelc.shows_dominik_premelc.networking.ApiModule
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,20 +27,17 @@ class ShowDetailsViewModel : ViewModel() {
     private var _reviews = MutableLiveData<List<Review>>()
     val reviews: LiveData<List<Review>> = _reviews
 
-    private var _rating = MutableLiveData<Float>()
-    val rating: LiveData<Float> = _rating
-
     private var _reviewsRecyclerFullOrEmpty = MutableLiveData<Boolean>()
     val reviewsRecyclerFullOrEmpty: LiveData<Boolean> = _reviewsRecyclerFullOrEmpty
-
-    private var _id = MutableLiveData<String>()
-    val id: LiveData<String> = _id
 
     private var _showsDetailResponse = MutableLiveData<String>()
     val showsDetailResponse: LiveData<String> = _showsDetailResponse
 
     private var _reviewsResponse = MutableLiveData<String>()
     val reviewsResponse: LiveData<String> = _reviewsResponse
+
+    private var _postReviewResponse = MutableLiveData<String>()
+    val postReviewResponse: LiveData<String> = _postReviewResponse
 
     fun initDetails(id: String) {
         fetchShow(id)
@@ -75,6 +77,33 @@ class ShowDetailsViewModel : ViewModel() {
             }
             override fun onFailure(call: Call<ReviewsResponse>, t: Throwable) {
                 _reviewsResponse.value = false.toString()
+            }
+        })
+    }
+
+    fun postReview(rating: Int , comment: String , showId: Int){
+        val postReviewRequest = PostReviewRequest(
+            rating,
+            comment,
+            showId
+        )
+
+        ApiModule.retrofit.postReview(postReviewRequest).enqueue(object:Callback<PostReviewResponse>{
+            override fun onResponse(call: Call<PostReviewResponse>, response: Response<PostReviewResponse>) {
+                if(response.isSuccessful){
+                    addReview(response.body()?.review!!)
+                    _postReviewResponse.value = response.isSuccessful.toString()
+                }else{
+                    val gson = Gson()
+                    val postReviewErrorResponse: PostReviewErrorResponse = gson.fromJson(response.errorBody()?.string() , PostReviewErrorResponse::class.java)
+                    if(response.code() == 401)_postReviewResponse.value = postReviewErrorResponse.errors[0]
+                    else{
+                        _postReviewResponse.value = postReviewErrorResponse.errors[0] + " , " + postReviewErrorResponse.errors[1]
+                    }
+                }
+            }
+            override fun onFailure(call: Call<PostReviewResponse>, t: Throwable) {
+                _postReviewResponse.value = false.toString()
             }
         })
     }

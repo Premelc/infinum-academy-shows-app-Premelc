@@ -4,6 +4,7 @@ import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import java.io.File
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -13,27 +14,27 @@ object ApiModule {
     private const val BASE_URL = "https://tv-shows.infinum.academy/"
     lateinit var retrofit: ShowsApiService
 
-    fun initRetrofit(context: Context , header: List<String>) {
+    fun initRetrofit(context: Context, header: List<String>) {
 
         val gson: Gson = GsonBuilder()
             .setLenient()
             .create()
 
-        var okhttp = OkHttpClient.Builder()
+        val okhttp = OkHttpClient.Builder()
             .addInterceptor(ChuckerInterceptor.Builder(context).build())
 
-        if(header.isNotEmpty()){
-            okhttp.addInterceptor(Interceptor{ chain->
+        if (header.isNotEmpty()) {
+            okhttp.addInterceptor(Interceptor { chain ->
                 val builder = chain.request().newBuilder()
-                builder.header("Accept" , "application/json")
+                builder.header("Accept", "application/json")
                 builder.header("access-token", header[1])
                 builder.header("client", header[2])
                 builder.header("token-type", header[0])
-                builder.header("uid" , header[3])
-                builder.header("Content-Type" , "application/json")
+                builder.header("uid", header[3])
+                builder.header("Content-Type", "application/json")
                 return@Interceptor chain.proceed(builder.build())
             }).build()
-        }else{
+        } else {
             okhttp.build()
         }
 
@@ -44,4 +45,5 @@ object ApiModule {
             .build()
             .create(ShowsApiService::class.java)
     }
+
 }

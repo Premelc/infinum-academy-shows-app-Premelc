@@ -46,6 +46,7 @@ class ShowsFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
             if (isSuccess) {
                 setProfilePicOnView(binding.profileButton)
+                viewModel.uploadImage(args.username)
             }
         }
 
@@ -158,7 +159,7 @@ class ShowsFragment : Fragment() {
     private fun takeImage() {
         lifecycleScope.launchWhenStarted {
             getFileUri(
-                createImageFile(requireContext(), args.username),
+                createImageFile(requireContext()),
                 requireContext()
             ).let { uri ->
                 takeImageResult.launch(uri)
@@ -170,9 +171,12 @@ class ShowsFragment : Fragment() {
         Glide.with(requireContext())
             .load(
                 getFileUri(
-                    getImageFile(requireContext(), args.username),
+                    getImageFile(requireContext()),
                     requireContext()
                 )
+            )
+            .placeholder(
+                R.mipmap.pfp
             )
             .error(
                 R.mipmap.pfp
