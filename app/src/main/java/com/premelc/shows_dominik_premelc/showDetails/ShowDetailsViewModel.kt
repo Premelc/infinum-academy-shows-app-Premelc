@@ -48,11 +48,7 @@ class ShowDetailsViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _show.value = response.body()?.show
                     _showsDetailResponse.value = response.isSuccessful.toString()
-                    _reviewsRecyclerFullOrEmpty.value = when(_showsDetailResponse.value){
-                         null -> true
-                        else -> false
-                    }
-
+                    _reviewsRecyclerFullOrEmpty.value = response.isSuccessful
                 } else {
                     val gson = Gson()
                     val showDetailsErrorResponse: ShowDetailsErrorResponse =
