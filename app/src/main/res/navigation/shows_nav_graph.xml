@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/ShowDetailsFragment"
-        android:name="com.premelc.shows_dominik_premelc.shows.ShowDetailsFragment"
+        android:name="com.premelc.shows_dominik_premelc.showDetails.ShowDetailsFragment"
         tools:layout="@layout/fragment_show_details">
         <argument
             android:name="id"

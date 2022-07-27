@@ -12,7 +12,8 @@ class ShowsAdapter(
 ) : RecyclerView.Adapter<ShowsAdapter.ShowViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
-        val binding = ViewShowItemBinding.inflate(LayoutInflater.from(parent.context),parent, false)
+        val binding =
+            ViewShowItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ShowViewHolder(binding)
     }
 
@@ -31,4 +32,11 @@ class ShowsAdapter(
             binding.cardContainer.setOnClickListener { handleClick(item.id) }
         }
     }
+
+    fun addAllShows(shows: List<Show>) {
+        items = shows
+        notifyDataSetChanged()
+    }
+
+
 }

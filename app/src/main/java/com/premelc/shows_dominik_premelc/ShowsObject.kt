@@ -1,10 +1,10 @@
-package com.premelc.shows_dominik_premelc.shows
+package com.premelc.shows_dominik_premelc
 
-import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.model.Review
 import com.premelc.shows_dominik_premelc.model.Show
 
-class ListOfShows(
+object ShowsObject {
+
     private val reviews: List<Review> = listOf(
         Review(
             "petra_benjak",
@@ -27,8 +27,9 @@ class ListOfShows(
             "ne kuzim",
             R.mipmap.pfp
         )
-    ),
-    val shows: List<Show> = listOf(
+    )
+
+    val showsList: List<Show> = listOf(
         Show(
             "the_office",
             "The Office",
@@ -51,4 +52,14 @@ class ListOfShows(
             R.mipmap.krv_nije_voda
         )
     )
-)
+
+    fun findShowById(id: String): Show? {
+        for (item in showsList) {
+            if (item.id == id) {
+                return item
+            }
+        }
+        return null
+    }
+
+}
