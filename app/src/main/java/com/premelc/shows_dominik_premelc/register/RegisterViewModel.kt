@@ -6,15 +6,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.login.PASSWORD_MIN_LENGTH
 import com.premelc.shows_dominik_premelc.model.RegisterErrorResponse
 import com.premelc.shows_dominik_premelc.model.RegisterRequest
 import com.premelc.shows_dominik_premelc.model.RegisterResponse
 import com.premelc.shows_dominik_premelc.networking.ApiModule
-import kotlinx.serialization.json.Json
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

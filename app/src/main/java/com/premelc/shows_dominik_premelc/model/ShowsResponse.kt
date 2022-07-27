@@ -1,31 +1,31 @@
-package com.premelc.shows_dominik_premelc.shows
+package com.premelc.shows_dominik_premelc.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ShowsResponse(
-    @SerialName("shows") val shows: List<Shows>,
-    @SerialName("meta") val meta: meta
+    @SerialName("shows") val shows: List<Show>,
+    @SerialName("meta") val meta: Meta
 )
 
 @Serializable
-data class Shows(
+data class Show(
     @SerialName("id") val id: String,
-    @SerialName("average_rating") val averageRating: Float?,
+    @SerialName("average_rating") val average_rating: Int?,
     @SerialName("description") val description: String?,
-    @SerialName("image_url") val imageUrl: String,
-    @SerialName("no_of_reviews") val noOfReviews: Int,
+    @SerialName("image_url") val image_url: String,
+    @SerialName("no_of_reviews") val no_of_reviews: Int,
     @SerialName("title") val title: String
 )
 
 @Serializable
-data class meta(
-    @SerialName("pagination") val pagination: pagination
+data class Meta(
+    @SerialName("pagination") val pagination: Pagination
 )
 
 @Serializable
-data class pagination(
+data class Pagination(
     @SerialName("count") val count: Int,
     @SerialName("page") val page: Int,
     @SerialName("items") val items: Int,

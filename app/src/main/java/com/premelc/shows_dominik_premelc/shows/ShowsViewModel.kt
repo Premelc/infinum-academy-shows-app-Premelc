@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
-import com.premelc.shows_dominik_premelc.ShowsObject.showsList
-import com.premelc.shows_dominik_premelc.model.LoginErrorResponse
 import com.premelc.shows_dominik_premelc.model.Show
+import com.premelc.shows_dominik_premelc.model.ShowsErrorResponse
+import com.premelc.shows_dominik_premelc.model.ShowsResponse
 import com.premelc.shows_dominik_premelc.networking.ApiModule
 import retrofit2.Call
 import retrofit2.Callback
@@ -28,19 +28,12 @@ class ShowsViewModel : ViewModel() {
     }
 
     fun fetchShowsFromServer() {
-        var showList = emptyList<Show>()
             ApiModule.retrofit.shows().enqueue(object:Callback<ShowsResponse>{
                 override fun onResponse(call: Call<ShowsResponse>, response: Response<ShowsResponse>) {
                     if(response.isSuccessful){
                         _showsResponse.value = response.isSuccessful.toString()
-                        for (item in response.body()?.shows!!){
-                            showList = showList + Show(item.id , item.title , item.description , emptyList() ,item.imageUrl)
-                        }
-                        _shows.value = showList
+                        _shows.value = response.body()?.shows
                         _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
-                        for (item in shows.value!!){
-                            println(item.name)
-                        }
                     }else{
                         val gson = Gson()
                         val showsErrorResponse: ShowsErrorResponse = gson.fromJson(response.errorBody()?.string() , ShowsErrorResponse::class.java)

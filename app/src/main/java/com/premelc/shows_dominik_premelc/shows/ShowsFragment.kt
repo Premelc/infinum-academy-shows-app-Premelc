@@ -31,7 +31,6 @@ import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_CLIENT
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_EMAIL
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_FILE_NAME
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_TOKEN_TYPE
-import com.premelc.shows_dominik_premelc.networking.ApiModule
 import com.premelc.shows_dominik_premelc.networking.ApiModule.initRetrofit
 
 class ShowsFragment : Fragment() {

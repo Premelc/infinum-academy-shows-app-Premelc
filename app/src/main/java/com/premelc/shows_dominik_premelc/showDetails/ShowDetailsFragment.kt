@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowDetailsBinding
@@ -38,27 +39,23 @@ class ShowDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.show.observe(viewLifecycleOwner) { show ->
-            binding.showTitle.text = show.name
+            binding.showTitle.text = show.title
             binding.showDescription.text = show.description
-            Glide.with(requireContext())
-                .load(show.imageUrl)
-                .error(R.mipmap.the_office)
-                .into(binding.img)
-        }
-        viewModel.reviewCount.observe(viewLifecycleOwner) { reviewCount ->
+
+            println("average: " + show.average_rating)
+            println("count" + show.no_of_reviews)
+
             binding.reviewsNumber.text = String.format(
                 this.getString(R.string.reviewCount),
-                reviewCount,
-                viewModel.reviewAvg.value
+                show.no_of_reviews.toString(),
+                show.average_rating.toString()
             )
-        }
-        viewModel.show.observe(viewLifecycleOwner) { show ->
             Glide.with(requireContext())
-                .load(show.imageUrl)
-                .error(R.mipmap.the_office)
+                .load(show.image_url)
+                .placeholder(R.mipmap.ic_launcher)
+                .error(R.mipmap.ic_launcher)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .into(binding.img)
-            binding.showTitle.text = show.name
-            binding.showDescription.text = show.description
         }
         viewModel.rating.observe(viewLifecycleOwner) { rating ->
             binding.ratings.rating = rating
@@ -67,7 +64,7 @@ class ShowDetailsFragment : Fragment() {
             adapter.addAllReviews(reviews)
             adapter.notifyDataSetChanged()
         }
-        viewModel.reviewsRecyclerFullOrEmpty.observe(viewLifecycleOwner){ toggleReviewsRecyclerFullOrEmpty ->
+        viewModel.reviewsRecyclerFullOrEmpty.observe(viewLifecycleOwner) { toggleReviewsRecyclerFullOrEmpty ->
             toggleReviewsRecyclerFullOrEmpty(toggleReviewsRecyclerFullOrEmpty)
         }
         initializeUI()
@@ -77,7 +74,6 @@ class ShowDetailsFragment : Fragment() {
         initBackButton()
         initDetails()
         initReviewsRecycler(emptyList())
-        initRatingDisplay()
         initReviewDialogButton(args.username)
     }
 
@@ -118,7 +114,6 @@ class ShowDetailsFragment : Fragment() {
                 val review = Review(username, username, rating, comment, R.mipmap.pfp)
                 addReviewToList(review)
                 Toast.makeText(context, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
-                initRatingDisplay()
                 dialog.dismiss()
             }
             dialog.setContentView(bottomSheetBinding.root)
@@ -134,9 +129,5 @@ class ShowDetailsFragment : Fragment() {
     private fun addReviewToList(review: Review) {
         viewModel.addReview(review)
         adapter.notifyItemInserted(viewModel.reviews.value!!.size)
-    }
-
-    private fun initRatingDisplay() {
-        viewModel.initRatingDisplay()
     }
 }

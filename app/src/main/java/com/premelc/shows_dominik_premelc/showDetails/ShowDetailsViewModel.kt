@@ -3,10 +3,16 @@ package com.premelc.shows_dominik_premelc.showDetails
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.premelc.shows_dominik_premelc.ShowsObject.findShowById
+import com.google.gson.Gson
 import com.premelc.shows_dominik_premelc.model.Review
 import com.premelc.shows_dominik_premelc.model.Show
-import java.text.DecimalFormat
+import com.premelc.shows_dominik_premelc.model.ShowDetailsErrorResponse
+import com.premelc.shows_dominik_premelc.model.ShowDetailsResponse
+import com.premelc.shows_dominik_premelc.model.ShowsErrorResponse
+import com.premelc.shows_dominik_premelc.networking.ApiModule
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ShowDetailsViewModel : ViewModel() {
     private var _show = MutableLiveData<Show>()
@@ -15,43 +21,46 @@ class ShowDetailsViewModel : ViewModel() {
     private var _reviews = MutableLiveData<List<Review>>()
     val reviews: LiveData<List<Review>> = _reviews
 
-    private var _reviewCount = MutableLiveData<Int>()
-    val reviewCount: LiveData<Int> = _reviewCount
-
-    private var _reviewAvg = MutableLiveData<Float>()
-    val reviewAvg: LiveData<Float> = _reviewAvg
-
     private var _rating = MutableLiveData<Float>()
     val rating: LiveData<Float> = _rating
 
     private var _reviewsRecyclerFullOrEmpty = MutableLiveData<Boolean>()
     val reviewsRecyclerFullOrEmpty: LiveData<Boolean> = _reviewsRecyclerFullOrEmpty
 
+    private var _id = MutableLiveData<String>()
+    val id: LiveData<String> = _id
+
+    private var _showsDetailResponse = MutableLiveData<String>()
+    val showsDetailResponse: LiveData<String> = _showsDetailResponse
+
     fun initDetails(id: String) {
-        val show = findShowById(id)
-        if (show != null) setShow(show)
+        ApiModule.retrofit.specificShow(id).enqueue(object:Callback<ShowDetailsResponse>{
+            override fun onResponse(call: Call<ShowDetailsResponse>, response: Response<ShowDetailsResponse>) {
+                if(response.isSuccessful){
+                    _show.value = response.body()?.show
+                    println("AVERAGE: " + _show.value?.average_rating)
+                    println("COUNT: " + _show.value?.no_of_reviews)
+                    println("AVERAGE: " + response.body()?.show?.average_rating)
+                    println("COUNT: " + response.body()?.show?.no_of_reviews)
+                    println(response.body()?.show)
+                    _showsDetailResponse.value = response.isSuccessful.toString()
+                }else{
+                    val gson = Gson()
+                    val showDetailsErrorResponse: ShowDetailsErrorResponse = gson.fromJson(response.errorBody()?.string() , ShowDetailsErrorResponse::class.java)
+                    _showsDetailResponse.value = showDetailsErrorResponse.errors[0]
+                }
+            }
+            override fun onFailure(call: Call<ShowDetailsResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 
     private fun setShow(show: Show) {
         _show.value = show
-        _reviews.value = show.reviews
     }
 
     fun addReview(review: Review) {
         _reviews.value = reviews.value?.plus(review)
-    }
-
-    fun initRatingDisplay() {
-        var sum = 0F
-        val df = DecimalFormat("#.##")
-        val count = reviews.value!!.count()
-        for (item in reviews.value!!) {
-            sum += item.grade
-        }
-        val avg = df.format(sum / reviews.value!!.count())
-        _reviewAvg.value = avg.toFloat()
-        _reviewCount.value = count
-        _rating.value = sum / reviews.value!!.count()
-        _reviewsRecyclerFullOrEmpty.value= count <= 0
     }
 }
