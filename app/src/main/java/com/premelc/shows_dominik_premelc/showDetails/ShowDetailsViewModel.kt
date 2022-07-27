@@ -52,6 +52,6 @@ class ShowDetailsViewModel : ViewModel() {
         _reviewAvg.value = avg.toFloat()
         _reviewCount.value = count
         _rating.value = sum / reviews.value!!.count()
-        _reviewsRecyclerFullOrEmpty.value = count <= 0
+        _reviewsRecyclerFullOrEmpty.value= count <= 0
     }
 }

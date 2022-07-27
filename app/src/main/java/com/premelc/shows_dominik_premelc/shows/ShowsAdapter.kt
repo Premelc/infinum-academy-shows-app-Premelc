@@ -3,6 +3,8 @@ package com.premelc.shows_dominik_premelc.shows
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.ViewShowItemBinding
 import com.premelc.shows_dominik_premelc.model.Show
 
@@ -28,7 +30,15 @@ class ShowsAdapter(
         fun bind(item: Show) {
             binding.showName.text = item.name
             binding.showDescription.text = item.description
-            binding.showImage.setImageResource(item.imageResourceId)
+            Glide.with(binding.root.context)
+                .load(
+                    item.imageUrl
+                ).error(
+                    R.mipmap.the_office
+                )
+                .into(
+                    binding.showImage
+                )
             binding.cardContainer.setOnClickListener { handleClick(item.id) }
         }
     }

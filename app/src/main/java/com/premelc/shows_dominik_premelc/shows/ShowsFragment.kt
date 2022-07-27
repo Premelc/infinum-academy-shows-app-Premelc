@@ -26,8 +26,13 @@ import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.CameraGaleryBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowsBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowsBottomSheetBinding
+import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_ACCESS_TOKEN
+import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_CLIENT
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_EMAIL
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_FILE_NAME
+import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_TOKEN_TYPE
+import com.premelc.shows_dominik_premelc.networking.ApiModule
+import com.premelc.shows_dominik_premelc.networking.ApiModule.initRetrofit
 
 class ShowsFragment : Fragment() {
 
@@ -48,6 +53,7 @@ class ShowsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedPreferences = requireContext().getSharedPreferences(SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
+        initRetrofitHeader()
     }
 
     override fun onCreateView(
@@ -67,12 +73,23 @@ class ShowsFragment : Fragment() {
         }
 
         viewModel.showsRecyclerFullOrEmpty.observe(viewLifecycleOwner) { fullOrEmpty ->
-            setShowsRecyclerFullOrEmpty(fullOrEmpty)
+            setShowsRecyclerFullOrEmpty(!fullOrEmpty)
         }
         initializeUI()
     }
 
+    private fun initRetrofitHeader(){
+        val header = listOf(
+            sharedPreferences.getString(SHARED_PREFERENCES_TOKEN_TYPE , "Bearer")!!,
+            sharedPreferences.getString(SHARED_PREFERENCES_ACCESS_TOKEN , "default")!!,
+            sharedPreferences.getString(SHARED_PREFERENCES_CLIENT , "default")!!,
+            sharedPreferences.getString(SHARED_PREFERENCES_EMAIL, "default@default.com")!!
+        )
+        initRetrofit(requireContext() , header)
+    }
+
     private fun initializeUI() {
+        viewModel.fetchShowsFromServer()
         initShowsRecycler()
         initProfileButton()
     }

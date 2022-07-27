@@ -6,7 +6,8 @@ import com.premelc.shows_dominik_premelc.R
 data class Show(
     val id: String,
     val name: String,
-    val description: String,
+    val description: String?,
     var reviews: List<Review>,
-    @DrawableRes val imageResourceId: Int = R.mipmap.pfp
+    val imageUrl: String?
+    // @DrawableRes val imageResourceId: Int = R.mipmap.pfp
 )

@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowDetailsBinding
@@ -39,7 +40,10 @@ class ShowDetailsFragment : Fragment() {
         viewModel.show.observe(viewLifecycleOwner) { show ->
             binding.showTitle.text = show.name
             binding.showDescription.text = show.description
-            binding.img.setImageResource(show.imageResourceId)
+            Glide.with(requireContext())
+                .load(show.imageUrl)
+                .error(R.mipmap.the_office)
+                .into(binding.img)
         }
         viewModel.reviewCount.observe(viewLifecycleOwner) { reviewCount ->
             binding.reviewsNumber.text = String.format(
@@ -49,7 +53,10 @@ class ShowDetailsFragment : Fragment() {
             )
         }
         viewModel.show.observe(viewLifecycleOwner) { show ->
-            binding.img.setImageResource(show.imageResourceId)
+            Glide.with(requireContext())
+                .load(show.imageUrl)
+                .error(R.mipmap.the_office)
+                .into(binding.img)
             binding.showTitle.text = show.name
             binding.showDescription.text = show.description
         }
