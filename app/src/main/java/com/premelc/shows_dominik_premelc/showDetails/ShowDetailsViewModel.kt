@@ -48,7 +48,11 @@ class ShowDetailsViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _show.value = response.body()?.show
                     _showsDetailResponse.value = response.isSuccessful.toString()
-                    _reviewsRecyclerFullOrEmpty.value = _showsDetailResponse.value!!.isNotEmpty()
+                    _reviewsRecyclerFullOrEmpty.value = when(_showsDetailResponse.value){
+                         null -> true
+                        else -> false
+                    }
+
                 } else {
                     val gson = Gson()
                     val showDetailsErrorResponse: ShowDetailsErrorResponse =
@@ -93,7 +97,7 @@ class ShowDetailsViewModel : ViewModel() {
         ApiModule.retrofit.postReview(postReviewRequest).enqueue(object : Callback<PostReviewResponse> {
             override fun onResponse(call: Call<PostReviewResponse>, response: Response<PostReviewResponse>) {
                 if (response.isSuccessful) {
-                    addReview(response.body()?.review!!)
+                    if(response.body() != null )addReview(response.body()!!.review)
                     _postReviewResponse.value = response.isSuccessful.toString()
                 } else {
                     val gson = Gson()

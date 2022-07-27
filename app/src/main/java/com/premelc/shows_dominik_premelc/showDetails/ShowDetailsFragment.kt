@@ -50,7 +50,8 @@ class ShowDetailsFragment : Fragment() {
                 show.no_of_reviews.toString(),
                 show.average_rating.toString()
             )
-            binding.ratings.rating = show.average_rating?.toFloat()!!
+            if (show.average_rating != null)binding.ratings.rating = show.average_rating.toFloat()
+            else binding.ratings.rating = show.no_of_reviews.toFloat()
             Glide.with(requireContext())
                 .load(show.image_url)
                 .placeholder(R.mipmap.ic_launcher)

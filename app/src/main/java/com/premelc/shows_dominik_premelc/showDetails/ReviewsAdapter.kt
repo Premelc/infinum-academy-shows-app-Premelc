@@ -32,7 +32,6 @@ class ReviewsAdapter(
                 username.text = item.user.email.substringBefore('@')
                 reviewMsg.text = item.comment
                 gradeValue.text = item.rating.toString()
-
                 Glide.with(binding.root.context)
                     .load(item.user.image_url)
                     .placeholder(
