@@ -29,40 +29,43 @@ class ShowsViewModel : ViewModel() {
     val changePhotoResponse: LiveData<String> = _changePhotoResponse
 
     init {
-       fetchShowsFromServer()
+        fetchShowsFromServer()
     }
 
     fun fetchShowsFromServer() {
-            ApiModule.retrofit.shows().enqueue(object:Callback<ShowsResponse>{
-                override fun onResponse(call: Call<ShowsResponse>, response: Response<ShowsResponse>) {
-                    if(response.isSuccessful){
-                        _showsResponse.value = response.isSuccessful.toString()
-                        _shows.value = response.body()?.shows
-                        _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
-                    }else{
-                        val gson = Gson()
-                        val showsErrorResponse: ShowsErrorResponse = gson.fromJson(response.errorBody()?.string() , ShowsErrorResponse::class.java)
-                        _showsResponse.value = showsErrorResponse.errors[0]
-                    }
+        ApiModule.retrofit.shows().enqueue(object : Callback<ShowsResponse> {
+            override fun onResponse(call: Call<ShowsResponse>, response: Response<ShowsResponse>) {
+                if (response.isSuccessful) {
+                    _showsResponse.value = response.isSuccessful.toString()
+                    _shows.value = response.body()?.shows
+                    _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
+                } else {
+                    val gson = Gson()
+                    val showsErrorResponse: ShowsErrorResponse =
+                        gson.fromJson(response.errorBody()?.string(), ShowsErrorResponse::class.java)
+                    _showsResponse.value = showsErrorResponse.errors[0]
                 }
-                override fun onFailure(call: Call<ShowsResponse>, t: Throwable) {
-                    _showsResponse.value = false.toString()
-                }
-            })
+            }
+
+            override fun onFailure(call: Call<ShowsResponse>, t: Throwable) {
+                _showsResponse.value = false.toString()
+            }
+        })
     }
 
-    fun uploadImage(email:String){
+    fun uploadImage(email: String) {
         val request = ChangePhotoRequest(
             email = email
         )
-        ApiModule.retrofit.changePhoto(request).enqueue(object:Callback<LoginResponse>{
+        ApiModule.retrofit.changePhoto(request).enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     _changePhotoResponse.value = response.isSuccessful.toString()
-                }else{
+                } else {
                     _changePhotoResponse.value = false.toString()
                 }
             }
+
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 _changePhotoResponse.value = false.toString()
             }

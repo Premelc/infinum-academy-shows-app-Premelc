@@ -11,7 +11,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.FragmentRegisterBinding
 import com.premelc.shows_dominik_premelc.databinding.LoadingBottomSheetBinding
-import com.premelc.shows_dominik_premelc.databinding.RegisterLoginResultBottomSheetBinding
+import com.premelc.shows_dominik_premelc.databinding.RequestResponseBottomSheetBinding
 import com.premelc.shows_dominik_premelc.networking.ApiModule
 
 class RegisterFragment : Fragment() {
@@ -45,24 +45,24 @@ class RegisterFragment : Fragment() {
         viewModel.passwordValidityStringCode.observe(viewLifecycleOwner) { passwordValidityStringCode ->
             if (passwordValidityStringCode != null) binding.passwordInput.error = getString(passwordValidityStringCode)
         }
-        viewModel.repeatPasswordValidityStringCode.observe(viewLifecycleOwner){ repeatPasswordValidityStringCode ->
+        viewModel.repeatPasswordValidityStringCode.observe(viewLifecycleOwner) { repeatPasswordValidityStringCode ->
             if (repeatPasswordValidityStringCode != null) binding.repeatPasswordInput.error = getString(repeatPasswordValidityStringCode)
         }
-        viewModel.passwordsMatchStringCode.observe(viewLifecycleOwner){passwordsMatch ->
+        viewModel.passwordsMatchStringCode.observe(viewLifecycleOwner) { passwordsMatch ->
             if (passwordsMatch != null) binding.repeatPasswordInput.error = getString(passwordsMatch)
         }
-        viewModel.registerButtonIsEnabled.observe(viewLifecycleOwner){registerButtonIsEnabled ->
+        viewModel.registerButtonIsEnabled.observe(viewLifecycleOwner) { registerButtonIsEnabled ->
             binding.registerButton.isEnabled = registerButtonIsEnabled
         }
-        viewModel.registerResponse.observe(viewLifecycleOwner){ registerResponse->
-            if(viewModel.validateEmail(registerResponse)) {
+        viewModel.registerResponse.observe(viewLifecycleOwner) { registerResponse ->
+            if (viewModel.validateEmail(registerResponse)) {
                 dialog.dismiss()
                 val directions = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment(true)
                 findNavController().navigate(directions)
-            }else{
+            } else {
                 dialog.dismiss()
-                val bottomSheetBinding: RegisterLoginResultBottomSheetBinding = RegisterLoginResultBottomSheetBinding.inflate(layoutInflater)
-                with(bottomSheetBinding){
+                val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+                with(bottomSheetBinding) {
                     callbackIcon.setImageResource(R.drawable.fail)
                     callbackText.text = getString(R.string.registration_failed)
                     callbackDescription.text = registerResponse
@@ -74,13 +74,13 @@ class RegisterFragment : Fragment() {
         initializeUI()
     }
 
-    private fun initializeUI(){
-        viewModel.initRegisterTextInputListeners(binding.emailInput , binding.passwordInput , binding.repeatPasswordInput)
+    private fun initializeUI() {
+        viewModel.initRegisterTextInputListeners(binding.emailInput, binding.passwordInput, binding.repeatPasswordInput)
         setUpRegisterButton()
     }
 
-    private fun setUpRegisterButton(){
-        binding.registerButton.setOnClickListener{
+    private fun setUpRegisterButton() {
+        binding.registerButton.setOnClickListener {
             viewModel.onRegisterButtonClicked(
                 binding.emailInput.text.toString(),
                 binding.passwordInput.text.toString()

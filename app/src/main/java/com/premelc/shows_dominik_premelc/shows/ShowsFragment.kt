@@ -25,6 +25,8 @@ import com.premelc.shows_dominik_premelc.FileUtil.getImageFile
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.CameraGaleryBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowsBinding
+import com.premelc.shows_dominik_premelc.databinding.LoadingBottomSheetBinding
+import com.premelc.shows_dominik_premelc.databinding.RequestResponseBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowsBottomSheetBinding
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_ACCESS_TOKEN
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_CLIENT
@@ -41,6 +43,7 @@ class ShowsFragment : Fragment() {
     private lateinit var adapter: ShowsAdapter
     private lateinit var sharedPreferences: SharedPreferences
     private val viewModel by viewModels<ShowsViewModel>()
+    private lateinit var dialog: BottomSheetDialog
 
     private val takeImageResult =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
@@ -62,6 +65,7 @@ class ShowsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentShowsBinding.inflate(inflater, container, false)
+        dialog = BottomSheetDialog(requireContext())
         return binding.root
     }
 
@@ -71,27 +75,49 @@ class ShowsFragment : Fragment() {
             adapter.addAllShows(shows)
             adapter.notifyDataSetChanged()
         }
-
         viewModel.showsRecyclerFullOrEmpty.observe(viewLifecycleOwner) { fullOrEmpty ->
             setShowsRecyclerFullOrEmpty(!fullOrEmpty)
+        }
+        viewModel.showsResponse.observe(viewLifecycleOwner) { showsResponse ->
+            dialog.dismiss()
+            if (showsResponse != "true") {
+                val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+                with(bottomSheetBinding) {
+                    callbackIcon.setImageResource(R.drawable.fail)
+                    callbackText.text = getString(R.string.shows_fetch_failed)
+                    callbackDescription.text = when (showsResponse) {
+                        "false" -> getString(R.string.connection_error)
+                        else -> showsResponse
+                    }
+                }
+                dialog.setContentView(bottomSheetBinding.root)
+                dialog.show()
+            }
         }
         initializeUI()
     }
 
-    private fun initRetrofitHeader(){
+    private fun initRetrofitHeader() {
         val header = listOf(
-            sharedPreferences.getString(SHARED_PREFERENCES_TOKEN_TYPE , "Bearer")!!,
-            sharedPreferences.getString(SHARED_PREFERENCES_ACCESS_TOKEN , "default")!!,
-            sharedPreferences.getString(SHARED_PREFERENCES_CLIENT , "default")!!,
+            sharedPreferences.getString(SHARED_PREFERENCES_TOKEN_TYPE, "Bearer")!!,
+            sharedPreferences.getString(SHARED_PREFERENCES_ACCESS_TOKEN, "default")!!,
+            sharedPreferences.getString(SHARED_PREFERENCES_CLIENT, "default")!!,
             sharedPreferences.getString(SHARED_PREFERENCES_EMAIL, "default@default.com")!!
         )
-        initRetrofit(requireContext() , header)
+        initRetrofit(requireContext(), header)
     }
 
     private fun initializeUI() {
+        initLoadingBottomSheet()
         viewModel.fetchShowsFromServer()
         initShowsRecycler()
         initProfileButton()
+    }
+
+    private fun initLoadingBottomSheet() {
+        val loadingBottomSheetBinding: LoadingBottomSheetBinding = LoadingBottomSheetBinding.inflate(layoutInflater)
+        dialog.setContentView(loadingBottomSheetBinding.root)
+        dialog.show()
     }
 
     private fun initShowsRecycler() {

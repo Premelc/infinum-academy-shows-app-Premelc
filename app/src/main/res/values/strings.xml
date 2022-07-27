@@ -44,5 +44,8 @@
     <string name="registerSuccessTitle">Registration successful!</string>
     <string name="registration_failed">Registration failed</string>
     <string name="login_failed">Login failed</string>
-
+    <string name="shows_fetch_failed">Failed to fetch shows</string>
+    <string name="connection_error">Connection error</string>
+    <string name="reviews_fetch_failed">Failed to fetch reviews</string>
+    <string name="post_review_failed">Failed to post review</string>
 </resources>

@@ -12,12 +12,12 @@ data class RegisterResponse(
 data class User(
     @SerialName("id") val id: String,
     @SerialName("email") val email: String,
-    @SerialName("image_url") val imageUrl: String?
+    @SerialName("image_url") val image_url: String?
 )
 
 @Serializable
 data class RegisterErrorResponse(
-    @SerialName("email")val email: String,
-    @SerialName("errors")val errors: List<String>,
-    @SerialName("image_url")val imageUrl: String?
+    @SerialName("email") val email: String,
+    @SerialName("errors") val errors: List<String>,
+    @SerialName("image_url") val imageUrl: String?
 )

@@ -34,5 +34,5 @@ data class Pagination(
 
 @Serializable
 data class ShowsErrorResponse(
-    @SerialName("errors")val errors: List<String>
+    @SerialName("errors") val errors: List<String>
 )

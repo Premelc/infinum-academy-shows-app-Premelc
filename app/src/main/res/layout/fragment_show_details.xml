@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -16,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp"></com.google.android.material.appbar.MaterialToolbar>
+        tools:layout_editor_absoluteY="0dp"/>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollview"
@@ -42,7 +43,7 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="The Office" />
+                tools:text="The Office"/>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/showImage"
@@ -67,7 +68,7 @@
                         android:layout_height="350dp"
                         android:contentDescription="@string/profile_picture"
                         android:scaleType="centerCrop"
-                        tools:src="@mipmap/the_office" />
+                        tools:src="@mipmap/the_office"/>
 
                 </FrameLayout>
 
@@ -83,7 +84,7 @@
                 android:textSize="17sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/showImage"
-                tools:text="The Office is an American mockumentary sitcom television series that depicts the everyday work lives of office employees in the Scranton, Pennsylvania, branch of the fictional Dunder Mifflin Paper Company. It aired on NBC from March 24, 2005, to May 16, 2013, lasting a total of nine seasons." />
+                tools:text="The Office is an American mockumentary sitcom television series that depicts the everyday work lives of office employees in the Scranton, Pennsylvania, branch of the fictional Dunder Mifflin Paper Company. It aired on NBC from March 24, 2005, to May 16, 2013, lasting a total of nine seasons."/>
 
             <TextView
                 android:id="@+id/reviewsTitle"
@@ -95,7 +96,7 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/showDescription" />
+                app:layout_constraintTop_toBottomOf="@id/showDescription"/>
 
             <TextView
                 android:id="@+id/reviewsNumber"
@@ -107,7 +108,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/reviewsTitle" />
+                app:layout_constraintTop_toBottomOf="@id/reviewsTitle"/>
 
             <RatingBar
                 android:id="@+id/ratings"
@@ -123,7 +124,7 @@
                 android:transformPivotX="0dp"
                 android:transformPivotY="0dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/reviewsNumber" />
+                app:layout_constraintTop_toBottomOf="@id/reviewsNumber"/>
 
             <TextView
                 android:id="@+id/emptyReview"
@@ -133,7 +134,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ratings" />
+                app:layout_constraintTop_toBottomOf="@id/ratings"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/reviewsRecycler"
@@ -143,7 +144,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ratings"
-                tools:listitem="@layout/view_item_review" />
+                tools:listitem="@layout/view_item_review"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -159,6 +160,6 @@
         app:cornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

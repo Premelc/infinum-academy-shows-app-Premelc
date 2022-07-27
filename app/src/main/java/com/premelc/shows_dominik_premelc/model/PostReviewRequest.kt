@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PostReviewRequest(
-    @SerialName("rating")val rating: Int,
-    @SerialName("comment")val comment:String,
-    @SerialName("show_id")val show_id:Int
+    @SerialName("rating") val rating: Int,
+    @SerialName("comment") val comment: String,
+    @SerialName("show_id") val show_id: Int
 )
 

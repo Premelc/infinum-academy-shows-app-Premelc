@@ -17,9 +17,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowDetailsBinding
+import com.premelc.shows_dominik_premelc.databinding.LoadingBottomSheetBinding
+import com.premelc.shows_dominik_premelc.databinding.RequestResponseBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowDetailsBottomSheetBinding
 import com.premelc.shows_dominik_premelc.model.Review
-import com.premelc.shows_dominik_premelc.model.User
 
 class ShowDetailsFragment : Fragment() {
     private var _binding: FragmentShowDetailsBinding? = null
@@ -27,6 +28,7 @@ class ShowDetailsFragment : Fragment() {
     private val args by navArgs<ShowDetailsFragmentArgs>()
     private lateinit var adapter: ReviewsAdapter
     private val viewModel by viewModels<ShowDetailsViewModel>()
+    private lateinit var dialog: BottomSheetDialog
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,6 +36,7 @@ class ShowDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentShowDetailsBinding.inflate(inflater, container, false)
+        dialog = BottomSheetDialog(requireContext())
         return binding.root
     }
 
@@ -62,14 +65,53 @@ class ShowDetailsFragment : Fragment() {
         viewModel.reviewsRecyclerFullOrEmpty.observe(viewLifecycleOwner) { toggleReviewsRecyclerFullOrEmpty ->
             toggleReviewsRecyclerFullOrEmpty(toggleReviewsRecyclerFullOrEmpty)
         }
+        viewModel.reviewsResponse.observe(viewLifecycleOwner) { reviewsResponse ->
+            dialog.dismiss()
+            if (reviewsResponse != "true") {
+                val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+                with(bottomSheetBinding) {
+                    callbackIcon.setImageResource(R.drawable.fail)
+                    callbackText.text = getString(R.string.reviews_fetch_failed)
+                    callbackDescription.text = when (reviewsResponse) {
+                        "false" -> getString(R.string.connection_error)
+                        else -> reviewsResponse
+                    }
+                }
+                dialog.setContentView(bottomSheetBinding.root)
+                dialog.show()
+            }
+        }
+        viewModel.postReviewResponse.observe(viewLifecycleOwner) { postReviewResponse ->
+            dialog.dismiss()
+            if (postReviewResponse != "true") {
+                val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+                with(bottomSheetBinding) {
+                    callbackIcon.setImageResource(R.drawable.fail)
+                    callbackText.text = getString(R.string.post_review_failed)
+                    callbackDescription.text = when (postReviewResponse) {
+                        "false" -> getString(R.string.connection_error)
+                        else -> postReviewResponse
+                    }
+                }
+                dialog.setContentView(bottomSheetBinding.root)
+                dialog.show()
+            }
+        }
         initializeUI()
     }
 
     private fun initializeUI() {
+        initLoadingBottomSheet()
         initBackButton()
         initDetails()
         initReviewsRecycler(emptyList())
         initReviewDialogButton()
+    }
+
+    private fun initLoadingBottomSheet() {
+        val loadingBottomSheetBinding: LoadingBottomSheetBinding = LoadingBottomSheetBinding.inflate(layoutInflater)
+        dialog.setContentView(loadingBottomSheetBinding.root)
+        dialog.show()
     }
 
     private fun initBackButton() {
@@ -106,9 +148,10 @@ class ShowDetailsFragment : Fragment() {
             btnSubmit.setOnClickListener {
                 val comment = bottomSheetBinding.reviewInput.text.toString()
                 val rating = bottomSheetBinding.ratingBar.rating.toInt()
-                viewModel.postReview(rating , comment , args.id.toInt())
+                viewModel.postReview(rating, comment, args.id.toInt())
                 Toast.makeText(context, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
+                initLoadingBottomSheet()
             }
             dialog.setContentView(bottomSheetBinding.root)
             dialog.show()

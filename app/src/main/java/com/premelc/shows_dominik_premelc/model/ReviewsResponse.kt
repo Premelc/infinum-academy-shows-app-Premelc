@@ -2,7 +2,6 @@ package com.premelc.shows_dominik_premelc.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Serializer
 
 @Serializable
 data class ReviewsResponse(
@@ -13,7 +12,7 @@ data class ReviewsResponse(
 )
 
 @Serializable
-data class Review (
+data class Review(
     @SerialName("id")
     val id: String,
     @SerialName("comment")

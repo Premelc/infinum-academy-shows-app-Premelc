@@ -16,7 +16,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class RegisterViewModel: ViewModel() {
+class RegisterViewModel : ViewModel() {
 
     private val _emailValidityStringCode = MutableLiveData<Int>()
     val emailValidityStringCode: LiveData<Int> = _emailValidityStringCode
@@ -38,14 +38,14 @@ class RegisterViewModel: ViewModel() {
 
     private val registrationResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
-    fun initRegisterTextInputListeners(emailTextView: TextView, passwordTextView: TextView , repeatPasswordTextView: TextView) {
+    fun initRegisterTextInputListeners(emailTextView: TextView, passwordTextView: TextView, repeatPasswordTextView: TextView) {
         emailTextView.doOnTextChanged { text, start, before, count ->
             checkEmailValidity(emailTextView.text.toString())
-            validateRegisterData(emailTextView.text.toString(), passwordTextView.text.toString() , repeatPasswordTextView.text.toString())
+            validateRegisterData(emailTextView.text.toString(), passwordTextView.text.toString(), repeatPasswordTextView.text.toString())
         }
         passwordTextView.doOnTextChanged { text, start, before, count ->
             checkPasswordValidity(passwordTextView.text.toString())
-            validateRegisterData(emailTextView.text.toString(), passwordTextView.text.toString() , repeatPasswordTextView.text.toString())
+            validateRegisterData(emailTextView.text.toString(), passwordTextView.text.toString(), repeatPasswordTextView.text.toString())
         }
         repeatPasswordTextView.doOnTextChanged { text, start, before, count ->
             checkRepeatPasswordValidity(repeatPasswordTextView.text.toString())
@@ -53,25 +53,25 @@ class RegisterViewModel: ViewModel() {
                 passwordTextView.text.toString() == repeatPasswordTextView.text.toString() -> null
                 else -> R.string.passwords_dont_match
             }
-            validateRegisterData(emailTextView.text.toString(), passwordTextView.text.toString() , repeatPasswordTextView.text.toString())
+            validateRegisterData(emailTextView.text.toString(), passwordTextView.text.toString(), repeatPasswordTextView.text.toString())
         }
     }
 
-    fun checkEmailValidity(emailText: String) {
+    private fun checkEmailValidity(emailText: String) {
         _emailValidityStringCode.value = when {
             validateEmail(emailText) -> null
             else -> R.string.invalidEmail
         }
     }
 
-    fun checkPasswordValidity(passwordText: String) {
+    private fun checkPasswordValidity(passwordText: String) {
         _passwordValidityStringCode.value = when {
             validatePassword(passwordText) -> null
             else -> R.string.invalidPassword
         }
     }
 
-    fun checkRepeatPasswordValidity(passwordText: String) {
+    private fun checkRepeatPasswordValidity(passwordText: String) {
         _repeatPasswordValidityStringCode.value = when {
             validatePassword(passwordText) -> null
             else -> R.string.invalidPassword
@@ -86,26 +86,28 @@ class RegisterViewModel: ViewModel() {
         return password.length >= PASSWORD_MIN_LENGTH
     }
 
-    fun validateRegisterData(email: String, password: String , repeatPassword: String) {
+    private fun validateRegisterData(email: String, password: String, repeatPassword: String) {
         _registerButtonIsEnabled.value = validateEmail(email) && validatePassword(password) && password == repeatPassword
     }
 
-    fun onRegisterButtonClicked(email: String , password: String){
+    fun onRegisterButtonClicked(email: String, password: String) {
         val registerRequest = RegisterRequest(
             email = email,
             password = password,
             passwordConfirmation = password
         )
-        ApiModule.retrofit.register(registerRequest).enqueue(object:Callback<RegisterResponse>{
+        ApiModule.retrofit.register(registerRequest).enqueue(object : Callback<RegisterResponse> {
             override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
-                if(response.isSuccessful){
+                if (response.isSuccessful) {
                     _registerResponse.value = response.body()?.user?.email
-                }else{
+                } else {
                     val gson = Gson()
-                    val registerErrorResponse:RegisterErrorResponse = gson.fromJson(response.errorBody()?.string() , RegisterErrorResponse::class.java)
+                    val registerErrorResponse: RegisterErrorResponse =
+                        gson.fromJson(response.errorBody()?.string(), RegisterErrorResponse::class.java)
                     _registerResponse.value = registerErrorResponse.errors[0]
                 }
             }
+
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
                 registrationResultLiveData.value = false
             }

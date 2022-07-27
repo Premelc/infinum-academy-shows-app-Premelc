@@ -31,7 +31,7 @@ object FileUtil {
 
         val file = File(
             context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-             "avatar.jpg"
+            "avatar.jpg"
         )
         if (file.exists().not()) {
             Log.e("FileUtil", "Image file does not exist.")

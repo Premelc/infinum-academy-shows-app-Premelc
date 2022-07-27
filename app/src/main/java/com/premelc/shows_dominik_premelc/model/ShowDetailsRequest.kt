@@ -4,6 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ShowDetailsRequest (
-    @SerialName("id")val id : String
+data class ShowDetailsRequest(
+    @SerialName("id") val id: String
 )

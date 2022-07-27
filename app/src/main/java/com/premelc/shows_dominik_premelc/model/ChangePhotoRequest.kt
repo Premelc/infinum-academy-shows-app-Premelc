@@ -4,6 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ChangePhotoRequest (
-    @SerialName("email")val email: String
+data class ChangePhotoRequest(
+    @SerialName("email") val email: String
 )

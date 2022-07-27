@@ -5,10 +5,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PostReviewResponse(
-    @SerialName("review")val review: Review
+    @SerialName("review") val review: Review
 )
 
 @Serializable
 data class PostReviewErrorResponse(
-    @SerialName("errors")val errors: List<String>
+    @SerialName("errors") val errors: List<String>
 )

@@ -54,14 +54,14 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    fun checkEmailValidity(emailText: String) {
+    private fun checkEmailValidity(emailText: String) {
         _emailValidityStringCode.value = when {
             validateEmail(emailText) -> null
             else -> R.string.invalidEmail
         }
     }
 
-    fun checkPasswordValidity(passwordText: String) {
+    private fun checkPasswordValidity(passwordText: String) {
         _passwordValidityStringCode.value = when {
             validatePassword(passwordText) -> null
             else -> R.string.invalidPassword
@@ -76,30 +76,32 @@ class LoginViewModel : ViewModel() {
         return password.length >= PASSWORD_MIN_LENGTH
     }
 
-    fun validateLoginData(email: String, password: String) {
+    private fun validateLoginData(email: String, password: String) {
         _loginButtonIsEnabled.value = validateEmail(email) && validatePassword(password)
     }
 
-    fun onLoginButtonClicked(email: String , password: String){
+    fun onLoginButtonClicked(email: String, password: String) {
         val loginRequest = LoginRequest(
             email = email,
             password = password
         )
-        ApiModule.retrofit.login(loginRequest).enqueue(object:Callback<LoginResponse>{
+        ApiModule.retrofit.login(loginRequest).enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                if(response.isSuccessful){
+                if (response.isSuccessful) {
                     _loginResponse.value = response.body()?.user?.email
-                        _headerValues.value = arrayListOf(
-                            "Bearer",
-                            response.headers().values("access-token")[0],
-                            response.headers().values("client")[0],
-                        )
-                }else{
+                    _headerValues.value = arrayListOf(
+                        "Bearer",
+                        response.headers().values("access-token")[0],
+                        response.headers().values("client")[0],
+                    )
+                } else {
                     val gson = Gson()
-                    val loginErrorResponse: LoginErrorResponse = gson.fromJson(response.errorBody()?.string() , LoginErrorResponse::class.java)
+                    val loginErrorResponse: LoginErrorResponse =
+                        gson.fromJson(response.errorBody()?.string(), LoginErrorResponse::class.java)
                     _loginResponse.value = loginErrorResponse.errors[0]
                 }
             }
+
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 _loginResponse.value = "failed?"
             }

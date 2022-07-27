@@ -4,12 +4,12 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LoginResponse (
+data class LoginResponse(
     @SerialName("user") val user: User
 )
 
 @Serializable
 data class LoginErrorResponse(
-    @SerialName("success")val success:Boolean,
-    @SerialName("errors")val errors:List<String>
+    @SerialName("success") val success: Boolean,
+    @SerialName("errors") val errors: List<String>
 )

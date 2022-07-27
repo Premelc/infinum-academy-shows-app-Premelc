@@ -4,11 +4,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ShowDetailsResponse (
-@SerialName("show")val show:Show
+data class ShowDetailsResponse(
+    @SerialName("show") val show: Show
 )
 
 @Serializable
 data class ShowDetailsErrorResponse(
-    @SerialName("errors")val errors: List<String>
+    @SerialName("errors") val errors: List<String>
 )

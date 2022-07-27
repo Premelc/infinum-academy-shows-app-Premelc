@@ -8,17 +8,13 @@ import com.premelc.shows_dominik_premelc.model.PostReviewResponse
 import com.premelc.shows_dominik_premelc.model.RegisterRequest
 import com.premelc.shows_dominik_premelc.model.RegisterResponse
 import com.premelc.shows_dominik_premelc.model.ReviewsResponse
-import com.premelc.shows_dominik_premelc.model.ShowDetailsRequest
 import com.premelc.shows_dominik_premelc.model.ShowDetailsResponse
 import com.premelc.shows_dominik_premelc.model.ShowsResponse
-import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
-import retrofit2.http.Part
 import retrofit2.http.Path
 
 // TODO define all functions required to communicate with the server
@@ -43,5 +39,5 @@ interface ShowsApiService {
     fun postReview(@Body request: PostReviewRequest): Call<PostReviewResponse>
 
     @PUT("/users")
-    fun changePhoto(@Body request: ChangePhotoRequest):Call<LoginResponse>
+    fun changePhoto(@Body request: ChangePhotoRequest): Call<LoginResponse>
 }
