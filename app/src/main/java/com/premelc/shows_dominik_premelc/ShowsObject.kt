@@ -35,21 +35,22 @@ object ShowsObject {
             "The Office",
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
             reviews,
-            R.mipmap.the_office
+            "https://roost.nbcuni.com/bin/viewasset.html/content/dam/Peacock/Campaign/landingpages/library/theoffice/mainpage/office-social-min.png/_jcr_content/renditions/original"
         ),
         Show(
             "stranger_things",
             "Stranger Things",
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
             reviews,
-            R.mipmap.stranger_things
+            "https://roost.nbcuni.com/bin/viewasset.html/content/dam/Peacock/Campaign/landingpages/library/theoffice/mainpage/office-social-min.png/_jcr_content/renditions/original"
+
         ),
         Show(
             "krv_nije_voda",
             "Krv nije voda",
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
             reviews,
-            R.mipmap.krv_nije_voda
+            "https://roost.nbcuni.com/bin/viewasset.html/content/dam/Peacock/Campaign/landingpages/library/theoffice/mainpage/office-social-min.png/_jcr_content/renditions/original"
         )
     )
 

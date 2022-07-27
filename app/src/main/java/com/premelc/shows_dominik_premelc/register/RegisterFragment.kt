@@ -21,7 +21,7 @@ class RegisterFragment : Fragment() {
     private lateinit var dialog: BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        ApiModule.initRetrofit(requireContext())
+        ApiModule.initRetrofit(requireContext(), emptyList())
         super.onCreate(savedInstanceState)
     }
 
