@@ -36,7 +36,7 @@ class LoginFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ApiModule.initRetrofit(requireContext())
+        ApiModule.initRetrofit(requireContext() , emptyList())
         sharedPreferences = requireContext().getSharedPreferences(SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
         if (sharedPreferences.getBoolean(SHARED_PREFERENCES_REMEMBER_ME, false)) {
             val user = sharedPreferences.getString(SHARED_PREFERENCES_EMAIL, "placeholder").toString().substringBefore('@')
@@ -93,8 +93,12 @@ class LoginFragment : Fragment() {
             with(sharedPreferences.edit()){
                 putString(SHARED_PREFERENCES_TOKEN_TYPE , headerValues[0])
                 putString(SHARED_PREFERENCES_ACCESS_TOKEN , headerValues[1])
-                putString(SHARED_PREFERENCES_CLIENT, headerValues[2])
+                putString(SHARED_PREFERENCES_CLIENT, headerValues[2]).commit()
             }
+            println("SAVING HEADER VALUES NOW!!!!!!!!!!!!!!!!!!!!!")
+            println(headerValues[0])
+            println(headerValues[1])
+            println(headerValues[2])
         }
         handleRegisterSuccessful()
         initializeUI()
@@ -129,6 +133,7 @@ class LoginFragment : Fragment() {
                 binding.emailInput.text.toString(),
                 binding.passwordInput.text.toString()
             )
+
             val loadingBottomSheetBinding: LoadingBottomSheetBinding = LoadingBottomSheetBinding.inflate(layoutInflater)
             dialog.setContentView(loadingBottomSheetBinding.root)
             dialog.show()
