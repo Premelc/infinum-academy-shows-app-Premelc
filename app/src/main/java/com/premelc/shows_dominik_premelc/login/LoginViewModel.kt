@@ -6,7 +6,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.material.checkbox.MaterialCheckBox
+import com.google.gson.Gson
 import com.premelc.shows_dominik_premelc.R
+import com.premelc.shows_dominik_premelc.model.LoginErrorResponse
+import com.premelc.shows_dominik_premelc.model.LoginRequest
+import com.premelc.shows_dominik_premelc.model.LoginResponse
+import com.premelc.shows_dominik_premelc.networking.ApiModule
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 const val PASSWORD_MIN_LENGTH = 6
 
@@ -22,6 +30,12 @@ class LoginViewModel : ViewModel() {
 
     private val _loginButtonIsEnabled = MutableLiveData<Boolean>()
     val loginButtonIsEnabled: LiveData<Boolean> = _loginButtonIsEnabled
+
+    private val _loginResponse = MutableLiveData<String>()
+    val loginResponse: LiveData<String> = _loginResponse
+
+    private val _headerValues = MutableLiveData<List<String>>()
+    val headerValues: LiveData<List<String>> = _headerValues
 
     fun initRememberMeCheckboxListener(checkbox: MaterialCheckBox) {
         checkbox.setOnCheckedChangeListener { _, isChecked ->
@@ -54,7 +68,7 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    private fun validateEmail(email: String): Boolean {
+    fun validateEmail(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
@@ -64,6 +78,32 @@ class LoginViewModel : ViewModel() {
 
     fun validateLoginData(email: String, password: String) {
         _loginButtonIsEnabled.value = validateEmail(email) && validatePassword(password)
+    }
+
+    fun onLoginButtonClicked(email: String , password: String){
+        val loginRequest = LoginRequest(
+            email = email,
+            password = password
+        )
+        ApiModule.retrofit.login(loginRequest).enqueue(object:Callback<LoginResponse>{
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                if(response.isSuccessful){
+                    _loginResponse.value = response.body()?.user?.email
+                        _headerValues.value = arrayListOf(
+                            "Bearer",
+                            response.headers().values("access-token")[0],
+                            response.headers().values("client")[0],
+                        )
+                }else{
+                    val gson = Gson()
+                    val loginErrorResponse: LoginErrorResponse = gson.fromJson(response.errorBody()?.string() , LoginErrorResponse::class.java)
+                    _loginResponse.value = loginErrorResponse.errors[0]
+                }
+            }
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                _loginResponse.value = "failed?"
+            }
+        })
     }
 
 }

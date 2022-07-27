@@ -60,4 +60,7 @@ dependencies {
     //Chucker
     debugImplementation "com.github.chuckerteam.chucker:library:3.5.2"
     releaseImplementation "com.github.chuckerteam.chucker:library-no-op:3.5.2"
+
+    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+
 }

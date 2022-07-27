@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class RegisterResponse(
+data class RegisterResponse(
     @SerialName("user") val user: User
 )
 
@@ -13,4 +13,11 @@ data class User(
     @SerialName("id") val id: String,
     @SerialName("email") val email: String,
     @SerialName("image_url") val imageUrl: String?
+)
+
+@Serializable
+data class RegisterErrorResponse(
+    @SerialName("email")val email: String,
+    @SerialName("errors")val errors: List<String>,
+    @SerialName("image_url")val imageUrl: String?
 )
