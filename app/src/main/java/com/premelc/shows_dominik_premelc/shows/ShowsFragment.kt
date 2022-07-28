@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -19,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.chip.Chip
 import com.premelc.shows_dominik_premelc.FileUtil.createImageFile
 import com.premelc.shows_dominik_premelc.FileUtil.getFileUri
 import com.premelc.shows_dominik_premelc.FileUtil.getImageFile
@@ -34,6 +37,7 @@ import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_EMAIL
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_FILE_NAME
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_TOKEN_TYPE
 import com.premelc.shows_dominik_premelc.networking.ApiModule.initRetrofit
+import com.premelc.shows_dominik_premelc.networking.ApiModule.initRetrofitImageUpload
 
 class ShowsFragment : Fragment() {
 
@@ -49,7 +53,14 @@ class ShowsFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
             if (isSuccess) {
                 setProfilePicOnView(binding.profileButton)
-                viewModel.uploadImage(args.username)
+                val header = listOf(
+                    sharedPreferences.getString(SHARED_PREFERENCES_TOKEN_TYPE, "Bearer")!!,
+                    sharedPreferences.getString(SHARED_PREFERENCES_ACCESS_TOKEN, "default")!!,
+                    sharedPreferences.getString(SHARED_PREFERENCES_CLIENT, "default")!!,
+                    sharedPreferences.getString(SHARED_PREFERENCES_EMAIL, "default@default.com")!!
+                )
+                initRetrofitImageUpload(requireContext(),header , getImageFile(requireContext())?.path!! , args.username)
+                //viewModel.uploadImage(args.username)
             }
         }
 
@@ -112,6 +123,15 @@ class ShowsFragment : Fragment() {
         viewModel.fetchShowsFromServer()
         initShowsRecycler()
         initProfileButton()
+        initTopRatedChip()
+    }
+
+    private fun initTopRatedChip(){
+        val chip = binding.topRatedChip
+        chip.setInternalOnCheckedChangeListener{ chip: Chip, b: Boolean ->
+            if (b) viewModel.fetchTopRatedShowsFromServer()
+                else viewModel.fetchShowsFromServer()
+        }
     }
 
     private fun initLoadingBottomSheet() {

@@ -9,6 +9,7 @@ import com.premelc.shows_dominik_premelc.model.LoginResponse
 import com.premelc.shows_dominik_premelc.model.Show
 import com.premelc.shows_dominik_premelc.model.ShowsErrorResponse
 import com.premelc.shows_dominik_premelc.model.ShowsResponse
+import com.premelc.shows_dominik_premelc.model.TopRatedShowsResponse
 import com.premelc.shows_dominik_premelc.networking.ApiModule
 import retrofit2.Call
 import retrofit2.Callback
@@ -53,7 +54,29 @@ class ShowsViewModel : ViewModel() {
         })
     }
 
-    fun uploadImage(email: String) {
+    fun fetchTopRatedShowsFromServer(){
+        ApiModule.retrofit.topRatedShows().enqueue(object:Callback<TopRatedShowsResponse>{
+            override fun onResponse(call: Call<TopRatedShowsResponse>, response: Response<TopRatedShowsResponse>) {
+                if (response.isSuccessful) {
+                    _showsResponse.value = response.isSuccessful.toString()
+                    _shows.value = response.body()?.shows
+                    _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
+                } else {
+                    val gson = Gson()
+                    val showsErrorResponse: ShowsErrorResponse =
+                        gson.fromJson(response.errorBody()?.string(), ShowsErrorResponse::class.java)
+                    _showsResponse.value = showsErrorResponse.errors[0]
+                }
+            }
+
+            override fun onFailure(call: Call<TopRatedShowsResponse>, t: Throwable) {
+                _showsResponse.value = false.toString()
+            }
+
+        })
+    }
+
+   fun uploadImage(email: String) {
         val request = ChangePhotoRequest(
             email = email
         )
@@ -71,5 +94,4 @@ class ShowsViewModel : ViewModel() {
             }
         })
     }
-
 }
