@@ -163,4 +163,9 @@ class ShowDetailsFragment : Fragment() {
         binding.emptyReview.isVisible = !isEmpty
         binding.reviewsRecycler.isVisible = isEmpty
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
