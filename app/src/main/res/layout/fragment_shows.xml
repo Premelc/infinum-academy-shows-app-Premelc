@@ -59,16 +59,16 @@
         style="@style/CustomChipChoice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="24dp"
         android:text="@string/top_rated"
-        app:chipStrokeColor="@color/defaultPurple"
-        app:chipStrokeWidth="1dp"
-        app:chipIcon="@drawable/heart"
-        app:chipIconVisible="true"
         android:checkable="true"
         app:checkedIconEnabled="false"
+        app:chipIcon="@drawable/heart"
+        app:chipIconVisible="true"
+        app:chipStrokeColor="@color/defaultPurple"
+        app:chipStrokeWidth="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         />
 
     <androidx.recyclerview.widget.RecyclerView

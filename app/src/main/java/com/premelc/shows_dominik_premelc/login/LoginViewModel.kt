@@ -93,6 +93,7 @@ class LoginViewModel : ViewModel() {
                         "Bearer",
                         response.headers().values("access-token")[0],
                         response.headers().values("client")[0],
+                        response.body()?.user?.image_url.toString()
                     )
                 } else {
                     val gson = Gson()
@@ -103,7 +104,7 @@ class LoginViewModel : ViewModel() {
             }
 
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                _loginResponse.value = "failed?"
+                _loginResponse.value = false.toString()
             }
         })
     }

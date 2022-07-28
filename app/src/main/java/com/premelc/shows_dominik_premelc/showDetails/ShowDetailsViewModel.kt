@@ -93,7 +93,7 @@ class ShowDetailsViewModel : ViewModel() {
         ApiModule.retrofit.postReview(postReviewRequest).enqueue(object : Callback<PostReviewResponse> {
             override fun onResponse(call: Call<PostReviewResponse>, response: Response<PostReviewResponse>) {
                 if (response.isSuccessful) {
-                    if(response.body() != null )addReview(response.body()!!.review)
+                    if (response.body() != null) addReview(response.body()!!.review)
                     _postReviewResponse.value = response.isSuccessful.toString()
                 } else {
                     val gson = Gson()

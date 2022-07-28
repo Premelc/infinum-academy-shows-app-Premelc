@@ -6,11 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -35,9 +33,9 @@ import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_ACCESS_TOKEN
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_CLIENT
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_EMAIL
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_FILE_NAME
+import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_PFP_URL
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_TOKEN_TYPE
 import com.premelc.shows_dominik_premelc.networking.ApiModule.initRetrofit
-import com.premelc.shows_dominik_premelc.networking.ApiModule.initRetrofitImageUpload
 
 class ShowsFragment : Fragment() {
 
@@ -52,15 +50,7 @@ class ShowsFragment : Fragment() {
     private val takeImageResult =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
             if (isSuccess) {
-                setProfilePicOnView(binding.profileButton)
-                val header = listOf(
-                    sharedPreferences.getString(SHARED_PREFERENCES_TOKEN_TYPE, "Bearer")!!,
-                    sharedPreferences.getString(SHARED_PREFERENCES_ACCESS_TOKEN, "default")!!,
-                    sharedPreferences.getString(SHARED_PREFERENCES_CLIENT, "default")!!,
-                    sharedPreferences.getString(SHARED_PREFERENCES_EMAIL, "default@default.com")!!
-                )
-                initRetrofitImageUpload(requireContext(),header , getImageFile(requireContext())?.path!! , args.username)
-                //viewModel.uploadImage(args.username)
+                viewModel.uploadImage(args.username, getImageFile(requireContext())!!)
             }
         }
 
@@ -105,6 +95,14 @@ class ShowsFragment : Fragment() {
                 dialog.show()
             }
         }
+        viewModel.changePhotoResponse.observe(viewLifecycleOwner) { changePhotoResponse ->
+            if (changePhotoResponse != null && changePhotoResponse != "false") {
+                sharedPreferences.edit()
+                    .putString(SHARED_PREFERENCES_PFP_URL, changePhotoResponse)
+                    .commit()
+                setProfilePicOnView(binding.profileButton)
+            }
+        }
         initializeUI()
     }
 
@@ -126,11 +124,11 @@ class ShowsFragment : Fragment() {
         initTopRatedChip()
     }
 
-    private fun initTopRatedChip(){
+    private fun initTopRatedChip() {
         val chip = binding.topRatedChip
-        chip.setInternalOnCheckedChangeListener{ chip: Chip, b: Boolean ->
+        chip.setInternalOnCheckedChangeListener { chip: Chip, b: Boolean ->
             if (b) viewModel.fetchTopRatedShowsFromServer()
-                else viewModel.fetchShowsFromServer()
+            else viewModel.fetchShowsFromServer()
         }
     }
 
@@ -214,12 +212,10 @@ class ShowsFragment : Fragment() {
     }
 
     private fun setProfilePicOnView(view: ImageView) {
+        val pfpUrl = sharedPreferences.getString(SHARED_PREFERENCES_PFP_URL, "default")
         Glide.with(requireContext())
             .load(
-                getFileUri(
-                    getImageFile(requireContext()),
-                    requireContext()
-                )
+                pfpUrl
             )
             .placeholder(
                 R.mipmap.pfp

@@ -1,6 +1,5 @@
 package com.premelc.shows_dominik_premelc.networking
 
-import com.premelc.shows_dominik_premelc.model.ChangePhotoRequest
 import com.premelc.shows_dominik_premelc.model.LoginRequest
 import com.premelc.shows_dominik_premelc.model.LoginResponse
 import com.premelc.shows_dominik_premelc.model.PostReviewRequest
@@ -11,7 +10,7 @@ import com.premelc.shows_dominik_premelc.model.ReviewsResponse
 import com.premelc.shows_dominik_premelc.model.ShowDetailsResponse
 import com.premelc.shows_dominik_premelc.model.ShowsResponse
 import com.premelc.shows_dominik_premelc.model.TopRatedShowsResponse
-import okhttp3.Request
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -41,7 +40,7 @@ interface ShowsApiService {
     fun postReview(@Body request: PostReviewRequest): Call<PostReviewResponse>
 
     @PUT("/users")
-    fun changePhoto(request: ChangePhotoRequest): Call<LoginResponse>
+    fun changePhoto(@Body request: MultipartBody): Call<LoginResponse>
 
     @GET("shows/top_rated")
     fun topRatedShows(): Call<TopRatedShowsResponse>

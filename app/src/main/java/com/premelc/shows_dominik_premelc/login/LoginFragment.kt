@@ -22,6 +22,7 @@ import com.premelc.shows_dominik_premelc.networking.ApiModule
 const val SHARED_PREFERENCES_FILE_NAME = "SHOWS"
 const val SHARED_PREFERENCES_REMEMBER_ME = "REMEMBER_ME"
 const val SHARED_PREFERENCES_EMAIL = "EMAIL"
+const val SHARED_PREFERENCES_PFP_URL = "URL"
 const val SHARED_PREFERENCES_ACCESS_TOKEN = "ACCESS_TOKEN"
 const val SHARED_PREFERENCES_CLIENT = "CLIENT"
 const val SHARED_PREFERENCES_TOKEN_TYPE = "TOKEN_TYPE"
@@ -93,7 +94,8 @@ class LoginFragment : Fragment() {
             with(sharedPreferences.edit()) {
                 putString(SHARED_PREFERENCES_TOKEN_TYPE, headerValues[0])
                 putString(SHARED_PREFERENCES_ACCESS_TOKEN, headerValues[1])
-                putString(SHARED_PREFERENCES_CLIENT, headerValues[2]).commit()
+                putString(SHARED_PREFERENCES_CLIENT, headerValues[2])
+                putString(SHARED_PREFERENCES_PFP_URL, headerValues[3]).commit()
             }
         }
         handleRegisterSuccessful()

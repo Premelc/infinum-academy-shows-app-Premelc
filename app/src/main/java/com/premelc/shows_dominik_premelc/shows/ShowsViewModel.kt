@@ -4,16 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
-import com.premelc.shows_dominik_premelc.model.ChangePhotoRequest
 import com.premelc.shows_dominik_premelc.model.LoginResponse
 import com.premelc.shows_dominik_premelc.model.Show
 import com.premelc.shows_dominik_premelc.model.ShowsErrorResponse
 import com.premelc.shows_dominik_premelc.model.ShowsResponse
 import com.premelc.shows_dominik_premelc.model.TopRatedShowsResponse
 import com.premelc.shows_dominik_premelc.networking.ApiModule
+import java.io.File
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
+val MEDIA_TYPE_JPG = "image/png".toMediaType()
 
 class ShowsViewModel : ViewModel() {
 
@@ -54,8 +59,8 @@ class ShowsViewModel : ViewModel() {
         })
     }
 
-    fun fetchTopRatedShowsFromServer(){
-        ApiModule.retrofit.topRatedShows().enqueue(object:Callback<TopRatedShowsResponse>{
+    fun fetchTopRatedShowsFromServer() {
+        ApiModule.retrofit.topRatedShows().enqueue(object : Callback<TopRatedShowsResponse> {
             override fun onResponse(call: Call<TopRatedShowsResponse>, response: Response<TopRatedShowsResponse>) {
                 if (response.isSuccessful) {
                     _showsResponse.value = response.isSuccessful.toString()
@@ -76,14 +81,17 @@ class ShowsViewModel : ViewModel() {
         })
     }
 
-   fun uploadImage(email: String) {
-        val request = ChangePhotoRequest(
-            email = email
-        )
+    fun uploadImage(email: String, file: File) {
+        val request = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("email", email)
+            .addFormDataPart("image", "avatar.jpg", file.asRequestBody(MEDIA_TYPE_JPG))
+            .build()
+
         ApiModule.retrofit.changePhoto(request).enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if (response.isSuccessful) {
-                    _changePhotoResponse.value = response.isSuccessful.toString()
+                    _changePhotoResponse.value = response.body()?.user?.image_url
                 } else {
                     _changePhotoResponse.value = false.toString()
                 }
