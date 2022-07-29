@@ -86,8 +86,7 @@ class ShowsFragment : Fragment() {
                 with(bottomSheetBinding) {
                     callbackIcon.setImageResource(R.drawable.fail)
                     callbackText.text = getString(R.string.shows_fetch_failed)
-                    if (showsResponse == "false")callbackDescription.text = getString(R.string.connection_error)
-                    else callbackDescription.text = showsResponse
+                    callbackDescription.text = if (showsResponse == "false") getString(R.string.connection_error) else showsResponse
                 }
                 dialog.setContentView(bottomSheetBinding.root)
                 dialog.show()
