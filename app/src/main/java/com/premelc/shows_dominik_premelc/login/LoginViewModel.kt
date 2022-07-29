@@ -7,6 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.gson.Gson
+import com.premelc.shows_dominik_premelc.CommonFunctions.validateEmail
+import com.premelc.shows_dominik_premelc.CommonFunctions.validatePassword
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.model.LoginErrorResponse
 import com.premelc.shows_dominik_premelc.model.LoginRequest
@@ -34,8 +36,8 @@ class LoginViewModel : ViewModel() {
     private val _loginResponse = MutableLiveData<String>()
     val loginResponse: LiveData<String> = _loginResponse
 
-    private val _headerValues = MutableLiveData<List<String>>()
-    val headerValues: LiveData<List<String>> = _headerValues
+    private val _headerValues = MutableLiveData<Map<String , String>>()
+    val headerValues: LiveData<Map<String,String>> = _headerValues
 
     fun initRememberMeCheckboxListener(checkbox: MaterialCheckBox) {
         checkbox.setOnCheckedChangeListener { _, isChecked ->
@@ -43,40 +45,20 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    fun initLoginTextInputListeners(emailTextView: TextView, passwordTextView: TextView) {
-        emailTextView.doOnTextChanged { text, start, before, count ->
-            checkEmailValidity(emailTextView.text.toString())
-            validateLoginData(emailTextView.text.toString(), passwordTextView.text.toString())
-        }
-        passwordTextView.doOnTextChanged { text, start, before, count ->
-            checkPasswordValidity(passwordTextView.text.toString())
-            validateLoginData(emailTextView.text.toString(), passwordTextView.text.toString())
-        }
-    }
-
-    private fun checkEmailValidity(emailText: String) {
+    fun checkEmailValidity(emailText: String) {
         _emailValidityStringCode.value = when {
             validateEmail(emailText) -> null
             else -> R.string.invalidEmail
         }
     }
 
-    private fun checkPasswordValidity(passwordText: String) {
+    fun checkPasswordValidity(passwordText: String) {
         _passwordValidityStringCode.value = when {
             validatePassword(passwordText) -> null
             else -> R.string.invalidPassword
         }
     }
-
-    fun validateEmail(email: String): Boolean {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    }
-
-    private fun validatePassword(password: String): Boolean {
-        return password.length >= PASSWORD_MIN_LENGTH
-    }
-
-    private fun validateLoginData(email: String, password: String) {
+    fun validateLoginData(email: String, password: String) {
         _loginButtonIsEnabled.value = validateEmail(email) && validatePassword(password)
     }
 
@@ -89,11 +71,11 @@ class LoginViewModel : ViewModel() {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if (response.isSuccessful) {
                     _loginResponse.value = response.body()?.user?.email
-                    _headerValues.value = arrayListOf(
-                        "Bearer",
-                        response.headers().values("access-token")[0],
-                        response.headers().values("client")[0],
-                        response.body()?.user?.image_url.toString()
+                    _headerValues.value = mapOf(
+                        SHARED_PREFERENCES_TOKEN_TYPE to "Bearer" ,
+                        SHARED_PREFERENCES_ACCESS_TOKEN to response.headers().values("access-token")[0],
+                        SHARED_PREFERENCES_CLIENT to response.headers().values("client")[0],
+                        SHARED_PREFERENCES_PFP_URL to response.body()?.user?.image_url.toString()
                     )
                 } else {
                     val gson = Gson()

@@ -8,11 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.edit
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.premelc.shows_dominik_premelc.CommonFunctions.validateEmail
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.FragmentLoginBinding
 import com.premelc.shows_dominik_premelc.databinding.LoadingBottomSheetBinding
@@ -37,7 +39,7 @@ class LoginFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ApiModule.initRetrofit(requireContext(), emptyList())
+        ApiModule.initRetrofit(requireContext(), emptyMap())
         sharedPreferences = requireContext().getSharedPreferences(SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
         if (sharedPreferences.getBoolean(SHARED_PREFERENCES_REMEMBER_ME, false)) {
             val user = sharedPreferences.getString(SHARED_PREFERENCES_EMAIL, "placeholder").toString()
@@ -72,14 +74,13 @@ class LoginFragment : Fragment() {
             binding.loginButton.isEnabled = loginButtonIsEnabled
         }
         viewModel.loginResponse.observe(viewLifecycleOwner) { loginResponse ->
-            if (viewModel.validateEmail(loginResponse)) {
+            dialog.dismiss()
+            if (validateEmail(loginResponse)) {
                 val directions = LoginFragmentDirections.actionLoginFragmentToShowsFragment(
                     binding.emailInput.text.toString()
                 )
-                dialog.dismiss()
                 findNavController().navigate(directions)
             } else {
-                dialog.dismiss()
                 val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
                 with(bottomSheetBinding) {
                     callbackIcon.setImageResource(R.drawable.fail)
@@ -91,11 +92,11 @@ class LoginFragment : Fragment() {
             }
         }
         viewModel.headerValues.observe(viewLifecycleOwner) { headerValues ->
-            with(sharedPreferences.edit()) {
-                putString(SHARED_PREFERENCES_TOKEN_TYPE, headerValues[0])
-                putString(SHARED_PREFERENCES_ACCESS_TOKEN, headerValues[1])
-                putString(SHARED_PREFERENCES_CLIENT, headerValues[2])
-                putString(SHARED_PREFERENCES_PFP_URL, headerValues[3]).commit()
+           sharedPreferences.edit(commit = true){
+                putString(SHARED_PREFERENCES_TOKEN_TYPE, headerValues[SHARED_PREFERENCES_TOKEN_TYPE])
+                putString(SHARED_PREFERENCES_ACCESS_TOKEN, headerValues[SHARED_PREFERENCES_ACCESS_TOKEN])
+                putString(SHARED_PREFERENCES_CLIENT, headerValues[SHARED_PREFERENCES_CLIENT])
+                putString(SHARED_PREFERENCES_PFP_URL, headerValues[SHARED_PREFERENCES_PFP_URL])
             }
         }
         handleRegisterSuccessful()
@@ -146,7 +147,16 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupLoginValidation() {
-        viewModel.initLoginTextInputListeners(binding.emailInput, binding.passwordInput)
+        with(binding){
+            emailInput.doOnTextChanged { text, start, before, count ->
+                viewModel.checkEmailValidity(emailInput.text.toString())
+                viewModel.validateLoginData(emailInput.text.toString(), passwordInput.text.toString())
+            }
+            passwordInput.doOnTextChanged { text, start, before, count ->
+                viewModel.checkPasswordValidity(emailInput.text.toString())
+                viewModel.validateLoginData(emailInput.text.toString(), passwordInput.text.toString())
+            }
+        }
     }
 
     override fun onDestroyView() {

@@ -6,6 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
+import com.premelc.shows_dominik_premelc.CommonFunctions.validateEmail
+import com.premelc.shows_dominik_premelc.CommonFunctions.validatePassword
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.login.PASSWORD_MIN_LENGTH
 import com.premelc.shows_dominik_premelc.model.RegisterErrorResponse
@@ -38,55 +40,23 @@ class RegisterViewModel : ViewModel() {
 
     private val registrationResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
-    fun initRegisterTextInputListeners(emailTextView: TextView, passwordTextView: TextView, repeatPasswordTextView: TextView) {
-        emailTextView.doOnTextChanged { text, start, before, count ->
-            checkEmailValidity(emailTextView.text.toString())
-            validateRegisterData(emailTextView.text.toString(), passwordTextView.text.toString(), repeatPasswordTextView.text.toString())
-        }
-        passwordTextView.doOnTextChanged { text, start, before, count ->
-            checkPasswordValidity(passwordTextView.text.toString())
-            validateRegisterData(emailTextView.text.toString(), passwordTextView.text.toString(), repeatPasswordTextView.text.toString())
-        }
-        repeatPasswordTextView.doOnTextChanged { text, start, before, count ->
-            checkRepeatPasswordValidity(repeatPasswordTextView.text.toString())
-            _passwordsMatchStringCode.value = when {
-                passwordTextView.text.toString() == repeatPasswordTextView.text.toString() -> null
-                else -> R.string.passwords_dont_match
-            }
-            validateRegisterData(emailTextView.text.toString(), passwordTextView.text.toString(), repeatPasswordTextView.text.toString())
-        }
+    fun checkIfPasswordsMatch(password: String , repeatPassword: String){
+        _passwordsMatchStringCode.value = if(password == repeatPassword) null else R.string.passwords_dont_match
     }
 
-    private fun checkEmailValidity(emailText: String) {
-        _emailValidityStringCode.value = when {
-            validateEmail(emailText) -> null
-            else -> R.string.invalidEmail
-        }
+    fun checkEmailValidity(emailText: String) {
+        _emailValidityStringCode.value = if(validateEmail(emailText)) null else R.string.invalidEmail
     }
 
-    private fun checkPasswordValidity(passwordText: String) {
-        _passwordValidityStringCode.value = when {
-            validatePassword(passwordText) -> null
-            else -> R.string.invalidPassword
-        }
+    fun checkPasswordValidity(passwordText: String) {
+        _passwordValidityStringCode.value = if (validatePassword(passwordText)) null else R.string.invalidPassword
     }
 
-    private fun checkRepeatPasswordValidity(passwordText: String) {
-        _repeatPasswordValidityStringCode.value = when {
-            validatePassword(passwordText) -> null
-            else -> R.string.invalidPassword
-        }
+    fun checkRepeatPasswordValidity(passwordText: String) {
+        _repeatPasswordValidityStringCode.value = if(validatePassword(passwordText)) null else R.string.invalidPassword
     }
 
-    fun validateEmail(email: String): Boolean {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    }
-
-    private fun validatePassword(password: String): Boolean {
-        return password.length >= PASSWORD_MIN_LENGTH
-    }
-
-    private fun validateRegisterData(email: String, password: String, repeatPassword: String) {
+    fun validateRegisterData(email: String, password: String, repeatPassword: String) {
         _registerButtonIsEnabled.value = validateEmail(email) && validatePassword(password) && password == repeatPassword
     }
 

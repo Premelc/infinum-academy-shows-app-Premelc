@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.premelc.shows_dominik_premelc.CommonFunctions.validateEmail
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.FragmentRegisterBinding
 import com.premelc.shows_dominik_premelc.databinding.LoadingBottomSheetBinding
@@ -21,7 +23,7 @@ class RegisterFragment : Fragment() {
     private lateinit var dialog: BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        ApiModule.initRetrofit(requireContext(), emptyList())
+        ApiModule.initRetrofit(requireContext(), emptyMap())
         super.onCreate(savedInstanceState)
     }
 
@@ -55,12 +57,11 @@ class RegisterFragment : Fragment() {
             binding.registerButton.isEnabled = registerButtonIsEnabled
         }
         viewModel.registerResponse.observe(viewLifecycleOwner) { registerResponse ->
-            if (viewModel.validateEmail(registerResponse)) {
-                dialog.dismiss()
+            dialog.dismiss()
+            if (validateEmail(registerResponse)) {
                 val directions = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment(true)
                 findNavController().navigate(directions)
             } else {
-                dialog.dismiss()
                 val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
                 with(bottomSheetBinding) {
                     callbackIcon.setImageResource(R.drawable.fail)
@@ -75,8 +76,26 @@ class RegisterFragment : Fragment() {
     }
 
     private fun initializeUI() {
-        viewModel.initRegisterTextInputListeners(binding.emailInput, binding.passwordInput, binding.repeatPasswordInput)
+        setUpEmailAndPasswordValidation()
         setUpRegisterButton()
+    }
+
+    private fun setUpEmailAndPasswordValidation(){
+        with(binding){
+            emailInput.doOnTextChanged{  text, start, before, count ->
+                viewModel.checkEmailValidity(emailInput.text.toString())
+                viewModel.validateRegisterData(emailInput.text.toString() , passwordInput.text.toString() , repeatPasswordInput.text.toString())
+            }
+            passwordInput.doOnTextChanged{  text, start, before, count ->
+                viewModel.checkPasswordValidity(passwordInput.text.toString())
+                viewModel.validateRegisterData(emailInput.text.toString() , passwordInput.text.toString() , repeatPasswordInput.text.toString())
+            }
+            repeatPasswordInput.doOnTextChanged{    text, start, before, count ->
+                viewModel.checkRepeatPasswordValidity(repeatPasswordInput.text.toString())
+                viewModel.checkIfPasswordsMatch(repeatPasswordInput.text.toString() ,passwordInput.text.toString() )
+                viewModel.validateRegisterData(emailInput.text.toString() , passwordInput.text.toString() , repeatPasswordInput.text.toString())
+            }
+        }
     }
 
     private fun setUpRegisterButton() {

@@ -86,10 +86,8 @@ class ShowsFragment : Fragment() {
                 with(bottomSheetBinding) {
                     callbackIcon.setImageResource(R.drawable.fail)
                     callbackText.text = getString(R.string.shows_fetch_failed)
-                    callbackDescription.text = when (showsResponse) {
-                        "false" -> getString(R.string.connection_error)
-                        else -> showsResponse
-                    }
+                    if (showsResponse == "false")callbackDescription.text = getString(R.string.connection_error)
+                    else callbackDescription.text = showsResponse
                 }
                 dialog.setContentView(bottomSheetBinding.root)
                 dialog.show()
@@ -107,11 +105,11 @@ class ShowsFragment : Fragment() {
     }
 
     private fun initRetrofitHeader() {
-        val header = listOf(
-            sharedPreferences.getString(SHARED_PREFERENCES_TOKEN_TYPE, "Bearer")!!,
-            sharedPreferences.getString(SHARED_PREFERENCES_ACCESS_TOKEN, "default")!!,
-            sharedPreferences.getString(SHARED_PREFERENCES_CLIENT, "default")!!,
-            sharedPreferences.getString(SHARED_PREFERENCES_EMAIL, "default@default.com")!!
+        val header = mapOf(
+            SHARED_PREFERENCES_TOKEN_TYPE to sharedPreferences.getString(SHARED_PREFERENCES_TOKEN_TYPE, "Bearer").toString(),
+            SHARED_PREFERENCES_ACCESS_TOKEN to sharedPreferences.getString(SHARED_PREFERENCES_ACCESS_TOKEN, "default").toString(),
+            SHARED_PREFERENCES_CLIENT to sharedPreferences.getString(SHARED_PREFERENCES_CLIENT, "default").toString(),
+            SHARED_PREFERENCES_EMAIL to sharedPreferences.getString(SHARED_PREFERENCES_EMAIL, "default@default.com").toString()
         )
         initRetrofit(requireContext(), header)
     }
@@ -126,8 +124,8 @@ class ShowsFragment : Fragment() {
 
     private fun initTopRatedChip() {
         val chip = binding.topRatedChip
-        chip.setInternalOnCheckedChangeListener { chip: Chip, b: Boolean ->
-            if (b) viewModel.fetchTopRatedShowsFromServer()
+        chip.setInternalOnCheckedChangeListener { chip: Chip, chipIsChecked: Boolean ->
+            if (chipIsChecked) viewModel.fetchTopRatedShowsFromServer()
             else viewModel.fetchShowsFromServer()
         }
     }

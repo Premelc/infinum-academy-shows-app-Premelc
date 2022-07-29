@@ -73,10 +73,8 @@ class ShowDetailsFragment : Fragment() {
                 with(bottomSheetBinding) {
                     callbackIcon.setImageResource(R.drawable.fail)
                     callbackText.text = getString(R.string.reviews_fetch_failed)
-                    callbackDescription.text = when (reviewsResponse) {
-                        "false" -> getString(R.string.connection_error)
-                        else -> reviewsResponse
-                    }
+                    if (reviewsResponse == "false")callbackDescription.text = getString(R.string.connection_error)
+                    else callbackDescription.text = reviewsResponse
                 }
                 dialog.setContentView(bottomSheetBinding.root)
                 dialog.show()
@@ -89,13 +87,13 @@ class ShowDetailsFragment : Fragment() {
                 with(bottomSheetBinding) {
                     callbackIcon.setImageResource(R.drawable.fail)
                     callbackText.text = getString(R.string.post_review_failed)
-                    callbackDescription.text = when (postReviewResponse) {
-                        "false" -> getString(R.string.connection_error)
-                        else -> postReviewResponse
-                    }
+                    if (postReviewResponse == "false")callbackDescription.text = getString(R.string.connection_error)
+                    else callbackDescription.text = postReviewResponse
                 }
                 dialog.setContentView(bottomSheetBinding.root)
                 dialog.show()
+            }else{
+                Toast.makeText(context, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
             }
         }
         initializeUI()
@@ -150,7 +148,6 @@ class ShowDetailsFragment : Fragment() {
                 val comment = bottomSheetBinding.reviewInput.text.toString()
                 val rating = bottomSheetBinding.ratingBar.rating.toInt()
                 viewModel.postReview(rating, comment, args.id.toInt())
-                Toast.makeText(context, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
                 initLoadingBottomSheet()
             }

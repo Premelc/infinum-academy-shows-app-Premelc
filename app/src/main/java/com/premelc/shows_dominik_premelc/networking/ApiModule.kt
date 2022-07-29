@@ -4,6 +4,10 @@ import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_ACCESS_TOKEN
+import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_CLIENT
+import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_EMAIL
+import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_TOKEN_TYPE
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -14,7 +18,7 @@ object ApiModule {
     private const val BASE_URL = "https://tv-shows.infinum.academy/"
     lateinit var retrofit: ShowsApiService
 
-    fun initRetrofit(context: Context, header: List<String>) {
+    fun initRetrofit(context: Context, header: Map<String , String>) {
 
         val gson: Gson = GsonBuilder()
             .setLenient()
@@ -27,10 +31,10 @@ object ApiModule {
             okhttp.addInterceptor(Interceptor { chain ->
                 val builder = chain.request().newBuilder()
                 builder.header("Accept", "application/json")
-                builder.header("access-token", header[1])
-                builder.header("client", header[2])
-                builder.header("token-type", header[0])
-                builder.header("uid", header[3])
+                builder.header("access-token", header[SHARED_PREFERENCES_ACCESS_TOKEN].toString())
+                builder.header("client", header[SHARED_PREFERENCES_CLIENT].toString())
+                builder.header("token-type", header[SHARED_PREFERENCES_TOKEN_TYPE].toString())
+                builder.header("uid", header[SHARED_PREFERENCES_EMAIL].toString())
                 builder.header("Content-Type", "application/json")
                 return@Interceptor chain.proceed(builder.build())
             }).build()
