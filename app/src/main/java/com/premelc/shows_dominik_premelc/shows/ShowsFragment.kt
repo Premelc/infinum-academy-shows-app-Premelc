@@ -21,22 +21,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.chip.Chip
 import com.premelc.shows_dominik_premelc.FileUtil.createImageFile
 import com.premelc.shows_dominik_premelc.FileUtil.getFileUri
 import com.premelc.shows_dominik_premelc.FileUtil.getImageFile
 import com.premelc.shows_dominik_premelc.R
+import com.premelc.shows_dominik_premelc.ShowApplication
 import com.premelc.shows_dominik_premelc.databinding.CameraGaleryBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowsBinding
 import com.premelc.shows_dominik_premelc.databinding.LoadingBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.RequestResponseBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowsBottomSheetBinding
+import com.premelc.shows_dominik_premelc.db.ShowsViewModelFactory
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_ACCESS_TOKEN
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_CLIENT
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_EMAIL
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_FILE_NAME
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_PFP_URL
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_TOKEN_TYPE
+import com.premelc.shows_dominik_premelc.model.Show
 import com.premelc.shows_dominik_premelc.networking.ApiModule.initRetrofit
 
 class ShowsFragment : Fragment() {
@@ -46,7 +48,10 @@ class ShowsFragment : Fragment() {
     private val args by navArgs<ShowsFragmentArgs>()
     private lateinit var adapter: ShowsAdapter
     private lateinit var sharedPreferences: SharedPreferences
-    private val viewModel by viewModels<ShowsViewModel>()
+    private var connectionEstablished = true
+    private val viewModel:ShowsViewModel by viewModels{
+        ShowsViewModelFactory((requireActivity().application as ShowApplication).database)
+    }
     private lateinit var dialog: BottomSheetDialog
 
     private val takeImageResult =
@@ -82,6 +87,7 @@ class ShowsFragment : Fragment() {
             setShowsRecyclerFullOrEmpty(!fullOrEmpty)
         }
         viewModel.showsResponse.observe(viewLifecycleOwner) { showsResponse ->
+            connectionEstablished = showsResponse
             dialog.dismiss()
             if (!showsResponse) {
                 val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
@@ -139,6 +145,22 @@ class ShowsFragment : Fragment() {
             dialog.setContentView(bottomSheetBinding.root)
             dialog.show()
         }
+
+        viewModel.fetchShowsFromDb().observe(viewLifecycleOwner){ showsFromDb ->
+            if(!connectionEstablished){
+                updateRecycler(showsFromDb.map { showEntity ->
+                    Show(
+                        showEntity.id,
+                        showEntity.averageRating,
+                        showEntity.description,
+                        showEntity.imageUrl,
+                        showEntity.noOfReviews,
+                        showEntity.title
+                    )
+                })
+                setShowsRecyclerFullOrEmpty(showsFromDb.isNotEmpty())
+            }
+        }
         initializeUI()
     }
 
@@ -190,6 +212,11 @@ class ShowsFragment : Fragment() {
         binding.emptyStateElipse.isVisible = !isFull
         binding.emptyStateIcon.isVisible = !isFull
         binding.emptyState.isVisible = !isFull
+    }
+
+    private fun updateRecycler(list: List<Show>){
+        adapter.addAllShows(list)
+        adapter.notifyDataSetChanged()
     }
 
     private fun initProfileButton() {

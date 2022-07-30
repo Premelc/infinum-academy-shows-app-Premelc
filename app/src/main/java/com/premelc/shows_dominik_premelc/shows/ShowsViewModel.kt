@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
+import com.premelc.shows_dominik_premelc.db.ShowEntity
+import com.premelc.shows_dominik_premelc.db.ShowsDatabase
 import com.premelc.shows_dominik_premelc.model.ChangePhotoErrorResponse
 import com.premelc.shows_dominik_premelc.model.LoginResponse
 import com.premelc.shows_dominik_premelc.model.Show
@@ -12,6 +14,7 @@ import com.premelc.shows_dominik_premelc.model.ShowsResponse
 import com.premelc.shows_dominik_premelc.model.TopRatedShowsResponse
 import com.premelc.shows_dominik_premelc.networking.ApiModule
 import java.io.File
+import java.util.concurrent.Executors
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -21,7 +24,9 @@ import retrofit2.Response
 
 val MEDIA_TYPE_JPG = "image/png".toMediaType()
 
-class ShowsViewModel : ViewModel() {
+class ShowsViewModel(
+    private val database: ShowsDatabase
+) : ViewModel() {
 
     private val _shows = MutableLiveData<List<Show>>(emptyList())
     val shows: LiveData<List<Show>> = _shows
@@ -39,7 +44,7 @@ class ShowsViewModel : ViewModel() {
     val changePhotoResponse: LiveData<Boolean> = _changePhotoResponse
 
     private val _changePhotoResponseMessage = MutableLiveData<String>()
-     val changePhotoResponseMessage: LiveData<String> = _changePhotoResponseMessage
+    val changePhotoResponseMessage: LiveData<String> = _changePhotoResponseMessage
 
     init {
         fetchShowsFromServer()
@@ -52,6 +57,16 @@ class ShowsViewModel : ViewModel() {
                     _showsResponse.value = response.isSuccessful
                     _shows.value = response.body()?.shows
                     _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
+                        addToDb(_shows.value!!.map { shows ->
+                            ShowEntity(
+                                shows.id,
+                                shows.average_rating,
+                                shows.description.toString(),
+                                shows.image_url,
+                                shows.no_of_reviews,
+                                shows.title
+                            )
+                        })
                 } else {
                     val gson = Gson()
                     val showsErrorResponse: ShowsErrorResponse =
@@ -66,6 +81,16 @@ class ShowsViewModel : ViewModel() {
         })
     }
 
+    fun addToDb(list: List<ShowEntity>){
+        Executors.newSingleThreadExecutor().execute {
+            database.showsDAO().insertAllShows(list)
+        }
+    }
+
+    fun fetchShowsFromDb(): LiveData<List<ShowEntity>> {
+        return database.showsDAO().getAllShows()
+    }
+
     fun fetchTopRatedShowsFromServer() {
         ApiModule.retrofit.topRatedShows().enqueue(object : Callback<TopRatedShowsResponse> {
             override fun onResponse(call: Call<TopRatedShowsResponse>, response: Response<TopRatedShowsResponse>) {
@@ -73,6 +98,16 @@ class ShowsViewModel : ViewModel() {
                     _showsResponse.value = response.isSuccessful
                     _shows.value = response.body()?.shows
                     _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
+                    addToDb(_shows.value!!.map { shows ->
+                        ShowEntity(
+                            shows.id,
+                            shows.average_rating,
+                            shows.description.toString(),
+                            shows.image_url,
+                            shows.no_of_reviews,
+                            shows.title
+                        )
+                    })
                 } else {
                     val gson = Gson()
                     val showsErrorResponse: ShowsErrorResponse =
