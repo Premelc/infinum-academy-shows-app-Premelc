@@ -1,13 +1,9 @@
 package com.premelc.shows_dominik_premelc.register
 
-import android.widget.TextView
-import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
-import com.premelc.shows_dominik_premelc.CommonFunctions.validateEmail
-import com.premelc.shows_dominik_premelc.CommonFunctions.validatePassword
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.login.PASSWORD_MIN_LENGTH
 import com.premelc.shows_dominik_premelc.model.RegisterErrorResponse
@@ -41,7 +37,13 @@ class RegisterViewModel : ViewModel() {
     private val _registerErrorMessage = MutableLiveData<String>()
     val registerErrorMessage: LiveData<String> = _registerErrorMessage
 
-    private val registrationResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
+    private fun validateEmail(email: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    private fun validatePassword(password: String): Boolean {
+        return password.length >= PASSWORD_MIN_LENGTH
+    }
 
     fun checkIfPasswordsMatch(password: String , repeatPassword: String){
         _passwordsMatchStringCode.value = if(password == repeatPassword) null else R.string.passwords_dont_match

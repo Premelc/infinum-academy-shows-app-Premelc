@@ -1,14 +1,10 @@
 package com.premelc.shows_dominik_premelc.login
 
-import android.widget.TextView
-import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.gson.Gson
-import com.premelc.shows_dominik_premelc.CommonFunctions.validateEmail
-import com.premelc.shows_dominik_premelc.CommonFunctions.validatePassword
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.model.LoginErrorResponse
 import com.premelc.shows_dominik_premelc.model.LoginRequest
@@ -46,6 +42,14 @@ class LoginViewModel : ViewModel() {
         checkbox.setOnCheckedChangeListener { _, isChecked ->
             _isRememberMeChecked.value = isChecked
         }
+    }
+
+    private fun validateEmail(email: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    private fun validatePassword(password: String): Boolean {
+        return password.length >= PASSWORD_MIN_LENGTH
     }
 
     fun checkEmailValidity(emailText: String) {

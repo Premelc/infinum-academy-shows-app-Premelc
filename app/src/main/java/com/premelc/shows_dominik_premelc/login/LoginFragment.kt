@@ -14,7 +14,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.premelc.shows_dominik_premelc.CommonFunctions.validateEmail
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.FragmentLoginBinding
 import com.premelc.shows_dominik_premelc.databinding.LoadingBottomSheetBinding
@@ -164,7 +163,7 @@ class LoginFragment : Fragment() {
                 viewModel.validateLoginData(emailInput.text.toString(), passwordInput.text.toString())
             }
             passwordInput.doOnTextChanged { text, start, before, count ->
-                viewModel.checkPasswordValidity(emailInput.text.toString())
+                viewModel.checkPasswordValidity(passwordInput.text.toString())
                 viewModel.validateLoginData(emailInput.text.toString(), passwordInput.text.toString())
             }
         }
