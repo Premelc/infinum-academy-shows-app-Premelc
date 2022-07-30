@@ -60,7 +60,6 @@ class ShowsViewModel(
                 _connectionEstablished.value = false
             }
         })
-
     }
 
     fun fetchShowsFromServer() {
@@ -132,7 +131,6 @@ class ShowsViewModel(
             override fun onFailure(call: Call<TopRatedShowsResponse>, t: Throwable) {
                 _showsResponse.value = false
             }
-
         })
     }
 
