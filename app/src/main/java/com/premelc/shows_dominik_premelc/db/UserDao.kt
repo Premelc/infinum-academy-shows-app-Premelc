@@ -7,14 +7,10 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
-interface ShowsDao {
-    @Query("SELECT * FROM show")
-    fun getAllShows(): LiveData<List<ShowEntity>>
-
+interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllShows(shows: List<ShowEntity>)
+    fun insertUsers(listUsers: List<UserEntity>)
 
-    @Query("SELECT * FROM show WHERE id IS :showId")
-    fun getShow(showId: String): LiveData<ShowEntity>
-
+    @Query("SELECT * FROM user WHERE id is :userId")
+    fun getUser(userId: String):LiveData<UserEntity>
 }

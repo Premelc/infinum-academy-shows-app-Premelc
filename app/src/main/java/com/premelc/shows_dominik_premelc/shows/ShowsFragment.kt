@@ -80,70 +80,34 @@ class ShowsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.shows.observe(viewLifecycleOwner) { shows ->
-            adapter.addAllShows(shows)
-            adapter.notifyDataSetChanged()
+           updateRecycler(shows)
         }
         viewModel.showsRecyclerFullOrEmpty.observe(viewLifecycleOwner) { fullOrEmpty ->
             setShowsRecyclerFullOrEmpty(!fullOrEmpty)
         }
         viewModel.showsResponse.observe(viewLifecycleOwner) { showsResponse ->
-            connectionEstablished = showsResponse
-            dialog.dismiss()
             if (!showsResponse) {
-                val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
-                with(bottomSheetBinding) {
-                    callbackIcon.setImageResource(R.drawable.fail)
-                    callbackText.text = getString(R.string.shows_fetch_failed)
-                    callbackDescription.text =  getString(R.string.connection_error)
-                }
-                dialog.setContentView(bottomSheetBinding.root)
-                dialog.show()
+                triggerNotificationBottomSheet(R.drawable.fail,getString(R.string.shows_fetch_failed) , getString(R.string.connection_error))
             }
         }
         viewModel.showsErrorMessage.observe(viewLifecycleOwner){ showsErrorMessage->
-            dialog.dismiss()
-            val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
-            with(bottomSheetBinding) {
-                callbackIcon.setImageResource(R.drawable.fail)
-                callbackText.text = getString(R.string.shows_fetch_failed)
-                callbackDescription.text =  showsErrorMessage
-            }
-            dialog.setContentView(bottomSheetBinding.root)
-            dialog.show()
+            triggerNotificationBottomSheet(R.drawable.fail,getString(R.string.shows_fetch_failed) , showsErrorMessage)
         }
         viewModel.changePhotoResponse.observe(viewLifecycleOwner) { changePhotoResponse ->
             if (!changePhotoResponse) {
-                val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
-                with(bottomSheetBinding) {
-                    callbackIcon.setImageResource(R.drawable.fail)
-                    callbackText.text = getString(R.string.change_photo_error)
-                    callbackDescription.text =  getString(R.string.connection_error)
-                }
-                dialog.setContentView(bottomSheetBinding.root)
-                dialog.show()
+                triggerNotificationBottomSheet(R.drawable.fail,getString(R.string.change_photo_error) , getString(R.string.connection_error))
             }
         }
         viewModel.changePhotoResponseMessage.observe(viewLifecycleOwner){changePhotoResponseMessage->
-            val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
             if (URLUtil.isValidUrl(changePhotoResponseMessage)){
                 sharedPreferences.edit()
                     .putString(SHARED_PREFERENCES_PFP_URL, changePhotoResponseMessage)
                     .commit()
                 setProfilePicOnView(binding.profileButton)
-                with(bottomSheetBinding) {
-                    callbackIcon.setImageResource(R.drawable.success)
-                    callbackText.text = getString(R.string.change_photo_success)
-                    callbackDescription.text =  getString(R.string.empty)
-                }
+                triggerNotificationBottomSheet(R.drawable.success , getString(R.string.change_photo_success) ,getString(R.string.empty) )
             }else{
-                with(bottomSheetBinding) {
-                    callbackIcon.setImageResource(R.drawable.fail)
-                    callbackText.text = getString(R.string.change_photo_error)
-                    callbackDescription.text =  changePhotoResponseMessage
-                }
+                triggerNotificationBottomSheet(R.drawable.fail , getString(R.string.change_photo_error) ,changePhotoResponseMessage )
             }
-            dialog.setContentView(bottomSheetBinding.root)
-            dialog.show()
         }
 
         viewModel.fetchShowsFromDb().observe(viewLifecycleOwner){ showsFromDb ->
@@ -160,6 +124,9 @@ class ShowsFragment : Fragment() {
                 })
                 setShowsRecyclerFullOrEmpty(showsFromDb.isNotEmpty())
             }
+        }
+        viewModel.connectionEstablished.observe(viewLifecycleOwner){connected->
+            connectionEstablished = connected
         }
         initializeUI()
     }
@@ -288,6 +255,18 @@ class ShowsFragment : Fragment() {
             )
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .into(view)
+    }
+
+    private fun triggerNotificationBottomSheet(icon:Int,title: String , subtitle:String){
+        dialog.dismiss()
+        val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+        with(bottomSheetBinding) {
+            callbackIcon.setImageResource(icon)
+            callbackText.text = title
+            callbackDescription.text =  subtitle
+        }
+        dialog.setContentView(bottomSheetBinding.root)
+        dialog.show()
     }
 
     override fun onDestroyView() {

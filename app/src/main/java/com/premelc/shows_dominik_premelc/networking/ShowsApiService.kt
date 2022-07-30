@@ -43,4 +43,7 @@ interface ShowsApiService {
 
     @GET("shows/top_rated")
     fun topRatedShows(): Call<TopRatedShowsResponse>
+
+    @GET("users/me")
+    fun getMe(): Call<LoginResponse>
 }

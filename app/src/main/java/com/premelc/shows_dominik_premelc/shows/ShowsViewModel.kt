@@ -46,8 +46,21 @@ class ShowsViewModel(
     private val _changePhotoResponseMessage = MutableLiveData<String>()
     val changePhotoResponseMessage: LiveData<String> = _changePhotoResponseMessage
 
+    private var _connectionEstablished = MutableLiveData<Boolean>()
+    var connectionEstablished: LiveData<Boolean> = _connectionEstablished
+
     init {
-        fetchShowsFromServer()
+        ApiModule.retrofit.getMe().enqueue(object: Callback<LoginResponse>{
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                _connectionEstablished.value = true
+                fetchShowsFromServer()
+            }
+
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                _connectionEstablished.value = false
+            }
+        })
+
     }
 
     fun fetchShowsFromServer() {

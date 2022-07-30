@@ -22,8 +22,6 @@ class ShowsAdapter(
 
     override fun getItemCount() = items.count()
 
-    fun isEmpty() = items.isEmpty()
-
     override fun onBindViewHolder(holder: ShowViewHolder, position: Int) {
         holder.bind(items[position])
     }

@@ -16,18 +16,25 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.premelc.shows_dominik_premelc.R
+import com.premelc.shows_dominik_premelc.ShowApplication
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowDetailsBinding
 import com.premelc.shows_dominik_premelc.databinding.LoadingBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.RequestResponseBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowDetailsBottomSheetBinding
+import com.premelc.shows_dominik_premelc.db.ShowsViewModelFactory
 import com.premelc.shows_dominik_premelc.model.Review
+import com.premelc.shows_dominik_premelc.model.Show
+import com.premelc.shows_dominik_premelc.model.User
 
 class ShowDetailsFragment : Fragment() {
     private var _binding: FragmentShowDetailsBinding? = null
     private val binding get() = _binding!!
     private val args by navArgs<ShowDetailsFragmentArgs>()
     private lateinit var adapter: ReviewsAdapter
-    private val viewModel by viewModels<ShowDetailsViewModel>()
+    private val viewModel: ShowDetailsViewModel by viewModels {
+        ShowsViewModelFactory((requireActivity().application as ShowApplication).database)
+    }
+    private var connectionEstablished = true
     private lateinit var dialog: BottomSheetDialog
 
     override fun onCreateView(
@@ -43,30 +50,18 @@ class ShowDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.show.observe(viewLifecycleOwner) { show ->
-            binding.showTitle.text = show.title
-            binding.showDescription.text = show.description
-            binding.reviewsNumber.text = String.format(
-                this.getString(R.string.reviewCount),
-                show.no_of_reviews.toString(),
-                show.average_rating.toString()
-            )
-            if (show.average_rating != null) binding.ratings.rating = show.average_rating.toFloat()
-            else binding.ratings.rating = show.no_of_reviews.toFloat()
-            Glide.with(requireContext())
-                .load(show.image_url)
-                .placeholder(R.mipmap.ic_launcher)
-                .error(R.mipmap.ic_launcher)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .into(binding.img)
+            initShowDetails(show)
         }
         viewModel.reviews.observe(viewLifecycleOwner) { reviews ->
-            adapter.addAllReviews(reviews)
-            adapter.notifyDataSetChanged()
+            println("FRAGMENT LOADING FROM SERVER")
+            updateReviewRecycler(reviews)
         }
         viewModel.reviewsRecyclerFullOrEmpty.observe(viewLifecycleOwner) { toggleReviewsRecyclerFullOrEmpty ->
             toggleReviewsRecyclerFullOrEmpty(toggleReviewsRecyclerFullOrEmpty)
         }
         viewModel.reviewsResponse.observe(viewLifecycleOwner) { reviewsResponse ->
+            println("REVIEWS RESPONSE FORM SERVER")
+            println(reviewsResponse)
             dialog.dismiss()
             if (!reviewsResponse) {
                 val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
@@ -79,7 +74,7 @@ class ShowDetailsFragment : Fragment() {
                 dialog.show()
             }
         }
-        viewModel.reviewsErrorMessage.observe(viewLifecycleOwner){reviewErrorMessage->
+        viewModel.reviewsErrorMessage.observe(viewLifecycleOwner) { reviewErrorMessage ->
             dialog.dismiss()
             val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
             with(bottomSheetBinding) {
@@ -101,11 +96,11 @@ class ShowDetailsFragment : Fragment() {
                 }
                 dialog.setContentView(bottomSheetBinding.root)
                 dialog.show()
-            }else{
+            } else {
                 Toast.makeText(context, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
             }
         }
-        viewModel.postReviewErrorMessage.observe(viewLifecycleOwner){postReviewErrorMessage->
+        viewModel.postReviewErrorMessage.observe(viewLifecycleOwner) { postReviewErrorMessage ->
             dialog.dismiss()
             val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
             with(bottomSheetBinding) {
@@ -116,7 +111,7 @@ class ShowDetailsFragment : Fragment() {
             dialog.setContentView(bottomSheetBinding.root)
             dialog.show()
         }
-        viewModel.showsDetailResponse.observe(viewLifecycleOwner){showDetailResponse->
+        viewModel.showsDetailResponse.observe(viewLifecycleOwner) { showDetailResponse ->
             dialog.dismiss()
             if (!showDetailResponse) {
                 val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
@@ -129,7 +124,7 @@ class ShowDetailsFragment : Fragment() {
                 dialog.show()
             }
         }
-        viewModel.showsDetailErrorMessage.observe(viewLifecycleOwner){showDetailErrorMessage->
+        viewModel.showsDetailErrorMessage.observe(viewLifecycleOwner) { showDetailErrorMessage ->
             dialog.dismiss()
             val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
             with(bottomSheetBinding) {
@@ -140,15 +135,72 @@ class ShowDetailsFragment : Fragment() {
             dialog.setContentView(bottomSheetBinding.root)
             dialog.show()
         }
+        viewModel.fetchShowFromDb(args.id).observe(viewLifecycleOwner) { showFromDb ->
+            if (!connectionEstablished){
+                initShowDetails(
+                    Show(
+                        showFromDb.id,
+                        showFromDb.averageRating,
+                        showFromDb.description,
+                        showFromDb.imageUrl,
+                        showFromDb.noOfReviews,
+                        showFromDb.title
+                    )
+                )
+            }
+        }
+
+        viewModel.getReviewsFromDb(args.id.toInt()).observe(viewLifecycleOwner) { reviewsFromDb ->
+            println("CHECKING CONNECTION FOR DB: " + connectionEstablished)
+            if(!connectionEstablished){
+                println("FRAGMENT LOADING FROM DB")
+                println(reviewsFromDb)
+                updateReviewRecycler(reviewsFromDb.map { reviewEntity ->
+                    Review(
+                        reviewEntity.id,
+                        reviewEntity.comment,
+                        reviewEntity.rating,
+                        reviewEntity.showId,
+                        User(
+                            reviewEntity.userId,
+                            reviewEntity.userEmail,
+                            reviewEntity.userImageUrl
+                        )
+                    )
+                })
+                toggleReviewsRecyclerFullOrEmpty(reviewsFromDb.isNotEmpty())
+            }
+        }
+        viewModel.connectionEstablished.observe(viewLifecycleOwner){ connected->
+            connectionEstablished = connected
+        }
         initializeUI()
     }
 
     private fun initializeUI() {
         initLoadingBottomSheet()
         initBackButton()
-        initDetails()
+        viewModel.initDetails(args.id)
         initReviewsRecycler(emptyList())
         initReviewDialogButton()
+    }
+
+    private fun initShowDetails(show: Show) {
+        binding.showTitle.text = show.title
+        binding.showDescription.text = show.description
+        binding.reviewsNumber.text = String.format(
+            this.getString(R.string.reviewCount),
+            show.no_of_reviews.toString(),
+            show.average_rating.toString()
+        )
+        if (show.average_rating != null) binding.ratings.rating = show.average_rating.toFloat()
+        else binding.ratings.rating = show.no_of_reviews.toFloat()
+        Glide.with(requireContext())
+            .load(show.image_url)
+            .placeholder(R.mipmap.ic_launcher)
+            .error(R.mipmap.ic_launcher)
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            .into(binding.img)
     }
 
     private fun initLoadingBottomSheet() {
@@ -173,10 +225,10 @@ class ShowDetailsFragment : Fragment() {
         )
     }
 
-    private fun initDetails() {
-        viewModel.initDetails(args.id)
+    private fun updateReviewRecycler(reviews: List<Review>){
+        adapter.addAllReviews(reviews)
+        adapter.notifyDataSetChanged()
     }
-
     private fun initReviewDialogButton() {
         binding.writeReviewButton.setOnClickListener {
             val dialog = BottomSheetDialog(requireContext())
