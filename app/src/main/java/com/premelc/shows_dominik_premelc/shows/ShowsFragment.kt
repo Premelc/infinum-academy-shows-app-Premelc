@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.Toast
@@ -82,24 +83,61 @@ class ShowsFragment : Fragment() {
         }
         viewModel.showsResponse.observe(viewLifecycleOwner) { showsResponse ->
             dialog.dismiss()
-            if (showsResponse != "true") {
+            if (!showsResponse) {
                 val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
                 with(bottomSheetBinding) {
                     callbackIcon.setImageResource(R.drawable.fail)
                     callbackText.text = getString(R.string.shows_fetch_failed)
-                    callbackDescription.text = if (showsResponse == "false") getString(R.string.connection_error) else showsResponse
+                    callbackDescription.text =  getString(R.string.connection_error)
                 }
                 dialog.setContentView(bottomSheetBinding.root)
                 dialog.show()
             }
         }
+        viewModel.showsErrorMessage.observe(viewLifecycleOwner){ showsErrorMessage->
+            dialog.dismiss()
+            val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+            with(bottomSheetBinding) {
+                callbackIcon.setImageResource(R.drawable.fail)
+                callbackText.text = getString(R.string.shows_fetch_failed)
+                callbackDescription.text =  showsErrorMessage
+            }
+            dialog.setContentView(bottomSheetBinding.root)
+            dialog.show()
+        }
         viewModel.changePhotoResponse.observe(viewLifecycleOwner) { changePhotoResponse ->
-            if (changePhotoResponse != null && changePhotoResponse != "false") {
+            if (!changePhotoResponse) {
+                val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+                with(bottomSheetBinding) {
+                    callbackIcon.setImageResource(R.drawable.fail)
+                    callbackText.text = getString(R.string.change_photo_error)
+                    callbackDescription.text =  getString(R.string.connection_error)
+                }
+                dialog.setContentView(bottomSheetBinding.root)
+                dialog.show()
+            }
+        }
+        viewModel.changePhotoResponseMessage.observe(viewLifecycleOwner){changePhotoResponseMessage->
+            val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+            if (URLUtil.isValidUrl(changePhotoResponseMessage)){
                 sharedPreferences.edit()
-                    .putString(SHARED_PREFERENCES_PFP_URL, changePhotoResponse)
+                    .putString(SHARED_PREFERENCES_PFP_URL, changePhotoResponseMessage)
                     .commit()
                 setProfilePicOnView(binding.profileButton)
+                with(bottomSheetBinding) {
+                    callbackIcon.setImageResource(R.drawable.success)
+                    callbackText.text = getString(R.string.change_photo_success)
+                    callbackDescription.text =  getString(R.string.empty)
+                }
+            }else{
+                with(bottomSheetBinding) {
+                    callbackIcon.setImageResource(R.drawable.fail)
+                    callbackText.text = getString(R.string.change_photo_error)
+                    callbackDescription.text =  changePhotoResponseMessage
+                }
             }
+            dialog.setContentView(bottomSheetBinding.root)
+            dialog.show()
         }
         initializeUI()
     }

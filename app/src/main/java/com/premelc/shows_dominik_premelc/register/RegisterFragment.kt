@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.premelc.shows_dominik_premelc.CommonFunctions.validateEmail
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.FragmentRegisterBinding
 import com.premelc.shows_dominik_premelc.databinding.LoadingBottomSheetBinding
@@ -58,7 +57,7 @@ class RegisterFragment : Fragment() {
         }
         viewModel.registerResponse.observe(viewLifecycleOwner) { registerResponse ->
             dialog.dismiss()
-            if (validateEmail(registerResponse)) {
+            if (registerResponse) {
                 val directions = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment(true)
                 findNavController().navigate(directions)
             } else {
@@ -66,11 +65,22 @@ class RegisterFragment : Fragment() {
                 with(bottomSheetBinding) {
                     callbackIcon.setImageResource(R.drawable.fail)
                     callbackText.text = getString(R.string.registration_failed)
-                    callbackDescription.text = registerResponse
+                    callbackDescription.text = getString(R.string.connection_error)
                 }
                 dialog.setContentView(bottomSheetBinding.root)
                 dialog.show()
             }
+        }
+        viewModel.registerErrorMessage.observe(viewLifecycleOwner){registerErrorMessage->
+            dialog.dismiss()
+            val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+            with(bottomSheetBinding) {
+                callbackIcon.setImageResource(R.drawable.fail)
+                callbackText.text = getString(R.string.registration_failed)
+                callbackDescription.text = registerErrorMessage
+            }
+            dialog.setContentView(bottomSheetBinding.root)
+            dialog.show()
         }
         initializeUI()
     }

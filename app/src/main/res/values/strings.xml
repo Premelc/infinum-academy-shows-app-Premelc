@@ -49,4 +49,6 @@
     <string name="reviews_fetch_failed">Failed to fetch reviews</string>
     <string name="post_review_failed">Failed to post review</string>
     <string name="top_rated">Top rated</string>
+    <string name="change_photo_error">Failed to change profile photo</string>
+    <string name="change_photo_success">Successfully changed profile photo</string>
 </resources>

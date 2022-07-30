@@ -75,7 +75,7 @@ class LoginFragment : Fragment() {
         }
         viewModel.loginResponse.observe(viewLifecycleOwner) { loginResponse ->
             dialog.dismiss()
-            if (validateEmail(loginResponse)) {
+            if (loginResponse) {
                 val directions = LoginFragmentDirections.actionLoginFragmentToShowsFragment(
                     binding.emailInput.text.toString()
                 )
@@ -85,11 +85,22 @@ class LoginFragment : Fragment() {
                 with(bottomSheetBinding) {
                     callbackIcon.setImageResource(R.drawable.fail)
                     callbackText.text = getString(R.string.login_failed)
-                    callbackDescription.text = loginResponse
+                    callbackDescription.text = getString(R.string.connection_error)
                 }
                 dialog.setContentView(bottomSheetBinding.root)
                 dialog.show()
             }
+        }
+        viewModel.loginErrorMessage.observe(viewLifecycleOwner){loginErrorMessage->
+            dialog.dismiss()
+            val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+            with(bottomSheetBinding) {
+                callbackIcon.setImageResource(R.drawable.fail)
+                callbackText.text = getString(R.string.login_failed)
+                callbackDescription.text = loginErrorMessage
+            }
+            dialog.setContentView(bottomSheetBinding.root)
+            dialog.show()
         }
         viewModel.headerValues.observe(viewLifecycleOwner) { headerValues ->
            sharedPreferences.edit(commit = true){

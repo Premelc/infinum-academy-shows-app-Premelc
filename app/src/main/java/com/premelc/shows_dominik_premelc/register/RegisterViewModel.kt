@@ -35,8 +35,11 @@ class RegisterViewModel : ViewModel() {
     private val _passwordsMatchStringCode = MutableLiveData<Int>()
     val passwordsMatchStringCode: LiveData<Int> = _passwordsMatchStringCode
 
-    private val _registerResponse = MutableLiveData<String>()
-    val registerResponse: LiveData<String> = _registerResponse
+    private val _registerResponse = MutableLiveData<Boolean>()
+    val registerResponse: LiveData<Boolean> = _registerResponse
+
+    private val _registerErrorMessage = MutableLiveData<String>()
+    val registerErrorMessage: LiveData<String> = _registerErrorMessage
 
     private val registrationResultLiveData: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
@@ -69,17 +72,17 @@ class RegisterViewModel : ViewModel() {
         ApiModule.retrofit.register(registerRequest).enqueue(object : Callback<RegisterResponse> {
             override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
                 if (response.isSuccessful) {
-                    _registerResponse.value = response.body()?.user?.email
+                    _registerResponse.value = response.isSuccessful
                 } else {
                     val gson = Gson()
                     val registerErrorResponse: RegisterErrorResponse =
                         gson.fromJson(response.errorBody()?.string(), RegisterErrorResponse::class.java)
-                    _registerResponse.value = registerErrorResponse.errors[0]
+                    _registerErrorMessage.value = registerErrorResponse.errors.first()
                 }
             }
 
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
-                registrationResultLiveData.value = false
+                _registerResponse.value = false
             }
         })
     }

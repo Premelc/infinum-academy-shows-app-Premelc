@@ -33,8 +33,11 @@ class LoginViewModel : ViewModel() {
     private val _loginButtonIsEnabled = MutableLiveData<Boolean>()
     val loginButtonIsEnabled: LiveData<Boolean> = _loginButtonIsEnabled
 
-    private val _loginResponse = MutableLiveData<String>()
-    val loginResponse: LiveData<String> = _loginResponse
+    private val _loginResponse = MutableLiveData<Boolean>()
+    val loginResponse: LiveData<Boolean> = _loginResponse
+
+    private val _loginErrorMessage = MutableLiveData<String>()
+    val loginErrorMessage: LiveData<String> = _loginErrorMessage
 
     private val _headerValues = MutableLiveData<Map<String , String>>()
     val headerValues: LiveData<Map<String,String>> = _headerValues
@@ -70,7 +73,7 @@ class LoginViewModel : ViewModel() {
         ApiModule.retrofit.login(loginRequest).enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if (response.isSuccessful) {
-                    _loginResponse.value = response.body()?.user?.email
+                    _loginResponse.value = response.isSuccessful
                     _headerValues.value = mapOf(
                         SHARED_PREFERENCES_TOKEN_TYPE to "Bearer" ,
                         SHARED_PREFERENCES_ACCESS_TOKEN to response.headers().values("access-token")[0],
@@ -81,12 +84,12 @@ class LoginViewModel : ViewModel() {
                     val gson = Gson()
                     val loginErrorResponse: LoginErrorResponse =
                         gson.fromJson(response.errorBody()?.string(), LoginErrorResponse::class.java)
-                    _loginResponse.value = loginErrorResponse.errors[0]
+                    _loginErrorMessage.value = loginErrorResponse.errors.first()
                 }
             }
 
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                _loginResponse.value = false.toString()
+                _loginResponse.value = false
             }
         })
     }

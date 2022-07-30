@@ -31,11 +31,17 @@ class ShowDetailsViewModel : ViewModel() {
     private var _showsDetailResponse = MutableLiveData<String>()
     val showsDetailResponse: LiveData<String> = _showsDetailResponse
 
-    private var _reviewsResponse = MutableLiveData<String>()
-    val reviewsResponse: LiveData<String> = _reviewsResponse
+    private var _reviewsResponse = MutableLiveData<Boolean>()
+    val reviewsResponse: LiveData<Boolean> = _reviewsResponse
 
-    private var _postReviewResponse = MutableLiveData<String>()
-    val postReviewResponse: LiveData<String> = _postReviewResponse
+    private var _reviewsErrorMessage = MutableLiveData<String>()
+    val reviewsErrorMessage:LiveData<String> = _reviewsErrorMessage
+
+    private var _postReviewResponse = MutableLiveData<Boolean>()
+    val postReviewResponse: LiveData<Boolean> = _postReviewResponse
+
+    private var _postReviewErrorMessage = MutableLiveData<String>()
+    var postReviewErrorMessage: LiveData<String> = _postReviewErrorMessage
 
     fun initDetails(id: String) {
         fetchShow(id)
@@ -68,17 +74,17 @@ class ShowDetailsViewModel : ViewModel() {
             override fun onResponse(call: Call<ReviewsResponse>, response: Response<ReviewsResponse>) {
                 if (response.isSuccessful) {
                     _reviews.value = response.body()?.reviews
-                    _reviewsResponse.value = response.isSuccessful.toString()
+                    _reviewsResponse.value = response.isSuccessful
                 } else {
                     val gson = Gson()
                     val reviewsErrorResponse: ReviewsErrorResponse =
                         gson.fromJson(response.errorBody()?.string(), ReviewsErrorResponse::class.java)
-                    _reviewsResponse.value = reviewsErrorResponse.errors[0]
+                    _reviewsErrorMessage.value = reviewsErrorResponse.errors.first()
                 }
             }
 
             override fun onFailure(call: Call<ReviewsResponse>, t: Throwable) {
-                _reviewsResponse.value = false.toString()
+                _reviewsResponse.value = false
             }
         })
     }
@@ -94,20 +100,19 @@ class ShowDetailsViewModel : ViewModel() {
             override fun onResponse(call: Call<PostReviewResponse>, response: Response<PostReviewResponse>) {
                 if (response.isSuccessful) {
                     if (response.body() != null) addReview(response.body()!!.review)
-                    _postReviewResponse.value = response.isSuccessful.toString()
+                    _postReviewResponse.value = response.isSuccessful
                 } else {
                     val gson = Gson()
                     val postReviewErrorResponse: PostReviewErrorResponse =
                         gson.fromJson(response.errorBody()?.string(), PostReviewErrorResponse::class.java)
-                    if (response.code() == 401) _postReviewResponse.value = postReviewErrorResponse.errors[0]
+                    if (response.code() == 401) _postReviewErrorMessage.value = postReviewErrorResponse.errors.first()
                     else {
-                        _postReviewResponse.value = postReviewErrorResponse.errors[0] + " , " + postReviewErrorResponse.errors[1]
+                        _postReviewErrorMessage.value = postReviewErrorResponse.errors[0] + " , " + postReviewErrorResponse.errors[1]
                     }
                 }
             }
-
             override fun onFailure(call: Call<PostReviewResponse>, t: Throwable) {
-                _postReviewResponse.value = false.toString()
+                _postReviewResponse.value = false
             }
         })
     }
