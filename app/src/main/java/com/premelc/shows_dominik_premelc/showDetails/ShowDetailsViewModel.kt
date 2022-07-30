@@ -7,7 +7,6 @@ import com.google.gson.Gson
 import com.premelc.shows_dominik_premelc.db.ReviewEntity
 import com.premelc.shows_dominik_premelc.db.ShowEntity
 import com.premelc.shows_dominik_premelc.db.ShowsDatabase
-import com.premelc.shows_dominik_premelc.db.UserEntity
 import com.premelc.shows_dominik_premelc.model.LoginResponse
 import com.premelc.shows_dominik_premelc.model.PostReviewErrorResponse
 import com.premelc.shows_dominik_premelc.model.PostReviewRequest
@@ -18,7 +17,6 @@ import com.premelc.shows_dominik_premelc.model.ReviewsResponse
 import com.premelc.shows_dominik_premelc.model.Show
 import com.premelc.shows_dominik_premelc.model.ShowDetailsErrorResponse
 import com.premelc.shows_dominik_premelc.model.ShowDetailsResponse
-import com.premelc.shows_dominik_premelc.model.User
 import com.premelc.shows_dominik_premelc.networking.ApiModule
 import java.util.concurrent.Executors
 import retrofit2.Call

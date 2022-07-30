@@ -15,7 +15,7 @@ class ShowsViewModelFactory(val database: ShowsDatabase): ViewModelProvider.NewI
         }else if(modelClass.isAssignableFrom(ShowDetailsViewModel::class.java)){
             return ShowDetailsViewModel(database) as T
         }
-            throw IllegalArgumentException("No workee")
+            throw IllegalArgumentException("Unable to work with given view model")
     }
 
 }

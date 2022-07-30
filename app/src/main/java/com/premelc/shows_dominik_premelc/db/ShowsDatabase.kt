@@ -8,10 +8,9 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [
         ShowEntity::class,
-        ReviewEntity::class,
-        UserEntity::class
+        ReviewEntity::class
     ],
-    version = 2
+    version = 3
 )
 abstract class ShowsDatabase : RoomDatabase(){
 
@@ -36,5 +35,4 @@ abstract class ShowsDatabase : RoomDatabase(){
 
     abstract fun showsDAO():ShowsDao
     abstract fun reviewsDAO():ReviewsDao
-    abstract fun usersDAO():UserDao
 }
