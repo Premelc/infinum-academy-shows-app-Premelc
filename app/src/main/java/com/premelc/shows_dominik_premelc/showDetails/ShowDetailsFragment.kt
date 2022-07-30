@@ -116,6 +116,30 @@ class ShowDetailsFragment : Fragment() {
             dialog.setContentView(bottomSheetBinding.root)
             dialog.show()
         }
+        viewModel.showsDetailResponse.observe(viewLifecycleOwner){showDetailResponse->
+            dialog.dismiss()
+            if (!showDetailResponse) {
+                val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+                with(bottomSheetBinding) {
+                    callbackIcon.setImageResource(R.drawable.fail)
+                    callbackText.text = getString(R.string.failed_to_load_details)
+                    callbackDescription.text = getString(R.string.connection_error)
+                }
+                dialog.setContentView(bottomSheetBinding.root)
+                dialog.show()
+            }
+        }
+        viewModel.showsDetailErrorMessage.observe(viewLifecycleOwner){showDetailErrorMessage->
+            dialog.dismiss()
+            val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+            with(bottomSheetBinding) {
+                callbackIcon.setImageResource(R.drawable.fail)
+                callbackText.text = getString(R.string.failed_to_load_details)
+                callbackDescription.text = showDetailErrorMessage
+            }
+            dialog.setContentView(bottomSheetBinding.root)
+            dialog.show()
+        }
         initializeUI()
     }
 

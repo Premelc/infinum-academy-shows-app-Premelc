@@ -28,8 +28,11 @@ class ShowDetailsViewModel : ViewModel() {
     private var _reviewsRecyclerFullOrEmpty = MutableLiveData<Boolean>()
     val reviewsRecyclerFullOrEmpty: LiveData<Boolean> = _reviewsRecyclerFullOrEmpty
 
-    private var _showsDetailResponse = MutableLiveData<String>()
-    val showsDetailResponse: LiveData<String> = _showsDetailResponse
+    private var _showsDetailResponse = MutableLiveData<Boolean>()
+    val showsDetailResponse: LiveData<Boolean> = _showsDetailResponse
+
+    private var _showsDetailErrorMessage = MutableLiveData<String>()
+    val showsDetailErrorMessage: LiveData<String> = _showsDetailErrorMessage
 
     private var _reviewsResponse = MutableLiveData<Boolean>()
     val reviewsResponse: LiveData<Boolean> = _reviewsResponse
@@ -53,18 +56,18 @@ class ShowDetailsViewModel : ViewModel() {
             override fun onResponse(call: Call<ShowDetailsResponse>, response: Response<ShowDetailsResponse>) {
                 if (response.isSuccessful) {
                     _show.value = response.body()?.show
-                    _showsDetailResponse.value = response.isSuccessful.toString()
+                    _showsDetailResponse.value = response.isSuccessful
                     _reviewsRecyclerFullOrEmpty.value = response.isSuccessful
                 } else {
                     val gson = Gson()
                     val showDetailsErrorResponse: ShowDetailsErrorResponse =
                         gson.fromJson(response.errorBody()?.string(), ShowDetailsErrorResponse::class.java)
-                    _showsDetailResponse.value = showDetailsErrorResponse.errors[0]
+                    _showsDetailErrorMessage.value = showDetailsErrorResponse.errors.first()
                 }
             }
 
             override fun onFailure(call: Call<ShowDetailsResponse>, t: Throwable) {
-                _showsDetailResponse.value = false.toString()
+                _showsDetailResponse.value = false
             }
         })
     }
