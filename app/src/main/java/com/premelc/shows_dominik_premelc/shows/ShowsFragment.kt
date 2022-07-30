@@ -49,7 +49,7 @@ class ShowsFragment : Fragment() {
     private lateinit var adapter: ShowsAdapter
     private lateinit var sharedPreferences: SharedPreferences
     private var connectionEstablished = true
-    private val viewModel:ShowsViewModel by viewModels{
+    private val viewModel: ShowsViewModel by viewModels {
         ShowsViewModelFactory((requireActivity().application as ShowApplication).database)
     }
     private lateinit var dialog: BottomSheetDialog
@@ -80,38 +80,47 @@ class ShowsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.shows.observe(viewLifecycleOwner) { shows ->
-           updateRecycler(shows)
+            updateRecycler(shows)
         }
         viewModel.showsRecyclerFullOrEmpty.observe(viewLifecycleOwner) { fullOrEmpty ->
             setShowsRecyclerFullOrEmpty(!fullOrEmpty)
         }
         viewModel.showsResponse.observe(viewLifecycleOwner) { showsResponse ->
+            dialog.dismiss()
             if (!showsResponse) {
-                triggerNotificationBottomSheet(R.drawable.fail,getString(R.string.shows_fetch_failed) , getString(R.string.connection_error))
+                triggerNotificationBottomSheet(
+                    R.drawable.fail,
+                    getString(R.string.shows_fetch_failed),
+                    getString(R.string.connection_error)
+                )
             }
         }
-        viewModel.showsErrorMessage.observe(viewLifecycleOwner){ showsErrorMessage->
-            triggerNotificationBottomSheet(R.drawable.fail,getString(R.string.shows_fetch_failed) , showsErrorMessage)
+        viewModel.showsErrorMessage.observe(viewLifecycleOwner) { showsErrorMessage ->
+            triggerNotificationBottomSheet(R.drawable.fail, getString(R.string.shows_fetch_failed), showsErrorMessage)
         }
         viewModel.changePhotoResponse.observe(viewLifecycleOwner) { changePhotoResponse ->
             if (!changePhotoResponse) {
-                triggerNotificationBottomSheet(R.drawable.fail,getString(R.string.change_photo_error) , getString(R.string.connection_error))
+                triggerNotificationBottomSheet(
+                    R.drawable.fail,
+                    getString(R.string.change_photo_error),
+                    getString(R.string.connection_error)
+                )
             }
         }
-        viewModel.changePhotoResponseMessage.observe(viewLifecycleOwner){changePhotoResponseMessage->
-            if (URLUtil.isValidUrl(changePhotoResponseMessage)){
+        viewModel.changePhotoResponseMessage.observe(viewLifecycleOwner) { changePhotoResponseMessage ->
+            if (URLUtil.isValidUrl(changePhotoResponseMessage)) {
                 sharedPreferences.edit()
                     .putString(SHARED_PREFERENCES_PFP_URL, changePhotoResponseMessage)
                     .commit()
                 setProfilePicOnView(binding.profileButton)
-                triggerNotificationBottomSheet(R.drawable.success , getString(R.string.change_photo_success) ,getString(R.string.empty) )
-            }else{
-                triggerNotificationBottomSheet(R.drawable.fail , getString(R.string.change_photo_error) ,changePhotoResponseMessage )
+                triggerNotificationBottomSheet(R.drawable.success, getString(R.string.change_photo_success), getString(R.string.empty))
+            } else {
+                triggerNotificationBottomSheet(R.drawable.fail, getString(R.string.change_photo_error), changePhotoResponseMessage)
             }
         }
 
-        viewModel.fetchShowsFromDb().observe(viewLifecycleOwner){ showsFromDb ->
-            if(!connectionEstablished){
+        viewModel.fetchShowsFromDb().observe(viewLifecycleOwner) { showsFromDb ->
+            if (!connectionEstablished) {
                 updateRecycler(showsFromDb.map { showEntity ->
                     Show(
                         showEntity.id,
@@ -125,7 +134,7 @@ class ShowsFragment : Fragment() {
                 setShowsRecyclerFullOrEmpty(showsFromDb.isNotEmpty())
             }
         }
-        viewModel.connectionEstablished.observe(viewLifecycleOwner){connected->
+        viewModel.connectionEstablished.observe(viewLifecycleOwner) { connected ->
             connectionEstablished = connected
         }
         initializeUI()
@@ -151,7 +160,7 @@ class ShowsFragment : Fragment() {
 
     private fun initTopRatedChip() {
         val chip = binding.topRatedChip
-        chip.setOnCheckedChangeListener{ chip: CompoundButton, chipIsChecked: Boolean ->
+        chip.setOnCheckedChangeListener { chip: CompoundButton, chipIsChecked: Boolean ->
             if (chipIsChecked) viewModel.fetchTopRatedShowsFromServer()
             else viewModel.fetchShowsFromServer()
         }
@@ -181,7 +190,7 @@ class ShowsFragment : Fragment() {
         binding.emptyState.isVisible = !isFull
     }
 
-    private fun updateRecycler(list: List<Show>){
+    private fun updateRecycler(list: List<Show>) {
         adapter.addAllShows(list)
         adapter.notifyDataSetChanged()
     }
@@ -257,13 +266,13 @@ class ShowsFragment : Fragment() {
             .into(view)
     }
 
-    private fun triggerNotificationBottomSheet(icon:Int,title: String , subtitle:String){
+    private fun triggerNotificationBottomSheet(icon: Int, title: String, subtitle: String) {
         dialog.dismiss()
         val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
         with(bottomSheetBinding) {
             callbackIcon.setImageResource(icon)
             callbackText.text = title
-            callbackDescription.text =  subtitle
+            callbackDescription.text = subtitle
         }
         dialog.setContentView(bottomSheetBinding.root)
         dialog.show()

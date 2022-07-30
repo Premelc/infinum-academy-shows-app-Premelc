@@ -53,90 +53,45 @@ class ShowDetailsFragment : Fragment() {
             initShowDetails(show)
         }
         viewModel.reviews.observe(viewLifecycleOwner) { reviews ->
-            println("FRAGMENT LOADING FROM SERVER")
             updateReviewRecycler(reviews)
         }
         viewModel.reviewsRecyclerFullOrEmpty.observe(viewLifecycleOwner) { toggleReviewsRecyclerFullOrEmpty ->
             toggleReviewsRecyclerFullOrEmpty(toggleReviewsRecyclerFullOrEmpty)
         }
         viewModel.reviewsResponse.observe(viewLifecycleOwner) { reviewsResponse ->
-            println("REVIEWS RESPONSE FORM SERVER")
-            println(reviewsResponse)
             dialog.dismiss()
-            if (!reviewsResponse) {
-                val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
-                with(bottomSheetBinding) {
-                    callbackIcon.setImageResource(R.drawable.fail)
-                    callbackText.text = getString(R.string.reviews_fetch_failed)
-                    callbackDescription.text = getString(R.string.connection_error)
-                }
-                dialog.setContentView(bottomSheetBinding.root)
-                dialog.show()
-            }
+            if (!reviewsResponse) triggerNotificationBottomSheet(
+                R.drawable.fail,
+                getString(R.string.reviews_fetch_failed),
+                getString(R.string.connection_error)
+            )
         }
         viewModel.reviewsErrorMessage.observe(viewLifecycleOwner) { reviewErrorMessage ->
-            dialog.dismiss()
-            val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
-            with(bottomSheetBinding) {
-                callbackIcon.setImageResource(R.drawable.fail)
-                callbackText.text = getString(R.string.reviews_fetch_failed)
-                callbackDescription.text = reviewErrorMessage
-            }
-            dialog.setContentView(bottomSheetBinding.root)
-            dialog.show()
+            triggerNotificationBottomSheet(R.drawable.fail, getString(R.string.reviews_fetch_failed), reviewErrorMessage)
         }
         viewModel.postReviewResponse.observe(viewLifecycleOwner) { postReviewResponse ->
-            dialog.dismiss()
-            if (!postReviewResponse) {
-                val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
-                with(bottomSheetBinding) {
-                    callbackIcon.setImageResource(R.drawable.fail)
-                    callbackText.text = getString(R.string.post_review_failed)
-                    callbackDescription.text = getString(R.string.connection_error)
-                }
-                dialog.setContentView(bottomSheetBinding.root)
-                dialog.show()
-            } else {
-                Toast.makeText(context, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
-            }
+            if (!postReviewResponse) triggerNotificationBottomSheet(
+                R.drawable.fail,
+                getString(R.string.post_review_failed),
+                getString(R.string.connection_error)
+            )
+            else Toast.makeText(context, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
         }
         viewModel.postReviewErrorMessage.observe(viewLifecycleOwner) { postReviewErrorMessage ->
-            dialog.dismiss()
-            val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
-            with(bottomSheetBinding) {
-                callbackIcon.setImageResource(R.drawable.fail)
-                callbackText.text = getString(R.string.post_review_failed)
-                callbackDescription.text = postReviewErrorMessage
-            }
-            dialog.setContentView(bottomSheetBinding.root)
-            dialog.show()
+            triggerNotificationBottomSheet(R.drawable.fail, getString(R.string.post_review_failed), postReviewErrorMessage)
         }
         viewModel.showsDetailResponse.observe(viewLifecycleOwner) { showDetailResponse ->
-            dialog.dismiss()
-            if (!showDetailResponse) {
-                val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
-                with(bottomSheetBinding) {
-                    callbackIcon.setImageResource(R.drawable.fail)
-                    callbackText.text = getString(R.string.failed_to_load_details)
-                    callbackDescription.text = getString(R.string.connection_error)
-                }
-                dialog.setContentView(bottomSheetBinding.root)
-                dialog.show()
-            }
+            if (!showDetailResponse) triggerNotificationBottomSheet(
+                R.drawable.fail,
+                getString(R.string.failed_to_load_details),
+                getString(R.string.connection_error)
+            )
         }
         viewModel.showsDetailErrorMessage.observe(viewLifecycleOwner) { showDetailErrorMessage ->
-            dialog.dismiss()
-            val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
-            with(bottomSheetBinding) {
-                callbackIcon.setImageResource(R.drawable.fail)
-                callbackText.text = getString(R.string.failed_to_load_details)
-                callbackDescription.text = showDetailErrorMessage
-            }
-            dialog.setContentView(bottomSheetBinding.root)
-            dialog.show()
+            triggerNotificationBottomSheet(R.drawable.fail, getString(R.string.failed_to_load_details), showDetailErrorMessage)
         }
         viewModel.fetchShowFromDb(args.id).observe(viewLifecycleOwner) { showFromDb ->
-            if (!connectionEstablished){
+            if (!connectionEstablished) {
                 initShowDetails(
                     Show(
                         showFromDb.id,
@@ -151,10 +106,7 @@ class ShowDetailsFragment : Fragment() {
         }
 
         viewModel.getReviewsFromDb(args.id.toInt()).observe(viewLifecycleOwner) { reviewsFromDb ->
-            println("CHECKING CONNECTION FOR DB: " + connectionEstablished)
-            if(!connectionEstablished){
-                println("FRAGMENT LOADING FROM DB")
-                println(reviewsFromDb)
+            if (!connectionEstablished) {
                 updateReviewRecycler(reviewsFromDb.map { reviewEntity ->
                     Review(
                         reviewEntity.id,
@@ -171,7 +123,7 @@ class ShowDetailsFragment : Fragment() {
                 toggleReviewsRecyclerFullOrEmpty(reviewsFromDb.isNotEmpty())
             }
         }
-        viewModel.connectionEstablished.observe(viewLifecycleOwner){ connected->
+        viewModel.connectionEstablished.observe(viewLifecycleOwner) { connected ->
             connectionEstablished = connected
         }
         initializeUI()
@@ -225,10 +177,11 @@ class ShowDetailsFragment : Fragment() {
         )
     }
 
-    private fun updateReviewRecycler(reviews: List<Review>){
+    private fun updateReviewRecycler(reviews: List<Review>) {
         adapter.addAllReviews(reviews)
         adapter.notifyDataSetChanged()
     }
+
     private fun initReviewDialogButton() {
         binding.writeReviewButton.setOnClickListener {
             val dialog = BottomSheetDialog(requireContext())
@@ -255,6 +208,18 @@ class ShowDetailsFragment : Fragment() {
     private fun toggleReviewsRecyclerFullOrEmpty(isEmpty: Boolean) {
         binding.emptyReview.isVisible = !isEmpty
         binding.reviewsRecycler.isVisible = isEmpty
+    }
+
+    private fun triggerNotificationBottomSheet(icon: Int, title: String, subtitle: String) {
+        dialog.dismiss()
+        val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+        with(bottomSheetBinding) {
+            callbackIcon.setImageResource(icon)
+            callbackText.text = title
+            callbackDescription.text = subtitle
+        }
+        dialog.setContentView(bottomSheetBinding.root)
+        dialog.show()
     }
 
     override fun onDestroyView() {
