@@ -120,8 +120,8 @@ class ShowsFragment : Fragment() {
         viewModel.connectionEstablished.observe(viewLifecycleOwner) { connected ->
             if (!connected) triggerNotificationBottomSheet(
                 R.drawable.fail,
-                getString(R.string.shows_fetch_failed),
-                getString(R.string.connection_error)
+                getString(R.string.failed_to_reach_server),
+                getString(R.string.offline)
             )
         }
         initializeUI()

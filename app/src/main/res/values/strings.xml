@@ -45,11 +45,13 @@
     <string name="registration_failed">Registration failed</string>
     <string name="login_failed">Login failed</string>
     <string name="shows_fetch_failed">Failed to fetch shows</string>
-    <string name="connection_error">Connection error , displaying offline data</string>
+    <string name="connection_error">Connection error</string>
+    <string name="offline">Connection error , displaying offline data</string>
     <string name="reviews_fetch_failed">Failed to fetch reviews</string>
     <string name="post_review_failed">Failed to post review</string>
     <string name="top_rated">Top rated</string>
     <string name="change_photo_error">Failed to change profile photo</string>
     <string name="change_photo_success">Successfully changed profile photo</string>
     <string name="failed_to_load_details">Failed to load show details</string>
+    <string name="failed_to_reach_server">Failed to reach server</string>
 </resources>

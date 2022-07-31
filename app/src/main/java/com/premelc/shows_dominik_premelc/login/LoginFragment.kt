@@ -73,36 +73,21 @@ class LoginFragment : Fragment() {
             binding.loginButton.isEnabled = loginButtonIsEnabled
         }
         viewModel.loginResponse.observe(viewLifecycleOwner) { loginResponse ->
-            dialog.dismiss()
             if (loginResponse) {
+                dialog.dismiss()
                 val directions = LoginFragmentDirections.actionLoginFragmentToShowsFragment(
                     binding.emailInput.text.toString()
                 )
                 findNavController().navigate(directions)
             } else {
-                val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
-                with(bottomSheetBinding) {
-                    callbackIcon.setImageResource(R.drawable.fail)
-                    callbackText.text = getString(R.string.login_failed)
-                    callbackDescription.text = getString(R.string.connection_error)
-                }
-                dialog.setContentView(bottomSheetBinding.root)
-                dialog.show()
+                triggerNotificationBottomSheet(R.drawable.fail, getString(R.string.login_failed), getString(R.string.connection_error))
             }
         }
-        viewModel.loginErrorMessage.observe(viewLifecycleOwner){loginErrorMessage->
-            dialog.dismiss()
-            val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
-            with(bottomSheetBinding) {
-                callbackIcon.setImageResource(R.drawable.fail)
-                callbackText.text = getString(R.string.login_failed)
-                callbackDescription.text = loginErrorMessage
-            }
-            dialog.setContentView(bottomSheetBinding.root)
-            dialog.show()
+        viewModel.loginErrorMessage.observe(viewLifecycleOwner) { loginErrorMessage ->
+            triggerNotificationBottomSheet(R.drawable.fail, getString(R.string.login_failed), loginErrorMessage)
         }
         viewModel.headerValues.observe(viewLifecycleOwner) { headerValues ->
-           sharedPreferences.edit(commit = true){
+            sharedPreferences.edit(commit = true) {
                 putString(SHARED_PREFERENCES_TOKEN_TYPE, headerValues[SHARED_PREFERENCES_TOKEN_TYPE])
                 putString(SHARED_PREFERENCES_ACCESS_TOKEN, headerValues[SHARED_PREFERENCES_ACCESS_TOKEN])
                 putString(SHARED_PREFERENCES_CLIENT, headerValues[SHARED_PREFERENCES_CLIENT])
@@ -157,7 +142,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupLoginValidation() {
-        with(binding){
+        with(binding) {
             emailInput.doOnTextChanged { text, start, before, count ->
                 viewModel.checkEmailValidity(emailInput.text.toString())
                 viewModel.validateLoginData(emailInput.text.toString(), passwordInput.text.toString())
@@ -167,6 +152,18 @@ class LoginFragment : Fragment() {
                 viewModel.validateLoginData(emailInput.text.toString(), passwordInput.text.toString())
             }
         }
+    }
+
+    private fun triggerNotificationBottomSheet(icon: Int, title: String, subtitle: String) {
+        dialog.dismiss()
+        val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+        with(bottomSheetBinding) {
+            callbackIcon.setImageResource(icon)
+            callbackText.text = title
+            callbackDescription.text = subtitle
+        }
+        dialog.setContentView(bottomSheetBinding.root)
+        dialog.show()
     }
 
     override fun onDestroyView() {

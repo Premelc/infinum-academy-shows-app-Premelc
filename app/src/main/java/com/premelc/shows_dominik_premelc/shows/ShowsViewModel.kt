@@ -15,7 +15,6 @@ import com.premelc.shows_dominik_premelc.model.ShowsResponse
 import com.premelc.shows_dominik_premelc.model.TopRatedShowsResponse
 import com.premelc.shows_dominik_premelc.networking.ApiModule
 import java.io.File
-import java.util.concurrent.Executors
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -74,16 +73,18 @@ class ShowsViewModel(
                     _showsResponse.value = response.isSuccessful
                     _shows.value = response.body()?.shows
                     _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
-                    addToDb(_shows.value!!.map { shows ->
-                        ShowEntity(
-                            shows.id,
-                            shows.average_rating,
-                            shows.description.toString(),
-                            shows.image_url,
-                            shows.no_of_reviews,
-                            shows.title
-                        )
-                    })
+                    viewModelScope.launch {
+                        addToDb(_shows.value!!.map { shows ->
+                            ShowEntity(
+                                shows.id,
+                                shows.average_rating,
+                                shows.description.toString(),
+                                shows.image_url,
+                                shows.no_of_reviews,
+                                shows.title
+                            )
+                        })
+                    }
                 } else {
                     val gson = Gson()
                     val showsErrorResponse: ShowsErrorResponse =
@@ -98,10 +99,8 @@ class ShowsViewModel(
         })
     }
 
-    fun addToDb(list: List<ShowEntity>) {
-        Executors.newSingleThreadExecutor().execute {
-            database.showsDAO().insertAllShows(list)
-        }
+    suspend fun addToDb(list: List<ShowEntity>) {
+        database.showsDAO().insertAllShows(list)
     }
 
     suspend fun fetchAllShowsFromDb() {
@@ -125,16 +124,18 @@ class ShowsViewModel(
                     _showsResponse.value = response.isSuccessful
                     _shows.value = response.body()?.shows
                     _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
-                    addToDb(_shows.value!!.map { shows ->
-                        ShowEntity(
-                            shows.id,
-                            shows.average_rating,
-                            shows.description.toString(),
-                            shows.image_url,
-                            shows.no_of_reviews,
-                            shows.title
-                        )
-                    })
+                    viewModelScope.launch {
+                        addToDb(_shows.value!!.map { shows ->
+                            ShowEntity(
+                                shows.id,
+                                shows.average_rating,
+                                shows.description.toString(),
+                                shows.image_url,
+                                shows.no_of_reviews,
+                                shows.title
+                            )
+                        })
+                    }
                 } else {
                     val gson = Gson()
                     val showsErrorResponse: ShowsErrorResponse =

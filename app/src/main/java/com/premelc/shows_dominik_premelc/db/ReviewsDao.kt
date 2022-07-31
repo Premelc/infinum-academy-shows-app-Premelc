@@ -18,5 +18,5 @@ interface ReviewsDao {
     fun getReview(reviewId: String): LiveData<ReviewEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertReview(reviewList: List<ReviewEntity>)
+    suspend fun insertReview(reviewList: List<ReviewEntity>)
 }

@@ -20,7 +20,6 @@ import com.premelc.shows_dominik_premelc.model.ShowDetailsErrorResponse
 import com.premelc.shows_dominik_premelc.model.ShowDetailsResponse
 import com.premelc.shows_dominik_premelc.model.User
 import com.premelc.shows_dominik_premelc.networking.ApiModule
-import java.util.concurrent.Executors
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -90,16 +89,18 @@ class ShowDetailsViewModel(
                     _show.value = response.body()?.show
                     _showsDetailResponse.value = response.isSuccessful
                     _reviewsRecyclerFullOrEmpty.value = response.isSuccessful
-                    addShowToDb(
-                        ShowEntity(
-                            _show.value?.id.toString(),
-                            _show.value?.average_rating,
-                            _show.value?.description.toString(),
-                            _show.value?.image_url.toString(),
-                            _show.value?.no_of_reviews ?: 0,
-                            _show.value?.title.toString()
+                    viewModelScope.launch {
+                        addShowToDb(
+                            ShowEntity(
+                                _show.value?.id.toString(),
+                                _show.value?.average_rating,
+                                _show.value?.description.toString(),
+                                _show.value?.image_url.toString(),
+                                _show.value?.no_of_reviews ?: 0,
+                                _show.value?.title.toString()
+                            )
                         )
-                    )
+                    }
                 } else {
                     val gson = Gson()
                     val showDetailsErrorResponse: ShowDetailsErrorResponse =
@@ -144,22 +145,16 @@ class ShowDetailsViewModel(
         _reviewsRecyclerFullOrEmpty.value = reviewsEntity.isNotEmpty()
     }
 
-    fun addShowToDb(show: ShowEntity) {
-        Executors.newSingleThreadExecutor().execute {
-            database.showsDAO().insertAllShows(listOf(show))
-        }
+    suspend fun addShowToDb(show: ShowEntity) {
+        database.showsDAO().insertAllShows(listOf(show))
     }
 
-    fun addReviewToDb(review: ReviewEntity) {
-        Executors.newSingleThreadExecutor().execute {
-            database.reviewsDAO().insertReview(listOf(review))
-        }
+    suspend fun addReviewToDb(review: ReviewEntity) {
+        database.reviewsDAO().insertReview(listOf(review))
     }
 
-    fun addAllReviewsToDb(list: List<ReviewEntity>) {
-        Executors.newSingleThreadExecutor().execute {
-            database.reviewsDAO().insertReview(list)
-        }
+    suspend fun addAllReviewsToDb(list: List<ReviewEntity>) {
+        database.reviewsDAO().insertReview(list)
     }
 
     private fun fetchReviews(id: Int) {
@@ -168,17 +163,19 @@ class ShowDetailsViewModel(
                 if (response.isSuccessful) {
                     _reviews.value = response.body()?.reviews
                     _reviewsResponse.value = response.isSuccessful
-                    addAllReviewsToDb(_reviews.value!!.map { review ->
-                        ReviewEntity(
-                            review.id,
-                            review.comment,
-                            review.rating,
-                            review.show_id,
-                            review.user.id,
-                            review.user.email,
-                            review.user.image_url.toString()
-                        )
-                    })
+                    viewModelScope.launch {
+                        addAllReviewsToDb(_reviews.value!!.map { review ->
+                            ReviewEntity(
+                                review.id,
+                                review.comment,
+                                review.rating,
+                                review.show_id,
+                                review.user.id,
+                                review.user.email,
+                                review.user.image_url.toString()
+                            )
+                        })
+                    }
                 } else {
                     val gson = Gson()
                     val reviewsErrorResponse: ReviewsErrorResponse =
@@ -206,17 +203,19 @@ class ShowDetailsViewModel(
                     if (response.body() != null) addReview(response.body()!!.review)
                     _postReviewResponse.value = response.isSuccessful
                     val review = response.body()!!.review
-                    addReviewToDb(
-                        ReviewEntity(
-                            review.id,
-                            review.comment,
-                            review.rating,
-                            review.show_id,
-                            review.user.id,
-                            review.user.email,
-                            review.user.image_url.toString()
+                    viewModelScope.launch {
+                        addReviewToDb(
+                            ReviewEntity(
+                                review.id,
+                                review.comment,
+                                review.rating,
+                                review.show_id,
+                                review.user.id,
+                                review.user.email,
+                                review.user.image_url.toString()
+                            )
                         )
-                    )
+                    }
                 } else {
                     val gson = Gson()
                     val postReviewErrorResponse: PostReviewErrorResponse =
