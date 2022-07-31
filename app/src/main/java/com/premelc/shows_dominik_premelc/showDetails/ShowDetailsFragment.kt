@@ -24,7 +24,6 @@ import com.premelc.shows_dominik_premelc.databinding.ShowDetailsBottomSheetBindi
 import com.premelc.shows_dominik_premelc.db.ShowsViewModelFactory
 import com.premelc.shows_dominik_premelc.model.Review
 import com.premelc.shows_dominik_premelc.model.Show
-import com.premelc.shows_dominik_premelc.model.User
 
 class ShowDetailsFragment : Fragment() {
     private var _binding: FragmentShowDetailsBinding? = null
@@ -34,7 +33,6 @@ class ShowDetailsFragment : Fragment() {
     private val viewModel: ShowDetailsViewModel by viewModels {
         ShowsViewModelFactory((requireActivity().application as ShowApplication).database)
     }
-    private var connectionEstablished = true
     private lateinit var dialog: BottomSheetDialog
 
     override fun onCreateView(
@@ -90,41 +88,13 @@ class ShowDetailsFragment : Fragment() {
         viewModel.showsDetailErrorMessage.observe(viewLifecycleOwner) { showDetailErrorMessage ->
             triggerNotificationBottomSheet(R.drawable.fail, getString(R.string.failed_to_load_details), showDetailErrorMessage)
         }
-        viewModel.fetchShowFromDb(args.id).observe(viewLifecycleOwner) { showFromDb ->
-            if (!connectionEstablished) {
-                initShowDetails(
-                    Show(
-                        showFromDb.id,
-                        showFromDb.averageRating,
-                        showFromDb.description,
-                        showFromDb.imageUrl,
-                        showFromDb.noOfReviews,
-                        showFromDb.title
-                    )
-                )
-            }
-        }
-
-        viewModel.getReviewsFromDb(args.id.toInt()).observe(viewLifecycleOwner) { reviewsFromDb ->
-            if (!connectionEstablished) {
-                updateReviewRecycler(reviewsFromDb.map { reviewEntity ->
-                    Review(
-                        reviewEntity.id,
-                        reviewEntity.comment,
-                        reviewEntity.rating,
-                        reviewEntity.showId,
-                        User(
-                            reviewEntity.userId,
-                            reviewEntity.userEmail,
-                            reviewEntity.userImageUrl
-                        )
-                    )
-                })
-                toggleReviewsRecyclerFullOrEmpty(reviewsFromDb.isNotEmpty())
-            }
-        }
         viewModel.connectionEstablished.observe(viewLifecycleOwner) { connected ->
-            connectionEstablished = connected
+            if (!connected) triggerNotificationBottomSheet(
+                R.drawable.fail,
+                getString(R.string.reviews_fetch_failed),
+                getString(R.string.connection_error)
+            )
+            viewModel.initDetails(args.id)
         }
         initializeUI()
     }
@@ -132,7 +102,6 @@ class ShowDetailsFragment : Fragment() {
     private fun initializeUI() {
         initLoadingBottomSheet()
         initBackButton()
-        viewModel.initDetails(args.id)
         initReviewsRecycler(emptyList())
         initReviewDialogButton()
     }

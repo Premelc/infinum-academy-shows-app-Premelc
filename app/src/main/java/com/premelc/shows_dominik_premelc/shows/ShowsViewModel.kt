@@ -105,16 +105,15 @@ class ShowsViewModel(
     }
 
     suspend fun fetchAllShowsFromDb() {
-        println("FETCHING FROM DB")
-            _shows.value = database.showsDAO().getAllTheShows().map { showEntity ->
-                Show(
-                    showEntity.id,
-                    showEntity.averageRating,
-                    showEntity.description,
-                    showEntity.imageUrl,
-                    showEntity.noOfReviews,
-                    showEntity.title
-                )
+        _shows.value = database.showsDAO().getAllShows().map { showEntity ->
+            Show(
+                showEntity.id,
+                showEntity.averageRating,
+                showEntity.description,
+                showEntity.imageUrl,
+                showEntity.noOfReviews,
+                showEntity.title
+            )
         }
         _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
     }

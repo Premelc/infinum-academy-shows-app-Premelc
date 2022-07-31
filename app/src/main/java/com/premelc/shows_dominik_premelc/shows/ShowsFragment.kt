@@ -117,6 +117,13 @@ class ShowsFragment : Fragment() {
                 triggerNotificationBottomSheet(R.drawable.fail, getString(R.string.change_photo_error), changePhotoResponseMessage)
             }
         }
+        viewModel.connectionEstablished.observe(viewLifecycleOwner) { connected ->
+            if (!connected) triggerNotificationBottomSheet(
+                R.drawable.fail,
+                getString(R.string.shows_fetch_failed),
+                getString(R.string.connection_error)
+            )
+        }
         initializeUI()
     }
 
@@ -132,7 +139,6 @@ class ShowsFragment : Fragment() {
 
     private fun initializeUI() {
         initLoadingBottomSheet()
-        viewModel.fetchShowsFromServer()
         initShowsRecycler()
         initProfileButton()
         initTopRatedChip()

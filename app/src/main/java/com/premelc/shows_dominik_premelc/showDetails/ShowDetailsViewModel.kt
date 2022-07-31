@@ -3,6 +3,7 @@ package com.premelc.shows_dominik_premelc.showDetails
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.premelc.shows_dominik_premelc.db.ReviewEntity
 import com.premelc.shows_dominik_premelc.db.ShowEntity
@@ -17,8 +18,10 @@ import com.premelc.shows_dominik_premelc.model.ReviewsResponse
 import com.premelc.shows_dominik_premelc.model.Show
 import com.premelc.shows_dominik_premelc.model.ShowDetailsErrorResponse
 import com.premelc.shows_dominik_premelc.model.ShowDetailsResponse
+import com.premelc.shows_dominik_premelc.model.User
 import com.premelc.shows_dominik_premelc.networking.ApiModule
 import java.util.concurrent.Executors
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -69,8 +72,15 @@ class ShowDetailsViewModel(
     }
 
     fun initDetails(id: String) {
-        fetchShow(id)
-        fetchReviews(id.toInt())
+        if (connectionEstablished.value == true) {
+            fetchShow(id)
+            fetchReviews(id.toInt())
+        } else {
+            viewModelScope.launch {
+                fetchShowFromDb(id)
+                fetchReviewsFromDb(id.toInt())
+            }
+        }
     }
 
     private fun fetchShow(id: String) {
@@ -104,12 +114,34 @@ class ShowDetailsViewModel(
         })
     }
 
-    fun getReviewsFromDb(id: Int): LiveData<List<ReviewEntity>> {
-        return database.reviewsDAO().getAllReviews(id)
+    private suspend fun fetchShowFromDb(id: String) {
+        val showEntity = database.showsDAO().getShow(id)
+        _show.value = Show(
+            showEntity.id,
+            showEntity.averageRating,
+            showEntity.description,
+            showEntity.imageUrl,
+            showEntity.noOfReviews,
+            showEntity.title
+        )
     }
 
-    fun fetchShowFromDb(id: String): LiveData<ShowEntity> {
-        return database.showsDAO().getShow(id)
+    private suspend fun fetchReviewsFromDb(id: Int) {
+        val reviewsEntity = database.reviewsDAO().getAllTheReviews(id)
+        _reviews.value = reviewsEntity.map { reviewEntity ->
+            Review(
+                reviewEntity.id,
+                reviewEntity.comment,
+                reviewEntity.rating,
+                reviewEntity.showId,
+                User(
+                    reviewEntity.userId,
+                    reviewEntity.userEmail,
+                    reviewEntity.userImageUrl
+                )
+            )
+        }
+        _reviewsRecyclerFullOrEmpty.value = reviewsEntity.isNotEmpty()
     }
 
     fun addShowToDb(show: ShowEntity) {
