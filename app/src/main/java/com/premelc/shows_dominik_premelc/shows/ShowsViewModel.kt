@@ -3,6 +3,7 @@ package com.premelc.shows_dominik_premelc.shows
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.premelc.shows_dominik_premelc.db.ShowEntity
 import com.premelc.shows_dominik_premelc.db.ShowsDatabase
@@ -15,6 +16,7 @@ import com.premelc.shows_dominik_premelc.model.TopRatedShowsResponse
 import com.premelc.shows_dominik_premelc.networking.ApiModule
 import java.io.File
 import java.util.concurrent.Executors
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -50,7 +52,7 @@ class ShowsViewModel(
     var connectionEstablished: LiveData<Boolean> = _connectionEstablished
 
     init {
-        ApiModule.retrofit.getMe().enqueue(object: Callback<LoginResponse>{
+        ApiModule.retrofit.getMe().enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 _connectionEstablished.value = true
                 fetchShowsFromServer()
@@ -58,6 +60,9 @@ class ShowsViewModel(
 
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 _connectionEstablished.value = false
+                viewModelScope.launch {
+                    fetchAllShowsFromDb()
+                }
             }
         })
     }
@@ -69,16 +74,16 @@ class ShowsViewModel(
                     _showsResponse.value = response.isSuccessful
                     _shows.value = response.body()?.shows
                     _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
-                        addToDb(_shows.value!!.map { shows ->
-                            ShowEntity(
-                                shows.id,
-                                shows.average_rating,
-                                shows.description.toString(),
-                                shows.image_url,
-                                shows.no_of_reviews,
-                                shows.title
-                            )
-                        })
+                    addToDb(_shows.value!!.map { shows ->
+                        ShowEntity(
+                            shows.id,
+                            shows.average_rating,
+                            shows.description.toString(),
+                            shows.image_url,
+                            shows.no_of_reviews,
+                            shows.title
+                        )
+                    })
                 } else {
                     val gson = Gson()
                     val showsErrorResponse: ShowsErrorResponse =
@@ -93,14 +98,25 @@ class ShowsViewModel(
         })
     }
 
-    fun addToDb(list: List<ShowEntity>){
+    fun addToDb(list: List<ShowEntity>) {
         Executors.newSingleThreadExecutor().execute {
             database.showsDAO().insertAllShows(list)
         }
     }
 
-    fun fetchShowsFromDb(): LiveData<List<ShowEntity>> {
-        return database.showsDAO().getAllShows()
+    suspend fun fetchAllShowsFromDb() {
+        println("FETCHING FROM DB")
+            _shows.value = database.showsDAO().getAllTheShows().map { showEntity ->
+                Show(
+                    showEntity.id,
+                    showEntity.averageRating,
+                    showEntity.description,
+                    showEntity.imageUrl,
+                    showEntity.noOfReviews,
+                    showEntity.title
+                )
+        }
+        _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
     }
 
     fun fetchTopRatedShowsFromServer() {

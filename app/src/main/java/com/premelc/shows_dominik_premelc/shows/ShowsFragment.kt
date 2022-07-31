@@ -48,7 +48,6 @@ class ShowsFragment : Fragment() {
     private val args by navArgs<ShowsFragmentArgs>()
     private lateinit var adapter: ShowsAdapter
     private lateinit var sharedPreferences: SharedPreferences
-    private var connectionEstablished = true
     private val viewModel: ShowsViewModel by viewModels {
         ShowsViewModelFactory((requireActivity().application as ShowApplication).database)
     }
@@ -117,25 +116,6 @@ class ShowsFragment : Fragment() {
             } else {
                 triggerNotificationBottomSheet(R.drawable.fail, getString(R.string.change_photo_error), changePhotoResponseMessage)
             }
-        }
-
-        viewModel.fetchShowsFromDb().observe(viewLifecycleOwner) { showsFromDb ->
-            if (!connectionEstablished) {
-                updateRecycler(showsFromDb.map { showEntity ->
-                    Show(
-                        showEntity.id,
-                        showEntity.averageRating,
-                        showEntity.description,
-                        showEntity.imageUrl,
-                        showEntity.noOfReviews,
-                        showEntity.title
-                    )
-                })
-                setShowsRecyclerFullOrEmpty(showsFromDb.isNotEmpty())
-            }
-        }
-        viewModel.connectionEstablished.observe(viewLifecycleOwner) { connected ->
-            connectionEstablished = connected
         }
         initializeUI()
     }

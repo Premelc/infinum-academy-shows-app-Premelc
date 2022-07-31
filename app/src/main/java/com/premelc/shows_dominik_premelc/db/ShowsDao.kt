@@ -17,4 +17,7 @@ interface ShowsDao {
     @Query("SELECT * FROM show WHERE id IS :showId")
     fun getShow(showId: String): LiveData<ShowEntity>
 
+    @Query("SELECT * FROM show ")
+    suspend fun getAllTheShows(): List<ShowEntity>
+
 }
