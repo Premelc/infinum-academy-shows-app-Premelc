@@ -75,5 +75,8 @@ dependencies {
 
 // viewModelScope:
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0-alpha01'
+//splash screen
+    implementation 'androidx.core:core-splashscreen:1.0.0'
+
 
 }

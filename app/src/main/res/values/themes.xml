@@ -24,4 +24,11 @@
         <item name="chipIconTint">@color/text_color_chip_state_list</item>
     </style>
 
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen.IconBackground">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/heart</item>
+        <item name="windowSplashScreenBackground">@color/defaultPurple</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/defaultPurple</item>
+        <item name="postSplashScreenTheme">@style/Theme.Showsdominikpremelc</item>
+    </style>
+
 </resources>
