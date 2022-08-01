@@ -235,6 +235,7 @@ class ShowsFragment : Fragment() {
             }
         }
     }
+
     private fun triggerNotificationBottomSheet(icon: Int, title: String, subtitle: String) {
         dialog.dismiss()
         val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
