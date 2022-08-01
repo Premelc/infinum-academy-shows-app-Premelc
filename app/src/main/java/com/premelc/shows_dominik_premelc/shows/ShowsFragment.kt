@@ -194,7 +194,7 @@ class ShowsFragment : Fragment() {
         val bottomSheetBinding: ShowsBottomSheetBinding =
             ShowsBottomSheetBinding.inflate(layoutInflater)
         dialog.setContentView(bottomSheetBinding.root)
-        setProfilePicOnView(bottomSheetBinding.profilePic)
+        setProfilePicOnView(bottomSheetBinding.profilePhoto.binding.profilePic)
         bottomSheetBinding.email.text = sharedPreferences.getString(SHARED_PREFERENCES_EMAIL, "example@example.com")
         bottomSheetBinding.logoutButton.setOnClickListener {
             initLogoutButton(dialog)
