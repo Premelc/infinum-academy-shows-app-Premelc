@@ -51,6 +51,10 @@ class ShowsViewModel(
     var connectionEstablished: LiveData<Boolean> = _connectionEstablished
 
     init {
+        checkIsServerResponsive()
+    }
+
+    private fun checkIsServerResponsive() {
         ApiModule.retrofit.getMe().enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 _connectionEstablished.value = true
@@ -75,16 +79,16 @@ class ShowsViewModel(
                     _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
                     viewModelScope.launch {
                         _shows.value?.let { shows ->
-                                addToDb(shows.map { show ->
-                                    ShowEntity(
-                                        show.id,
-                                        show.average_rating,
-                                        show.description.toString(),
-                                        show.image_url,
-                                        show.no_of_reviews,
-                                        show.title
-                                    )
-                                })
+                            addToDb(shows.map { show ->
+                                ShowEntity(
+                                    show.id,
+                                    show.average_rating,
+                                    show.description.toString(),
+                                    show.image_url,
+                                    show.no_of_reviews,
+                                    show.title
+                                )
+                            })
                         }
                     }
                 } else {
@@ -128,16 +132,16 @@ class ShowsViewModel(
                     _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
                     viewModelScope.launch {
                         _shows.value?.let { shows ->
-                                addToDb(shows.map { show ->
-                                    ShowEntity(
-                                        show.id,
-                                        show.average_rating,
-                                        show.description.toString(),
-                                        show.image_url,
-                                        show.no_of_reviews,
-                                        show.title
-                                    )
-                                })
+                            addToDb(shows.map { show ->
+                                ShowEntity(
+                                    show.id,
+                                    show.average_rating,
+                                    show.description.toString(),
+                                    show.image_url,
+                                    show.no_of_reviews,
+                                    show.title
+                                )
+                            })
                         }
                     }
                 } else {

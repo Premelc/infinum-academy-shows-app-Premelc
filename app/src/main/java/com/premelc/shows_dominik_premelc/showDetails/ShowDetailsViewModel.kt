@@ -59,6 +59,10 @@ class ShowDetailsViewModel(
     var connectionEstablished: LiveData<Boolean> = _connectionEstablished
 
     init {
+        checkIsServerResponsive()
+    }
+
+    private fun checkIsServerResponsive() {
         ApiModule.retrofit.getMe().enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 _connectionEstablished.value = true
@@ -90,17 +94,17 @@ class ShowDetailsViewModel(
                     _showsDetailResponse.value = response.isSuccessful
                     _reviewsRecyclerFullOrEmpty.value = response.isSuccessful
                     viewModelScope.launch {
-                        _show.value?.let {show->
-                                addShowToDb(
-                                    ShowEntity(
-                                        show.id,
-                                        show.average_rating,
-                                        show.description.toString(),
-                                        show.image_url,
-                                        show.no_of_reviews,
-                                        show.title
-                                    )
+                        _show.value?.let { show ->
+                            addShowToDb(
+                                ShowEntity(
+                                    show.id,
+                                    show.average_rating,
+                                    show.description.toString(),
+                                    show.image_url,
+                                    show.no_of_reviews,
+                                    show.title
                                 )
+                            )
                         }
                     }
                 } else {
@@ -167,18 +171,18 @@ class ShowDetailsViewModel(
                     _reviewsResponse.value = response.isSuccessful
                     viewModelScope.launch {
                         _reviews.value?.let { reviews ->
-                                addAllReviewsToDb(reviews.map { review ->
-                                    ReviewEntity(
-                                        review.id,
-                                        review.comment ?: "",
-                                        review.rating,
-                                        review.show_id,
-                                        review.user.id,
-                                        review.user.email,
-                                        review.user.image_url.toString()
-                                    )
-                                })
-                            }
+                            addAllReviewsToDb(reviews.map { review ->
+                                ReviewEntity(
+                                    review.id,
+                                    review.comment ?: "",
+                                    review.rating,
+                                    review.show_id,
+                                    review.user.id,
+                                    review.user.email,
+                                    review.user.image_url.toString()
+                                )
+                            })
+                        }
                     }
                 } else {
                     val gson = Gson()
