@@ -4,26 +4,25 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import androidx.core.content.ContentProviderCompat.requireContext
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.ViewProfilePhotoBinding
 
-class ProfilePhotoView @JvmOverloads  constructor(
+class ProfilePhotoView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : FrameLayout(context,attrs,defStyleAttr){
-    lateinit var binding: ViewProfilePhotoBinding
+) : FrameLayout(context, attrs, defStyleAttr) {
+    private lateinit  var binding: ViewProfilePhotoBinding
 
-    init{
-        binding = ViewProfilePhotoBinding.inflate(LayoutInflater.from(context),this)
+    init {
+        binding = ViewProfilePhotoBinding.inflate(LayoutInflater.from(context), this)
         clipChildren = false
         clipToPadding = false
     }
 
-    fun setPicture(url: String){
+    fun setPicture(url: String) {
         Glide.with(binding.root.context)
             .load(
                 url
@@ -38,7 +37,7 @@ class ProfilePhotoView @JvmOverloads  constructor(
             .into(binding.profilePic)
     }
 
-    fun setDimensions(size: Int){
+    fun setDimensions(size: Int) {
         val picOutline = binding.profilePicHolder
         val pic = binding.profilePic
         var params = binding.profilePicHolder.layoutParams

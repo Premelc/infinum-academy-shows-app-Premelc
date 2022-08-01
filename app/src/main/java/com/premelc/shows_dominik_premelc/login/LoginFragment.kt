@@ -120,16 +120,15 @@ class LoginFragment : Fragment() {
         setupRegisterButton()
     }
 
-     private fun animateLogo(){
-             with(binding.triangleImg) {
-                 animate()
-                     .translationY(0F)
-                     .setDuration(1000)
-                     .setInterpolator(BounceInterpolator())
-                     .start()
-             }
-     }
-
+    private fun animateLogo() {
+        with(binding.triangleImg) {
+            animate()
+                .translationY(0F)
+                .setDuration(1000)
+                .setInterpolator(BounceInterpolator())
+                .start()
+        }
+    }
 
     private fun setupLoginButton() {
         binding.loginButton.setOnClickListener {
