@@ -17,12 +17,6 @@ class ProfilePhotoView @JvmOverloads  constructor(
         binding = ViewProfilePhotoBinding.inflate(LayoutInflater.from(context),this)
         clipChildren = false
         clipToPadding = false
-        setPadding(
-            24,
-            24,
-            24,
-            24
-        )
     }
 
 }

@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.premelc.shows_dominik_premelc.CommonFunctions.resizeProfilePic
 import com.premelc.shows_dominik_premelc.FileUtil.createImageFile
 import com.premelc.shows_dominik_premelc.FileUtil.getFileUri
 import com.premelc.shows_dominik_premelc.FileUtil.getImageFile
@@ -40,6 +41,7 @@ import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_PFP_URL
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_TOKEN_TYPE
 import com.premelc.shows_dominik_premelc.model.Show
 import com.premelc.shows_dominik_premelc.networking.ApiModule.initRetrofit
+import com.premelc.shows_dominik_premelc.views.ProfilePhotoView
 
 class ShowsFragment : Fragment() {
 
@@ -111,7 +113,7 @@ class ShowsFragment : Fragment() {
                 sharedPreferences.edit()
                     .putString(SHARED_PREFERENCES_PFP_URL, changePhotoResponseMessage)
                     .commit()
-                setProfilePicOnView(binding.profileButton)
+                setProfilePicOnView(binding.profilePhoto.binding.profilePic)
                 triggerNotificationBottomSheet(R.drawable.success, getString(R.string.change_photo_success), getString(R.string.empty))
             } else {
                 triggerNotificationBottomSheet(R.drawable.fail, getString(R.string.change_photo_error), changePhotoResponseMessage)
@@ -182,8 +184,9 @@ class ShowsFragment : Fragment() {
     }
 
     private fun initProfileButton() {
-        setProfilePicOnView(binding.profileButton)
-        binding.profileButton.setOnClickListener {
+        setProfilePicOnView(binding.profilePhoto.binding.profilePic)
+        resizeProfilePic(binding.profilePhoto ,requireContext().resources.getDimensionPixelSize(R.dimen.profileButton))
+        binding.profilePhoto.setOnClickListener {
             val dialog = BottomSheetDialog(requireContext())
             initProfileBottomSheet(dialog)
         }

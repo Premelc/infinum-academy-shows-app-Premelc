@@ -132,7 +132,7 @@ class ShowDetailsViewModel(
         _reviews.value = reviewsEntity.map { reviewEntity ->
             Review(
                 reviewEntity.id,
-                reviewEntity.comment,
+                reviewEntity.comment.toString(),
                 reviewEntity.rating,
                 reviewEntity.showId,
                 User(
@@ -167,7 +167,7 @@ class ShowDetailsViewModel(
                         addAllReviewsToDb(_reviews.value!!.map { review ->
                             ReviewEntity(
                                 review.id,
-                                review.comment,
+                                review.comment ?: "",
                                 review.rating,
                                 review.show_id,
                                 review.user.id,
