@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,7 +9,7 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/white"
         android:minHeight="?attr/actionBarSize"
@@ -35,7 +36,7 @@
                     android:id="@+id/profileButton"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    tools:src="@mipmap/pfp" />
+                    tools:src="@mipmap/pfp"/>
             </androidx.cardview.widget.CardView>
         </androidx.cardview.widget.CardView>
     </com.google.android.material.appbar.MaterialToolbar>
@@ -51,7 +52,24 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/showsRecycler"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar"/>
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/topRatedChip"
+        style="@style/CustomChipChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:text="@string/top_rated"
+        android:checkable="true"
+        app:checkedIconEnabled="false"
+        app:chipIcon="@drawable/heart"
+        app:chipIconVisible="true"
+        app:chipStrokeColor="@color/defaultPurple"
+        app:chipStrokeWidth="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/showsRecycler"
@@ -63,7 +81,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        tools:listitem="@layout/view_show_item" />
+        tools:listitem="@layout/view_show_item"/>
 
     <ImageView
         android:id="@+id/emptyStateElipse"
@@ -74,7 +92,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/emptyStateIcon"
@@ -85,7 +103,7 @@
         app:layout_constraintBottom_toBottomOf="@id/emptyStateElipse"
         app:layout_constraintEnd_toEndOf="@id/emptyStateElipse"
         app:layout_constraintStart_toStartOf="@id/emptyStateElipse"
-        app:layout_constraintTop_toTopOf="@id/emptyStateElipse" />
+        app:layout_constraintTop_toTopOf="@id/emptyStateElipse"/>
 
     <TextView
         android:id="@+id/emptyState"
@@ -96,5 +114,5 @@
         android:textAlignment="center"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintLeft_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emptyStateElipse" />
+        app:layout_constraintTop_toBottomOf="@id/emptyStateElipse"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

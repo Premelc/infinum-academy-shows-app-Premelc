@@ -5,8 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.premelc.shows_dominik_premelc.FileUtil.getFileUri
-import com.premelc.shows_dominik_premelc.FileUtil.getImageFile
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.ViewItemReviewBinding
 import com.premelc.shows_dominik_premelc.model.Review
@@ -31,12 +29,14 @@ class ReviewsAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Review) {
             with(binding) {
-                username.text = item.username
-                reviewMsg.text = item.text
-                gradeValue.text = item.grade.toString()
-
+                username.text = item.user.email.substringBefore('@')
+                reviewMsg.text = item.comment
+                gradeValue.text = item.rating.toString()
                 Glide.with(binding.root.context)
-                    .load(getFileUri(getImageFile(binding.root.context, item.username), binding.root.context))
+                    .load(item.user.image_url)
+                    .placeholder(
+                        R.mipmap.pfp
+                    )
                     .error(
                         R.mipmap.pfp
                     )

@@ -26,12 +26,12 @@ private const val COMPRESSED_IMAGE_QUALITY_PERCENTAGE = 15
  */
 object FileUtil {
 
-    fun getImageFile(context: Context?, username: String): File? {
+    fun getImageFile(context: Context?): File? {
         if (context == null) return null
 
         val file = File(
             context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-            username + "_avatar.jpg"
+            "avatar.jpg"
         )
         if (file.exists().not()) {
             Log.e("FileUtil", "Image file does not exist.")
@@ -72,11 +72,11 @@ object FileUtil {
         }
     }
 
-    fun createImageFile(context: Context, username: String): File? {
+    fun createImageFile(context: Context): File? {
         try {
             val file = File(
                 context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                username + "_avatar.jpg"
+                "avatar.jpg"
             )
             if (file.exists().not() && file.createNewFile().not()) {
                 Log.e("FileUtil", "Failed to create image file.")

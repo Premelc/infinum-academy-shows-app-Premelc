@@ -26,8 +26,7 @@
     <string name="star">star</string>
     <string name="show_image">show image</string>
     <string name="toast_make_review">Submited review successfully</string>
-    <string name="reviewCount">"%d reviews %s average"</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="reviewCount">"%s reviews %s average"</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="logout">logout</string>
     <string name="remember_me">Remember me</string>
@@ -39,4 +38,18 @@
     <string name="invalidEmail">Invalid email address</string>
     <string name="invalidPassword">Invalid password</string>
     <string name="empty"/>
+    <string name="register">Register</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="passwords_dont_match">Passwords don\'t match</string>
+    <string name="registerSuccessTitle">Registration successful!</string>
+    <string name="registration_failed">Registration failed</string>
+    <string name="login_failed">Login failed</string>
+    <string name="shows_fetch_failed">Failed to fetch shows</string>
+    <string name="connection_error">Connection error</string>
+    <string name="reviews_fetch_failed">Failed to fetch reviews</string>
+    <string name="post_review_failed">Failed to post review</string>
+    <string name="top_rated">Top rated</string>
+    <string name="change_photo_error">Failed to change profile photo</string>
+    <string name="change_photo_success">Successfully changed profile photo</string>
+    <string name="failed_to_load_details">Failed to load show details</string>
 </resources>

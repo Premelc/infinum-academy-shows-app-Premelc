@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -27,12 +28,12 @@
                 android:layout_height="200dp"
                 android:contentDescription="@string/show_image"
                 android:scaleType="centerCrop"
-                tools:src="@mipmap/krv_nije_voda" />
+                tools:src="@mipmap/krv_nije_voda"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="200dp" />
+                android:layout_marginTop="200dp"/>
 
             <TextView
                 android:id="@+id/showName"
@@ -43,7 +44,7 @@
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                tools:text="The Office" />
+                tools:text="The Office"/>
 
             <TextView
                 android:id="@+id/showDescription"
@@ -53,7 +54,7 @@
                 android:padding="16dp"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-                tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" />
+                tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor"/>
 
         </FrameLayout>
 

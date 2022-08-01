@@ -12,9 +12,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowDetailsBinding
+import com.premelc.shows_dominik_premelc.databinding.LoadingBottomSheetBinding
+import com.premelc.shows_dominik_premelc.databinding.RequestResponseBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowDetailsBottomSheetBinding
 import com.premelc.shows_dominik_premelc.model.Review
 
@@ -24,6 +28,7 @@ class ShowDetailsFragment : Fragment() {
     private val args by navArgs<ShowDetailsFragmentArgs>()
     private lateinit var adapter: ReviewsAdapter
     private val viewModel by viewModels<ShowDetailsViewModel>()
+    private lateinit var dialog: BottomSheetDialog
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,47 +36,125 @@ class ShowDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentShowDetailsBinding.inflate(inflater, container, false)
+        dialog = BottomSheetDialog(requireContext())
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.show.observe(viewLifecycleOwner) { show ->
-            binding.showTitle.text = show.name
+            binding.showTitle.text = show.title
             binding.showDescription.text = show.description
-            binding.img.setImageResource(show.imageResourceId)
-        }
-        viewModel.reviewCount.observe(viewLifecycleOwner) { reviewCount ->
             binding.reviewsNumber.text = String.format(
                 this.getString(R.string.reviewCount),
-                reviewCount,
-                viewModel.reviewAvg.value
+                show.no_of_reviews.toString(),
+                show.average_rating.toString()
             )
-        }
-        viewModel.show.observe(viewLifecycleOwner) { show ->
-            binding.img.setImageResource(show.imageResourceId)
-            binding.showTitle.text = show.name
-            binding.showDescription.text = show.description
-        }
-        viewModel.rating.observe(viewLifecycleOwner) { rating ->
-            binding.ratings.rating = rating
+            if (show.average_rating != null) binding.ratings.rating = show.average_rating.toFloat()
+            else binding.ratings.rating = show.no_of_reviews.toFloat()
+            Glide.with(requireContext())
+                .load(show.image_url)
+                .placeholder(R.mipmap.ic_launcher)
+                .error(R.mipmap.ic_launcher)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .into(binding.img)
         }
         viewModel.reviews.observe(viewLifecycleOwner) { reviews ->
             adapter.addAllReviews(reviews)
             adapter.notifyDataSetChanged()
         }
-        viewModel.reviewsRecyclerFullOrEmpty.observe(viewLifecycleOwner){ toggleReviewsRecyclerFullOrEmpty ->
+        viewModel.reviewsRecyclerFullOrEmpty.observe(viewLifecycleOwner) { toggleReviewsRecyclerFullOrEmpty ->
             toggleReviewsRecyclerFullOrEmpty(toggleReviewsRecyclerFullOrEmpty)
+        }
+        viewModel.reviewsResponse.observe(viewLifecycleOwner) { reviewsResponse ->
+            dialog.dismiss()
+            if (!reviewsResponse) {
+                val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+                with(bottomSheetBinding) {
+                    callbackIcon.setImageResource(R.drawable.fail)
+                    callbackText.text = getString(R.string.reviews_fetch_failed)
+                    callbackDescription.text = getString(R.string.connection_error)
+                }
+                dialog.setContentView(bottomSheetBinding.root)
+                dialog.show()
+            }
+        }
+        viewModel.reviewsErrorMessage.observe(viewLifecycleOwner){reviewErrorMessage->
+            dialog.dismiss()
+            val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+            with(bottomSheetBinding) {
+                callbackIcon.setImageResource(R.drawable.fail)
+                callbackText.text = getString(R.string.reviews_fetch_failed)
+                callbackDescription.text = reviewErrorMessage
+            }
+            dialog.setContentView(bottomSheetBinding.root)
+            dialog.show()
+        }
+        viewModel.postReviewResponse.observe(viewLifecycleOwner) { postReviewResponse ->
+            dialog.dismiss()
+            if (!postReviewResponse) {
+                val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+                with(bottomSheetBinding) {
+                    callbackIcon.setImageResource(R.drawable.fail)
+                    callbackText.text = getString(R.string.post_review_failed)
+                    callbackDescription.text = getString(R.string.connection_error)
+                }
+                dialog.setContentView(bottomSheetBinding.root)
+                dialog.show()
+            }else{
+                Toast.makeText(context, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
+            }
+        }
+        viewModel.postReviewErrorMessage.observe(viewLifecycleOwner){postReviewErrorMessage->
+            dialog.dismiss()
+            val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+            with(bottomSheetBinding) {
+                callbackIcon.setImageResource(R.drawable.fail)
+                callbackText.text = getString(R.string.post_review_failed)
+                callbackDescription.text = postReviewErrorMessage
+            }
+            dialog.setContentView(bottomSheetBinding.root)
+            dialog.show()
+        }
+        viewModel.showsDetailResponse.observe(viewLifecycleOwner){showDetailResponse->
+            dialog.dismiss()
+            if (!showDetailResponse) {
+                val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+                with(bottomSheetBinding) {
+                    callbackIcon.setImageResource(R.drawable.fail)
+                    callbackText.text = getString(R.string.failed_to_load_details)
+                    callbackDescription.text = getString(R.string.connection_error)
+                }
+                dialog.setContentView(bottomSheetBinding.root)
+                dialog.show()
+            }
+        }
+        viewModel.showsDetailErrorMessage.observe(viewLifecycleOwner){showDetailErrorMessage->
+            dialog.dismiss()
+            val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+            with(bottomSheetBinding) {
+                callbackIcon.setImageResource(R.drawable.fail)
+                callbackText.text = getString(R.string.failed_to_load_details)
+                callbackDescription.text = showDetailErrorMessage
+            }
+            dialog.setContentView(bottomSheetBinding.root)
+            dialog.show()
         }
         initializeUI()
     }
 
     private fun initializeUI() {
+        initLoadingBottomSheet()
         initBackButton()
         initDetails()
         initReviewsRecycler(emptyList())
-        initRatingDisplay()
-        initReviewDialogButton(args.username)
+        initReviewDialogButton()
+    }
+
+    private fun initLoadingBottomSheet() {
+        val loadingBottomSheetBinding: LoadingBottomSheetBinding = LoadingBottomSheetBinding.inflate(layoutInflater)
+        dialog.setContentView(loadingBottomSheetBinding.root)
+        dialog.show()
     }
 
     private fun initBackButton() {
@@ -94,7 +177,7 @@ class ShowDetailsFragment : Fragment() {
         viewModel.initDetails(args.id)
     }
 
-    private fun initReviewDialogButton(username: String) {
+    private fun initReviewDialogButton() {
         binding.writeReviewButton.setOnClickListener {
             val dialog = BottomSheetDialog(requireContext())
             val bottomSheetBinding: ShowDetailsBottomSheetBinding =
@@ -107,12 +190,10 @@ class ShowDetailsFragment : Fragment() {
             }
             btnSubmit.setOnClickListener {
                 val comment = bottomSheetBinding.reviewInput.text.toString()
-                val rating = bottomSheetBinding.ratingBar.rating
-                val review = Review(username, username, rating, comment, R.mipmap.pfp)
-                addReviewToList(review)
-                Toast.makeText(context, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
-                initRatingDisplay()
+                val rating = bottomSheetBinding.ratingBar.rating.toInt()
+                viewModel.postReview(rating, comment, args.id.toInt())
                 dialog.dismiss()
+                initLoadingBottomSheet()
             }
             dialog.setContentView(bottomSheetBinding.root)
             dialog.show()
@@ -120,16 +201,12 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun toggleReviewsRecyclerFullOrEmpty(isEmpty: Boolean) {
-        binding.emptyReview.isVisible = isEmpty
-        binding.reviewsRecycler.isVisible = !isEmpty
+        binding.emptyReview.isVisible = !isEmpty
+        binding.reviewsRecycler.isVisible = isEmpty
     }
 
-    private fun addReviewToList(review: Review) {
-        viewModel.addReview(review)
-        adapter.notifyItemInserted(viewModel.reviews.value!!.size)
-    }
-
-    private fun initRatingDisplay() {
-        viewModel.initRatingDisplay()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
