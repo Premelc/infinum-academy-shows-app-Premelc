@@ -21,7 +21,7 @@ import com.premelc.shows_dominik_premelc.databinding.LoadingBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.RequestResponseBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowDetailsBottomSheetBinding
 import com.premelc.shows_dominik_premelc.db.ShowsViewModelFactory
-import com.premelc.shows_dominik_premelc.CommonFunctions.getAppDatabase
+import com.premelc.shows_dominik_premelc.getAppDatabase
 import com.premelc.shows_dominik_premelc.model.Review
 import com.premelc.shows_dominik_premelc.model.Show
 

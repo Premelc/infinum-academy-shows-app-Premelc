@@ -90,8 +90,7 @@ class ShowDetailsViewModel(
                     _showsDetailResponse.value = response.isSuccessful
                     _reviewsRecyclerFullOrEmpty.value = response.isSuccessful
                     viewModelScope.launch {
-                        _show.value.let { show ->
-                            if (show != null) {
+                        _show.value?.let {show->
                                 addShowToDb(
                                     ShowEntity(
                                         show.id,
@@ -102,7 +101,6 @@ class ShowDetailsViewModel(
                                         show.title
                                     )
                                 )
-                            }
                         }
                     }
                 } else {
@@ -168,12 +166,11 @@ class ShowDetailsViewModel(
                     _reviews.value = response.body()?.reviews
                     _reviewsResponse.value = response.isSuccessful
                     viewModelScope.launch {
-                        _reviews.value.let { reviews ->
-                            if (reviews != null) {
+                        _reviews.value?.let { reviews ->
                                 addAllReviewsToDb(reviews.map { review ->
                                     ReviewEntity(
                                         review.id,
-                                        review.comment,
+                                        review.comment ?: "",
                                         review.rating,
                                         review.show_id,
                                         review.user.id,
@@ -182,7 +179,6 @@ class ShowDetailsViewModel(
                                     )
                                 })
                             }
-                        }
                     }
                 } else {
                     val gson = Gson()

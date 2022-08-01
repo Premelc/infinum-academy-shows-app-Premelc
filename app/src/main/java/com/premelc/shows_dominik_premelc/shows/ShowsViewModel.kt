@@ -74,8 +74,7 @@ class ShowsViewModel(
                     _shows.value = response.body()?.shows
                     _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
                     viewModelScope.launch {
-                        _shows.value.let { shows ->
-                            if (shows != null) {
+                        _shows.value?.let { shows ->
                                 addToDb(shows.map { show ->
                                     ShowEntity(
                                         show.id,
@@ -86,7 +85,6 @@ class ShowsViewModel(
                                         show.title
                                     )
                                 })
-                            }
                         }
                     }
                 } else {
@@ -129,8 +127,7 @@ class ShowsViewModel(
                     _shows.value = response.body()?.shows
                     _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
                     viewModelScope.launch {
-                        _shows.value.let { shows ->
-                            if (shows != null) {
+                        _shows.value?.let { shows ->
                                 addToDb(shows.map { show ->
                                     ShowEntity(
                                         show.id,
@@ -141,7 +138,6 @@ class ShowsViewModel(
                                         show.title
                                     )
                                 })
-                            }
                         }
                     }
                 } else {
@@ -169,7 +165,7 @@ class ShowsViewModel(
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if (response.isSuccessful) {
                     _changePhotoResponse.value = response.isSuccessful
-                    _changePhotoResponseMessage.value = response.body()?.user?.image_url
+                    _changePhotoResponseMessage.value = response.body()?.user?.image_url.toString()
                 } else {
                     val gson = Gson()
                     val changePhotoErrorResponse: ChangePhotoErrorResponse =
