@@ -123,7 +123,7 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    private fun animateLogo(){
+    private fun animateLogo() {
         with(binding.triangleImg) {
             animate()
                 .translationY(0F)

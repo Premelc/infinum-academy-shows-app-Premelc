@@ -2,6 +2,7 @@ package com.premelc.shows_dominik_premelc.showDetails
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.ViewItemReviewBinding
@@ -28,7 +29,8 @@ class ReviewsAdapter(
         fun bind(item: Review) {
             with(binding) {
                 username.text = item.user.email.substringBefore('@')
-                reviewMsg.text = item.comment
+                if(item.comment != null && item.comment.isNotEmpty())reviewMsg.text = item.comment
+                else reviewMsg.isVisible = false
                 gradeValue.text = item.rating.toString()
                 binding.profilePhoto.setDimensions(binding.root.context.resources.getDimensionPixelSize(R.dimen.reviewProfilePicture))
                 binding.profilePhoto.setPicture(item.user.image_url.toString())

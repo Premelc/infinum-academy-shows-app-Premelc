@@ -173,7 +173,7 @@ class ShowDetailsViewModel(
                                 addAllReviewsToDb(reviews.map { review ->
                                     ReviewEntity(
                                         review.id,
-                                        review.comment,
+                                        review.comment ?: "",
                                         review.rating,
                                         review.show_id,
                                         review.user.id,
