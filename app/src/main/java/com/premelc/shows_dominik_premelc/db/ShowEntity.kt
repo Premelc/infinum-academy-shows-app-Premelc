@@ -12,4 +12,4 @@ data class ShowEntity(
     @ColumnInfo(name = "image") val imageUrl: String,
     @ColumnInfo(name = "reviewsNumber") val noOfReviews: Int,
     @ColumnInfo(name = "title") val title: String
-    )
+)

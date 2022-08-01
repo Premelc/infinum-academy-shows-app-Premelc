@@ -90,16 +90,20 @@ class ShowDetailsViewModel(
                     _showsDetailResponse.value = response.isSuccessful
                     _reviewsRecyclerFullOrEmpty.value = response.isSuccessful
                     viewModelScope.launch {
-                        addShowToDb(
-                            ShowEntity(
-                                _show.value?.id.toString(),
-                                _show.value?.average_rating,
-                                _show.value?.description.toString(),
-                                _show.value?.image_url.toString(),
-                                _show.value?.no_of_reviews ?: 0,
-                                _show.value?.title.toString()
-                            )
-                        )
+                        _show.value.let { show ->
+                            if (show != null) {
+                                addShowToDb(
+                                    ShowEntity(
+                                        show.id,
+                                        show.average_rating,
+                                        show.description.toString(),
+                                        show.image_url,
+                                        show.no_of_reviews,
+                                        show.title
+                                    )
+                                )
+                            }
+                        }
                     }
                 } else {
                     val gson = Gson()
@@ -164,17 +168,21 @@ class ShowDetailsViewModel(
                     _reviews.value = response.body()?.reviews
                     _reviewsResponse.value = response.isSuccessful
                     viewModelScope.launch {
-                        addAllReviewsToDb(_reviews.value!!.map { review ->
-                            ReviewEntity(
-                                review.id,
-                                review.comment,
-                                review.rating,
-                                review.show_id,
-                                review.user.id,
-                                review.user.email,
-                                review.user.image_url.toString()
-                            )
-                        })
+                        _reviews.value.let { reviews ->
+                            if (reviews != null) {
+                                addAllReviewsToDb(reviews.map { review ->
+                                    ReviewEntity(
+                                        review.id,
+                                        review.comment,
+                                        review.rating,
+                                        review.show_id,
+                                        review.user.id,
+                                        review.user.email,
+                                        review.user.image_url.toString()
+                                    )
+                                })
+                            }
+                        }
                     }
                 } else {
                     val gson = Gson()
@@ -202,19 +210,21 @@ class ShowDetailsViewModel(
                 if (response.isSuccessful) {
                     if (response.body() != null) addReview(response.body()!!.review)
                     _postReviewResponse.value = response.isSuccessful
-                    val review = response.body()!!.review
+                    val review = response.body()?.review
                     viewModelScope.launch {
-                        addReviewToDb(
-                            ReviewEntity(
-                                review.id,
-                                review.comment,
-                                review.rating,
-                                review.show_id,
-                                review.user.id,
-                                review.user.email,
-                                review.user.image_url.toString()
+                        if (review != null) {
+                            addReviewToDb(
+                                ReviewEntity(
+                                    review.id,
+                                    review.comment,
+                                    review.rating,
+                                    review.show_id,
+                                    review.user.id,
+                                    review.user.email,
+                                    review.user.image_url.toString()
+                                )
                             )
-                        )
+                        }
                     }
                 } else {
                     val gson = Gson()

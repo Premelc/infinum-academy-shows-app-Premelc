@@ -17,7 +17,7 @@ object ApiModule {
     private const val BASE_URL = "https://tv-shows.infinum.academy/"
     lateinit var retrofit: ShowsApiService
 
-    fun initRetrofit(context: Context, header: Map<String , String>) {
+    fun initRetrofit(context: Context, header: Map<String, String>) {
 
         val gson: Gson = GsonBuilder()
             .setLenient()

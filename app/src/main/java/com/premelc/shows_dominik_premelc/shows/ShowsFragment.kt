@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.premelc.shows_dominik_premelc.CommonFunctions.getAppDatabase
 import com.premelc.shows_dominik_premelc.FileUtil.createImageFile
 import com.premelc.shows_dominik_premelc.FileUtil.getFileUri
 import com.premelc.shows_dominik_premelc.FileUtil.getImageFile
@@ -49,7 +50,7 @@ class ShowsFragment : Fragment() {
     private lateinit var adapter: ShowsAdapter
     private lateinit var sharedPreferences: SharedPreferences
     private val viewModel: ShowsViewModel by viewModels {
-        ShowsViewModelFactory((requireActivity().application as ShowApplication).database)
+        ShowsViewModelFactory(getAppDatabase())
     }
     private lateinit var dialog: BottomSheetDialog
 

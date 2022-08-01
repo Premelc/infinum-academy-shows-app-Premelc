@@ -74,16 +74,20 @@ class ShowsViewModel(
                     _shows.value = response.body()?.shows
                     _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
                     viewModelScope.launch {
-                        addToDb(_shows.value!!.map { shows ->
-                            ShowEntity(
-                                shows.id,
-                                shows.average_rating,
-                                shows.description.toString(),
-                                shows.image_url,
-                                shows.no_of_reviews,
-                                shows.title
-                            )
-                        })
+                        _shows.value.let { shows ->
+                            if (shows != null) {
+                                addToDb(shows.map { show ->
+                                    ShowEntity(
+                                        show.id,
+                                        show.average_rating,
+                                        show.description.toString(),
+                                        show.image_url,
+                                        show.no_of_reviews,
+                                        show.title
+                                    )
+                                })
+                            }
+                        }
                     }
                 } else {
                     val gson = Gson()
@@ -125,16 +129,20 @@ class ShowsViewModel(
                     _shows.value = response.body()?.shows
                     _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
                     viewModelScope.launch {
-                        addToDb(_shows.value!!.map { shows ->
-                            ShowEntity(
-                                shows.id,
-                                shows.average_rating,
-                                shows.description.toString(),
-                                shows.image_url,
-                                shows.no_of_reviews,
-                                shows.title
-                            )
-                        })
+                        _shows.value.let { shows ->
+                            if (shows != null) {
+                                addToDb(shows.map { show ->
+                                    ShowEntity(
+                                        show.id,
+                                        show.average_rating,
+                                        show.description.toString(),
+                                        show.image_url,
+                                        show.no_of_reviews,
+                                        show.title
+                                    )
+                                })
+                            }
+                        }
                     }
                 } else {
                     val gson = Gson()

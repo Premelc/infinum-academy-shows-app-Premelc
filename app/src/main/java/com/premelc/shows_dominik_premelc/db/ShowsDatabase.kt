@@ -12,15 +12,15 @@ import androidx.room.RoomDatabase
     ],
     version = 4
 )
-abstract class ShowsDatabase : RoomDatabase(){
+abstract class ShowsDatabase : RoomDatabase() {
 
-    companion object{
+    companion object {
 
         @Volatile
         private var INSTANCE: ShowsDatabase? = null
 
         fun getDatabase(context: Context): ShowsDatabase {
-            return INSTANCE ?: synchronized(this){
+            return INSTANCE ?: synchronized(this) {
                 val database = Room.databaseBuilder(
                     context,
                     ShowsDatabase::class.java,
@@ -33,6 +33,6 @@ abstract class ShowsDatabase : RoomDatabase(){
         }
     }
 
-    abstract fun showsDAO():ShowsDao
-    abstract fun reviewsDAO():ReviewsDao
+    abstract fun showsDAO(): ShowsDao
+    abstract fun reviewsDAO(): ReviewsDao
 }

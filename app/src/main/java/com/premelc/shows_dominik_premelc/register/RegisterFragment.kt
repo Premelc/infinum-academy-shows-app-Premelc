@@ -61,10 +61,14 @@ class RegisterFragment : Fragment() {
                 val directions = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment(true)
                 findNavController().navigate(directions)
             } else {
-                triggerNotificationBottomSheet(R.drawable.fail, getString(R.string.registration_failed), getString(R.string.connection_error))
+                triggerNotificationBottomSheet(
+                    R.drawable.fail,
+                    getString(R.string.registration_failed),
+                    getString(R.string.connection_error)
+                )
             }
         }
-        viewModel.registerErrorMessage.observe(viewLifecycleOwner){registerErrorMessage->
+        viewModel.registerErrorMessage.observe(viewLifecycleOwner) { registerErrorMessage ->
             triggerNotificationBottomSheet(R.drawable.fail, getString(R.string.registration_failed), registerErrorMessage)
         }
         initializeUI()
@@ -75,20 +79,32 @@ class RegisterFragment : Fragment() {
         setUpRegisterButton()
     }
 
-    private fun setUpEmailAndPasswordValidation(){
-        with(binding){
-            emailInput.doOnTextChanged{  text, start, before, count ->
+    private fun setUpEmailAndPasswordValidation() {
+        with(binding) {
+            emailInput.doOnTextChanged { text, start, before, count ->
                 viewModel.checkEmailValidity(emailInput.text.toString())
-                viewModel.validateRegisterData(emailInput.text.toString() , passwordInput.text.toString() , repeatPasswordInput.text.toString())
+                viewModel.validateRegisterData(
+                    emailInput.text.toString(),
+                    passwordInput.text.toString(),
+                    repeatPasswordInput.text.toString()
+                )
             }
-            passwordInput.doOnTextChanged{  text, start, before, count ->
+            passwordInput.doOnTextChanged { text, start, before, count ->
                 viewModel.checkPasswordValidity(passwordInput.text.toString())
-                viewModel.validateRegisterData(emailInput.text.toString() , passwordInput.text.toString() , repeatPasswordInput.text.toString())
+                viewModel.validateRegisterData(
+                    emailInput.text.toString(),
+                    passwordInput.text.toString(),
+                    repeatPasswordInput.text.toString()
+                )
             }
-            repeatPasswordInput.doOnTextChanged{    text, start, before, count ->
+            repeatPasswordInput.doOnTextChanged { text, start, before, count ->
                 viewModel.checkRepeatPasswordValidity(repeatPasswordInput.text.toString())
-                viewModel.checkIfPasswordsMatch(repeatPasswordInput.text.toString() ,passwordInput.text.toString() )
-                viewModel.validateRegisterData(emailInput.text.toString() , passwordInput.text.toString() , repeatPasswordInput.text.toString())
+                viewModel.checkIfPasswordsMatch(repeatPasswordInput.text.toString(), passwordInput.text.toString())
+                viewModel.validateRegisterData(
+                    emailInput.text.toString(),
+                    passwordInput.text.toString(),
+                    repeatPasswordInput.text.toString()
+                )
             }
         }
     }

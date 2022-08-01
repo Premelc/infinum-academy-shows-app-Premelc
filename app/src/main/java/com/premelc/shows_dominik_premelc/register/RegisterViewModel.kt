@@ -45,12 +45,12 @@ class RegisterViewModel : ViewModel() {
         return password.length >= PASSWORD_MIN_LENGTH
     }
 
-    fun checkIfPasswordsMatch(password: String , repeatPassword: String){
-        _passwordsMatchStringCode.value = if(password == repeatPassword) null else R.string.passwords_dont_match
+    fun checkIfPasswordsMatch(password: String, repeatPassword: String) {
+        _passwordsMatchStringCode.value = if (password == repeatPassword) null else R.string.passwords_dont_match
     }
 
     fun checkEmailValidity(emailText: String) {
-        _emailValidityStringCode.value = if(validateEmail(emailText)) null else R.string.invalidEmail
+        _emailValidityStringCode.value = if (validateEmail(emailText)) null else R.string.invalidEmail
     }
 
     fun checkPasswordValidity(passwordText: String) {
@@ -58,7 +58,7 @@ class RegisterViewModel : ViewModel() {
     }
 
     fun checkRepeatPasswordValidity(passwordText: String) {
-        _repeatPasswordValidityStringCode.value = if(validatePassword(passwordText)) null else R.string.invalidPassword
+        _repeatPasswordValidityStringCode.value = if (validatePassword(passwordText)) null else R.string.invalidPassword
     }
 
     fun validateRegisterData(email: String, password: String, repeatPassword: String) {

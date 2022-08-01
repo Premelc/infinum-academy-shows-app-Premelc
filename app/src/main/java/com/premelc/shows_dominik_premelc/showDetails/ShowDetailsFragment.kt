@@ -16,12 +16,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.premelc.shows_dominik_premelc.R
-import com.premelc.shows_dominik_premelc.ShowApplication
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowDetailsBinding
 import com.premelc.shows_dominik_premelc.databinding.LoadingBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.RequestResponseBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowDetailsBottomSheetBinding
 import com.premelc.shows_dominik_premelc.db.ShowsViewModelFactory
+import com.premelc.shows_dominik_premelc.CommonFunctions.getAppDatabase
 import com.premelc.shows_dominik_premelc.model.Review
 import com.premelc.shows_dominik_premelc.model.Show
 
@@ -31,7 +31,7 @@ class ShowDetailsFragment : Fragment() {
     private val args by navArgs<ShowDetailsFragmentArgs>()
     private lateinit var adapter: ReviewsAdapter
     private val viewModel: ShowDetailsViewModel by viewModels {
-        ShowsViewModelFactory((requireActivity().application as ShowApplication).database)
+        ShowsViewModelFactory(getAppDatabase())
     }
     private lateinit var dialog: BottomSheetDialog
 
@@ -114,8 +114,8 @@ class ShowDetailsFragment : Fragment() {
             show.no_of_reviews.toString(),
             show.average_rating.toString()
         )
-        if (show.average_rating != null) binding.ratings.rating = show.average_rating.toFloat()
-        else binding.ratings.rating = show.no_of_reviews.toFloat()
+        binding.ratings.rating = if (show.average_rating != null) show.average_rating.toFloat()
+        else show.no_of_reviews.toFloat()
         Glide.with(requireContext())
             .load(show.image_url)
             .placeholder(R.mipmap.ic_launcher)

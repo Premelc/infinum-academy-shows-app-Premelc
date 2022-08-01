@@ -4,8 +4,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ChangePhotoErrorResponse (
-    @SerialName("success")val success:Boolean,
-    @SerialName("errors")val errors:List<String>,
-    @SerialName("status")val status: String
-    )
+data class ChangePhotoErrorResponse(
+    @SerialName("success") val success: Boolean,
+    @SerialName("errors") val errors: List<String>,
+    @SerialName("status") val status: String
+)

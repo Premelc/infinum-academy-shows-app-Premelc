@@ -35,8 +35,8 @@ class LoginViewModel : ViewModel() {
     private val _loginErrorMessage = MutableLiveData<String>()
     val loginErrorMessage: LiveData<String> = _loginErrorMessage
 
-    private val _headerValues = MutableLiveData<Map<String , String>>()
-    val headerValues: LiveData<Map<String,String>> = _headerValues
+    private val _headerValues = MutableLiveData<Map<String, String>>()
+    val headerValues: LiveData<Map<String, String>> = _headerValues
 
     fun initRememberMeCheckboxListener(checkbox: MaterialCheckBox) {
         checkbox.setOnCheckedChangeListener { _, isChecked ->
@@ -65,6 +65,7 @@ class LoginViewModel : ViewModel() {
             else -> R.string.invalidPassword
         }
     }
+
     fun validateLoginData(email: String, password: String) {
         _loginButtonIsEnabled.value = validateEmail(email) && validatePassword(password)
     }
@@ -79,7 +80,7 @@ class LoginViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _loginResponse.value = response.isSuccessful
                     _headerValues.value = mapOf(
-                        SHARED_PREFERENCES_TOKEN_TYPE to "Bearer" ,
+                        SHARED_PREFERENCES_TOKEN_TYPE to "Bearer",
                         SHARED_PREFERENCES_ACCESS_TOKEN to response.headers().values("access-token")[0],
                         SHARED_PREFERENCES_CLIENT to response.headers().values("client")[0],
                         SHARED_PREFERENCES_PFP_URL to response.body()?.user?.image_url.toString()
