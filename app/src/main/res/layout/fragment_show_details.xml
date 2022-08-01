@@ -105,6 +105,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
                 android:textSize="14sp"
+                tools:text="random text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -112,17 +113,8 @@
 
             <RatingBar
                 android:id="@+id/ratings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="6dp"
+                style="@style/ratingBarStyle"
                 android:isIndicator="true"
-                android:progressTint="@color/defaultPurple"
-                android:scaleX=".7"
-                android:scaleY=".7"
-                android:secondaryProgressTint="@color/defaultPurple"
-                android:transformPivotX="0dp"
-                android:transformPivotY="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/reviewsNumber"/>
 
@@ -150,14 +142,10 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/writeReviewButton"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_margin="10dp"
+        style="@style/MaterialButtonStyle"
         android:backgroundTint="@color/defaultPurple"
-        android:elevation="4dp"
         android:text="@string/reviewSubmitButtonText"
         android:textColor="@color/white"
-        app:cornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
