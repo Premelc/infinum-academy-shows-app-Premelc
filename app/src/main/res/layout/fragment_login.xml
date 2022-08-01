@@ -64,6 +64,8 @@
             android:textColor="@color/white"
             android:textSize="34sp"
             android:textStyle="bold"
+            android:scaleX="0"
+            android:scaleY="0"
             app:layout_constraintBottom_toTopOf="@+id/LoginText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/triangleImg"
