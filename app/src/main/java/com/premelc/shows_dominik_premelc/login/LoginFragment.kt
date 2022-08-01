@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.BounceInterpolator
+import android.view.animation.LinearInterpolator
 import android.view.animation.OvershootInterpolator
 import androidx.core.content.edit
 import androidx.core.view.isVisible
@@ -29,6 +30,7 @@ const val SHARED_PREFERENCES_PFP_URL = "URL"
 const val SHARED_PREFERENCES_ACCESS_TOKEN = "ACCESS_TOKEN"
 const val SHARED_PREFERENCES_CLIENT = "CLIENT"
 const val SHARED_PREFERENCES_TOKEN_TYPE = "TOKEN_TYPE"
+const val ANIMATION_DURATION:Long = 500
 
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
@@ -124,8 +126,17 @@ class LoginFragment : Fragment() {
         with(binding.triangleImg) {
             animate()
                 .translationY(0F)
-                .setDuration(1000)
+                .setDuration(ANIMATION_DURATION)
                 .setInterpolator(BounceInterpolator())
+                .start()
+        }
+        with(binding.titleText){
+            animate()
+                .scaleXBy(1F)
+                .scaleYBy(1F)
+                .setDuration(ANIMATION_DURATION)
+                .setInterpolator(LinearInterpolator())
+                .setStartDelay(ANIMATION_DURATION)
                 .start()
         }
     }
