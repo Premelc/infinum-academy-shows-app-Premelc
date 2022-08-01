@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MaterialButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:backgroundTint">@color/material_button_states_background</item>
+        <item name="android:textColor">@color/material_button_states_text</item>
+        <item name="cornerRadius">20dp</item>
+        <item name="android:layout_marginStart">24dp</item>
+        <item name="android:layout_marginEnd">24dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">48dp</item>
+    </style>
+
+    <style name="sideBySideButton">
+        <item name="android:layout_width">170dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:layout_margin">24dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="cornerRadius">24dp</item>
+    </style>
+
+    <style name="CustomChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/background_color_chip_state_list</item>
+        <item name="android:textColor">@color/text_color_chip_state_list</item>
+        <item name="chipIconTint">@color/text_color_chip_state_list</item>
+    </style>
+
+    <style name="textInputLayout" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_marginStart">24dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginEnd">24dp</item>
+        <item name="android:textColorHint">@color/white</item>
+        <item name="boxStrokeColor">@color/edit_text_box_border</item>
+        <item name="cornerRadius">20dp</item>
+        <item name="hintTextColor">@color/white</item>
+        <item name="placeholderTextColor">@color/white</item>
+        <item name="textFillColor">@color/white</item>
+        <item name="passwordToggleTint">@color/white</item>
+    </style>
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen.IconBackground">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/heart</item>
+        <item name="windowSplashScreenBackground">@color/defaultPurple</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/defaultPurple</item>
+        <item name="postSplashScreenTheme">@style/Theme.Showsdominikpremelc</item>
+    </style>
+</resources>
