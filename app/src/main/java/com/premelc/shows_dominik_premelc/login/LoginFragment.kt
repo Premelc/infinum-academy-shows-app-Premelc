@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.BounceInterpolator
+import android.view.animation.OvershootInterpolator
 import androidx.core.content.edit
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -111,11 +113,23 @@ class LoginFragment : Fragment() {
     }
 
     private fun initializeUI() {
+        animateLogo()
         viewModel.initRememberMeCheckboxListener(binding.rememberMeCheckbox)
         setupLoginValidation()
         setupLoginButton()
         setupRegisterButton()
     }
+
+     private fun animateLogo(){
+             with(binding.triangleImg) {
+                 animate()
+                     .translationY(0F)
+                     .setDuration(1000)
+                     .setInterpolator(BounceInterpolator())
+                     .start()
+             }
+     }
+
 
     private fun setupLoginButton() {
         binding.loginButton.setOnClickListener {
@@ -127,6 +141,8 @@ class LoginFragment : Fragment() {
                 binding.emailInput.text.toString(),
                 binding.passwordInput.text.toString()
             )
+
+            binding.triangleImg.animate().rotation(360F).setDuration(500).setInterpolator(OvershootInterpolator()).start()
 
             val loadingBottomSheetBinding: LoadingBottomSheetBinding = LoadingBottomSheetBinding.inflate(layoutInflater)
             dialog.setContentView(loadingBottomSheetBinding.root)

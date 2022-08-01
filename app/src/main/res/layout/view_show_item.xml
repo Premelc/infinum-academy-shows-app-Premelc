@@ -39,6 +39,7 @@
                 android:id="@+id/showName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:translationX="-100dp"
                 android:layout_marginTop="200dp"
                 android:padding="16dp"
                 android:textColor="@android:color/black"

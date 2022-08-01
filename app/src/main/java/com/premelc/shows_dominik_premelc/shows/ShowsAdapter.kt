@@ -2,6 +2,7 @@ package com.premelc.shows_dominik_premelc.shows
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.OvershootInterpolator
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -29,6 +30,8 @@ class ShowsAdapter(
     inner class ShowViewHolder(private val binding: ViewShowItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Show) {
+            binding.showName.animate().translationX(0F)
+                .setDuration(500).setInterpolator(OvershootInterpolator()).start()
             binding.showName.text = item.title
             binding.showDescription.text = item.description
             Glide.with(binding.root.context)
