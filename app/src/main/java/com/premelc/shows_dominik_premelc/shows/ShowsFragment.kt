@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.URLUtil
 import android.widget.CompoundButton
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
@@ -18,10 +17,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.premelc.shows_dominik_premelc.FileUtil.createImageFile
+import com.premelc.shows_dominik_premelc.CommonFunctions.getAppDatabase
 import com.premelc.shows_dominik_premelc.FileUtil.getFileUri
 import com.premelc.shows_dominik_premelc.FileUtil.getImageFile
 import com.premelc.shows_dominik_premelc.R
@@ -40,6 +38,7 @@ import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_PFP_URL
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_TOKEN_TYPE
 import com.premelc.shows_dominik_premelc.model.Show
 import com.premelc.shows_dominik_premelc.networking.ApiModule.initRetrofit
+import com.premelc.shows_dominik_premelc.views.ProfilePhotoView
 
 class ShowsFragment : Fragment() {
 
@@ -111,7 +110,7 @@ class ShowsFragment : Fragment() {
                 sharedPreferences.edit()
                     .putString(SHARED_PREFERENCES_PFP_URL, changePhotoResponseMessage)
                     .commit()
-                setProfilePicOnView(binding.profileButton)
+                binding.profilePhoto.setPicture(sharedPreferences.getString(SHARED_PREFERENCES_PFP_URL, "default").toString())
                 triggerNotificationBottomSheet(R.drawable.success, getString(R.string.change_photo_success), getString(R.string.empty))
             } else {
                 triggerNotificationBottomSheet(R.drawable.fail, getString(R.string.change_photo_error), changePhotoResponseMessage)
@@ -182,8 +181,9 @@ class ShowsFragment : Fragment() {
     }
 
     private fun initProfileButton() {
-        setProfilePicOnView(binding.profileButton)
-        binding.profileButton.setOnClickListener {
+        binding.profilePhoto.setPicture(sharedPreferences.getString(SHARED_PREFERENCES_PFP_URL, "default").toString())
+        binding.profilePhoto.setDimensions(requireContext().resources.getDimensionPixelSize(R.dimen.profileButton))
+        binding.profilePhoto.setOnClickListener {
             val dialog = BottomSheetDialog(requireContext())
             initProfileBottomSheet(dialog)
         }
@@ -193,7 +193,7 @@ class ShowsFragment : Fragment() {
         val bottomSheetBinding: ShowsBottomSheetBinding =
             ShowsBottomSheetBinding.inflate(layoutInflater)
         dialog.setContentView(bottomSheetBinding.root)
-        setProfilePicOnView(bottomSheetBinding.profilePhoto.binding.profilePic)
+        bottomSheetBinding.profilePhoto.setPicture(sharedPreferences.getString(SHARED_PREFERENCES_PFP_URL, "default").toString())
         bottomSheetBinding.email.text = sharedPreferences.getString(SHARED_PREFERENCES_EMAIL, "example@example.com")
         bottomSheetBinding.logoutButton.setOnClickListener {
             initLogoutButton(dialog)
@@ -235,23 +235,6 @@ class ShowsFragment : Fragment() {
             }
         }
     }
-
-    private fun setProfilePicOnView(view: ImageView) {
-        val pfpUrl = sharedPreferences.getString(SHARED_PREFERENCES_PFP_URL, "default")
-        Glide.with(requireContext())
-            .load(
-                pfpUrl
-            )
-            .placeholder(
-                R.mipmap.pfp
-            )
-            .error(
-                R.mipmap.pfp
-            )
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .into(view)
-    }
-
     private fun triggerNotificationBottomSheet(icon: Int, title: String, subtitle: String) {
         dialog.dismiss()
         val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
