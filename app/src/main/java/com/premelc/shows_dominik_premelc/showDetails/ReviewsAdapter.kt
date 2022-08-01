@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.premelc.shows_dominik_premelc.CommonFunctions.resizeProfilePic
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.databinding.ViewItemReviewBinding
 import com.premelc.shows_dominik_premelc.model.Review
@@ -32,6 +33,7 @@ class ReviewsAdapter(
                 username.text = item.user.email.substringBefore('@')
                 reviewMsg.text = item.comment
                 gradeValue.text = item.rating.toString()
+                resizeProfilePic(binding.profilePhoto ,binding.root.context.resources.getDimensionPixelSize(R.dimen.reviewProfilePicture))
                 Glide.with(binding.root.context)
                     .load(item.user.image_url)
                     .placeholder(
@@ -41,7 +43,7 @@ class ReviewsAdapter(
                         R.mipmap.pfp
                     )
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .into(profilePic)
+                    .into(profilePhoto.binding.profilePic)
             }
         }
     }

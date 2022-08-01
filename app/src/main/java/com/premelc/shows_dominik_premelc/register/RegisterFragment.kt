@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.BounceInterpolator
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -75,6 +76,7 @@ class RegisterFragment : Fragment() {
     }
 
     private fun initializeUI() {
+        animateLogo()
         setUpEmailAndPasswordValidation()
         setUpRegisterButton()
     }
@@ -118,6 +120,16 @@ class RegisterFragment : Fragment() {
             val loadingBottomSheetBinding: LoadingBottomSheetBinding = LoadingBottomSheetBinding.inflate(layoutInflater)
             dialog.setContentView(loadingBottomSheetBinding.root)
             dialog.show()
+        }
+    }
+
+    private fun animateLogo(){
+        with(binding.triangleImg) {
+            animate()
+                .translationY(0F)
+                .setDuration(1000)
+                .setInterpolator(BounceInterpolator())
+                .start()
         }
     }
 
