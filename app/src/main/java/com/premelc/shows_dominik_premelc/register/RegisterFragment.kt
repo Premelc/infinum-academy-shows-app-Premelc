@@ -56,31 +56,20 @@ class RegisterFragment : Fragment() {
             binding.registerButton.isEnabled = registerButtonIsEnabled
         }
         viewModel.registerResponse.observe(viewLifecycleOwner) { registerResponse ->
-            dialog.dismiss()
             if (registerResponse) {
+                dialog.dismiss()
                 val directions = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment(true)
                 findNavController().navigate(directions)
             } else {
-                val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
-                with(bottomSheetBinding) {
-                    callbackIcon.setImageResource(R.drawable.fail)
-                    callbackText.text = getString(R.string.registration_failed)
-                    callbackDescription.text = getString(R.string.connection_error)
-                }
-                dialog.setContentView(bottomSheetBinding.root)
-                dialog.show()
+                triggerNotificationBottomSheet(
+                    R.drawable.fail,
+                    getString(R.string.registration_failed),
+                    getString(R.string.connection_error)
+                )
             }
         }
-        viewModel.registerErrorMessage.observe(viewLifecycleOwner){registerErrorMessage->
-            dialog.dismiss()
-            val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
-            with(bottomSheetBinding) {
-                callbackIcon.setImageResource(R.drawable.fail)
-                callbackText.text = getString(R.string.registration_failed)
-                callbackDescription.text = registerErrorMessage
-            }
-            dialog.setContentView(bottomSheetBinding.root)
-            dialog.show()
+        viewModel.registerErrorMessage.observe(viewLifecycleOwner) { registerErrorMessage ->
+            triggerNotificationBottomSheet(R.drawable.fail, getString(R.string.registration_failed), registerErrorMessage)
         }
         initializeUI()
     }
@@ -90,20 +79,32 @@ class RegisterFragment : Fragment() {
         setUpRegisterButton()
     }
 
-    private fun setUpEmailAndPasswordValidation(){
-        with(binding){
-            emailInput.doOnTextChanged{  text, start, before, count ->
+    private fun setUpEmailAndPasswordValidation() {
+        with(binding) {
+            emailInput.doOnTextChanged { text, start, before, count ->
                 viewModel.checkEmailValidity(emailInput.text.toString())
-                viewModel.validateRegisterData(emailInput.text.toString() , passwordInput.text.toString() , repeatPasswordInput.text.toString())
+                viewModel.validateRegisterData(
+                    emailInput.text.toString(),
+                    passwordInput.text.toString(),
+                    repeatPasswordInput.text.toString()
+                )
             }
-            passwordInput.doOnTextChanged{  text, start, before, count ->
+            passwordInput.doOnTextChanged { text, start, before, count ->
                 viewModel.checkPasswordValidity(passwordInput.text.toString())
-                viewModel.validateRegisterData(emailInput.text.toString() , passwordInput.text.toString() , repeatPasswordInput.text.toString())
+                viewModel.validateRegisterData(
+                    emailInput.text.toString(),
+                    passwordInput.text.toString(),
+                    repeatPasswordInput.text.toString()
+                )
             }
-            repeatPasswordInput.doOnTextChanged{    text, start, before, count ->
+            repeatPasswordInput.doOnTextChanged { text, start, before, count ->
                 viewModel.checkRepeatPasswordValidity(repeatPasswordInput.text.toString())
-                viewModel.checkIfPasswordsMatch(repeatPasswordInput.text.toString() ,passwordInput.text.toString() )
-                viewModel.validateRegisterData(emailInput.text.toString() , passwordInput.text.toString() , repeatPasswordInput.text.toString())
+                viewModel.checkIfPasswordsMatch(repeatPasswordInput.text.toString(), passwordInput.text.toString())
+                viewModel.validateRegisterData(
+                    emailInput.text.toString(),
+                    passwordInput.text.toString(),
+                    repeatPasswordInput.text.toString()
+                )
             }
         }
     }
@@ -118,6 +119,18 @@ class RegisterFragment : Fragment() {
             dialog.setContentView(loadingBottomSheetBinding.root)
             dialog.show()
         }
+    }
+
+    private fun triggerNotificationBottomSheet(icon: Int, title: String, subtitle: String) {
+        dialog.dismiss()
+        val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+        with(bottomSheetBinding) {
+            callbackIcon.setImageResource(icon)
+            callbackText.text = title
+            callbackDescription.text = subtitle
+        }
+        dialog.setContentView(bottomSheetBinding.root)
+        dialog.show()
     }
 
     override fun onDestroyView() {

@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.chip.Chip
 import com.premelc.shows_dominik_premelc.FileUtil.createImageFile
 import com.premelc.shows_dominik_premelc.FileUtil.getFileUri
 import com.premelc.shows_dominik_premelc.FileUtil.getImageFile
@@ -31,12 +30,15 @@ import com.premelc.shows_dominik_premelc.databinding.FragmentShowsBinding
 import com.premelc.shows_dominik_premelc.databinding.LoadingBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.RequestResponseBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.ShowsBottomSheetBinding
+import com.premelc.shows_dominik_premelc.db.ShowsViewModelFactory
+import com.premelc.shows_dominik_premelc.getAppDatabase
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_ACCESS_TOKEN
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_CLIENT
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_EMAIL
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_FILE_NAME
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_PFP_URL
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_TOKEN_TYPE
+import com.premelc.shows_dominik_premelc.model.Show
 import com.premelc.shows_dominik_premelc.networking.ApiModule.initRetrofit
 
 class ShowsFragment : Fragment() {
@@ -46,7 +48,9 @@ class ShowsFragment : Fragment() {
     private val args by navArgs<ShowsFragmentArgs>()
     private lateinit var adapter: ShowsAdapter
     private lateinit var sharedPreferences: SharedPreferences
-    private val viewModel by viewModels<ShowsViewModel>()
+    private val viewModel: ShowsViewModel by viewModels {
+        ShowsViewModelFactory(getAppDatabase())
+    }
     private lateinit var dialog: BottomSheetDialog
 
     private val takeImageResult =
@@ -75,8 +79,7 @@ class ShowsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.shows.observe(viewLifecycleOwner) { shows ->
-            adapter.addAllShows(shows)
-            adapter.notifyDataSetChanged()
+            updateRecycler(shows)
         }
         viewModel.showsRecyclerFullOrEmpty.observe(viewLifecycleOwner) { fullOrEmpty ->
             setShowsRecyclerFullOrEmpty(!fullOrEmpty)
@@ -84,60 +87,42 @@ class ShowsFragment : Fragment() {
         viewModel.showsResponse.observe(viewLifecycleOwner) { showsResponse ->
             dialog.dismiss()
             if (!showsResponse) {
-                val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
-                with(bottomSheetBinding) {
-                    callbackIcon.setImageResource(R.drawable.fail)
-                    callbackText.text = getString(R.string.shows_fetch_failed)
-                    callbackDescription.text =  getString(R.string.connection_error)
-                }
-                dialog.setContentView(bottomSheetBinding.root)
-                dialog.show()
+                triggerNotificationBottomSheet(
+                    R.drawable.fail,
+                    getString(R.string.shows_fetch_failed),
+                    getString(R.string.connection_error)
+                )
             }
         }
-        viewModel.showsErrorMessage.observe(viewLifecycleOwner){ showsErrorMessage->
-            dialog.dismiss()
-            val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
-            with(bottomSheetBinding) {
-                callbackIcon.setImageResource(R.drawable.fail)
-                callbackText.text = getString(R.string.shows_fetch_failed)
-                callbackDescription.text =  showsErrorMessage
-            }
-            dialog.setContentView(bottomSheetBinding.root)
-            dialog.show()
+        viewModel.showsErrorMessage.observe(viewLifecycleOwner) { showsErrorMessage ->
+            triggerNotificationBottomSheet(R.drawable.fail, getString(R.string.shows_fetch_failed), showsErrorMessage)
         }
         viewModel.changePhotoResponse.observe(viewLifecycleOwner) { changePhotoResponse ->
             if (!changePhotoResponse) {
-                val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
-                with(bottomSheetBinding) {
-                    callbackIcon.setImageResource(R.drawable.fail)
-                    callbackText.text = getString(R.string.change_photo_error)
-                    callbackDescription.text =  getString(R.string.connection_error)
-                }
-                dialog.setContentView(bottomSheetBinding.root)
-                dialog.show()
+                triggerNotificationBottomSheet(
+                    R.drawable.fail,
+                    getString(R.string.change_photo_error),
+                    getString(R.string.connection_error)
+                )
             }
         }
-        viewModel.changePhotoResponseMessage.observe(viewLifecycleOwner){changePhotoResponseMessage->
-            val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
-            if (URLUtil.isValidUrl(changePhotoResponseMessage)){
+        viewModel.changePhotoResponseMessage.observe(viewLifecycleOwner) { changePhotoResponseMessage ->
+            if (URLUtil.isValidUrl(changePhotoResponseMessage)) {
                 sharedPreferences.edit()
                     .putString(SHARED_PREFERENCES_PFP_URL, changePhotoResponseMessage)
                     .commit()
                 setProfilePicOnView(binding.profileButton)
-                with(bottomSheetBinding) {
-                    callbackIcon.setImageResource(R.drawable.success)
-                    callbackText.text = getString(R.string.change_photo_success)
-                    callbackDescription.text =  getString(R.string.empty)
-                }
-            }else{
-                with(bottomSheetBinding) {
-                    callbackIcon.setImageResource(R.drawable.fail)
-                    callbackText.text = getString(R.string.change_photo_error)
-                    callbackDescription.text =  changePhotoResponseMessage
-                }
+                triggerNotificationBottomSheet(R.drawable.success, getString(R.string.change_photo_success), getString(R.string.empty))
+            } else {
+                triggerNotificationBottomSheet(R.drawable.fail, getString(R.string.change_photo_error), changePhotoResponseMessage)
             }
-            dialog.setContentView(bottomSheetBinding.root)
-            dialog.show()
+        }
+        viewModel.connectionEstablished.observe(viewLifecycleOwner) { connected ->
+            if (!connected) triggerNotificationBottomSheet(
+                R.drawable.fail,
+                getString(R.string.failed_to_reach_server),
+                getString(R.string.offline)
+            )
         }
         initializeUI()
     }
@@ -154,7 +139,6 @@ class ShowsFragment : Fragment() {
 
     private fun initializeUI() {
         initLoadingBottomSheet()
-        viewModel.fetchShowsFromServer()
         initShowsRecycler()
         initProfileButton()
         initTopRatedChip()
@@ -162,7 +146,7 @@ class ShowsFragment : Fragment() {
 
     private fun initTopRatedChip() {
         val chip = binding.topRatedChip
-        chip.setOnCheckedChangeListener{ chip: CompoundButton, chipIsChecked: Boolean ->
+        chip.setOnCheckedChangeListener { chip: CompoundButton, chipIsChecked: Boolean ->
             if (chipIsChecked) viewModel.fetchTopRatedShowsFromServer()
             else viewModel.fetchShowsFromServer()
         }
@@ -190,6 +174,11 @@ class ShowsFragment : Fragment() {
         binding.emptyStateElipse.isVisible = !isFull
         binding.emptyStateIcon.isVisible = !isFull
         binding.emptyState.isVisible = !isFull
+    }
+
+    private fun updateRecycler(list: List<Show>) {
+        adapter.addAllShows(list)
+        adapter.notifyDataSetChanged()
     }
 
     private fun initProfileButton() {
@@ -261,6 +250,18 @@ class ShowsFragment : Fragment() {
             )
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .into(view)
+    }
+
+    private fun triggerNotificationBottomSheet(icon: Int, title: String, subtitle: String) {
+        dialog.dismiss()
+        val bottomSheetBinding: RequestResponseBottomSheetBinding = RequestResponseBottomSheetBinding.inflate(layoutInflater)
+        with(bottomSheetBinding) {
+            callbackIcon.setImageResource(icon)
+            callbackText.text = title
+            callbackDescription.text = subtitle
+        }
+        dialog.setContentView(bottomSheetBinding.root)
+        dialog.show()
     }
 
     override fun onDestroyView() {

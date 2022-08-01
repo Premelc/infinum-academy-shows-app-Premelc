@@ -9,7 +9,6 @@ import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_CLIENT
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_EMAIL
 import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_TOKEN_TYPE
 import okhttp3.Interceptor
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -18,7 +17,7 @@ object ApiModule {
     private const val BASE_URL = "https://tv-shows.infinum.academy/"
     lateinit var retrofit: ShowsApiService
 
-    fun initRetrofit(context: Context, header: Map<String , String>) {
+    fun initRetrofit(context: Context, header: Map<String, String>) {
 
         val gson: Gson = GsonBuilder()
             .setLenient()

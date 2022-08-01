@@ -3,7 +3,12 @@ package com.premelc.shows_dominik_premelc.showDetails
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.premelc.shows_dominik_premelc.db.ReviewEntity
+import com.premelc.shows_dominik_premelc.db.ShowEntity
+import com.premelc.shows_dominik_premelc.db.ShowsDatabase
+import com.premelc.shows_dominik_premelc.model.LoginResponse
 import com.premelc.shows_dominik_premelc.model.PostReviewErrorResponse
 import com.premelc.shows_dominik_premelc.model.PostReviewRequest
 import com.premelc.shows_dominik_premelc.model.PostReviewResponse
@@ -13,12 +18,16 @@ import com.premelc.shows_dominik_premelc.model.ReviewsResponse
 import com.premelc.shows_dominik_premelc.model.Show
 import com.premelc.shows_dominik_premelc.model.ShowDetailsErrorResponse
 import com.premelc.shows_dominik_premelc.model.ShowDetailsResponse
+import com.premelc.shows_dominik_premelc.model.User
 import com.premelc.shows_dominik_premelc.networking.ApiModule
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ShowDetailsViewModel : ViewModel() {
+class ShowDetailsViewModel(
+    private val database: ShowsDatabase
+) : ViewModel() {
     private var _show = MutableLiveData<Show>()
     val show: LiveData<Show> = _show
 
@@ -38,7 +47,7 @@ class ShowDetailsViewModel : ViewModel() {
     val reviewsResponse: LiveData<Boolean> = _reviewsResponse
 
     private var _reviewsErrorMessage = MutableLiveData<String>()
-    val reviewsErrorMessage:LiveData<String> = _reviewsErrorMessage
+    val reviewsErrorMessage: LiveData<String> = _reviewsErrorMessage
 
     private var _postReviewResponse = MutableLiveData<Boolean>()
     val postReviewResponse: LiveData<Boolean> = _postReviewResponse
@@ -46,9 +55,35 @@ class ShowDetailsViewModel : ViewModel() {
     private var _postReviewErrorMessage = MutableLiveData<String>()
     var postReviewErrorMessage: LiveData<String> = _postReviewErrorMessage
 
+    private var _connectionEstablished = MutableLiveData<Boolean>()
+    var connectionEstablished: LiveData<Boolean> = _connectionEstablished
+
+    init {
+        checkIsServerResponsive()
+    }
+
+    private fun checkIsServerResponsive() {
+        ApiModule.retrofit.getMe().enqueue(object : Callback<LoginResponse> {
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                _connectionEstablished.value = true
+            }
+
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                _connectionEstablished.value = false
+            }
+        })
+    }
+
     fun initDetails(id: String) {
-        fetchShow(id)
-        fetchReviews(id.toInt())
+        if (connectionEstablished.value == true) {
+            fetchShow(id)
+            fetchReviews(id.toInt())
+        } else {
+            viewModelScope.launch {
+                fetchShowFromDb(id)
+                fetchReviewsFromDb(id.toInt())
+            }
+        }
     }
 
     private fun fetchShow(id: String) {
@@ -58,6 +93,20 @@ class ShowDetailsViewModel : ViewModel() {
                     _show.value = response.body()?.show
                     _showsDetailResponse.value = response.isSuccessful
                     _reviewsRecyclerFullOrEmpty.value = response.isSuccessful
+                    viewModelScope.launch {
+                        _show.value?.let { show ->
+                            addShowToDb(
+                                ShowEntity(
+                                    show.id,
+                                    show.average_rating,
+                                    show.description.toString(),
+                                    show.image_url,
+                                    show.no_of_reviews,
+                                    show.title
+                                )
+                            )
+                        }
+                    }
                 } else {
                     val gson = Gson()
                     val showDetailsErrorResponse: ShowDetailsErrorResponse =
@@ -72,12 +121,69 @@ class ShowDetailsViewModel : ViewModel() {
         })
     }
 
+    private suspend fun fetchShowFromDb(id: String) {
+        val showEntity = database.showsDAO().getShow(id)
+        _show.value = Show(
+            showEntity.id,
+            showEntity.averageRating,
+            showEntity.description,
+            showEntity.imageUrl,
+            showEntity.noOfReviews,
+            showEntity.title
+        )
+    }
+
+    private suspend fun fetchReviewsFromDb(id: Int) {
+        val reviewsEntity = database.reviewsDAO().getAllTheReviews(id)
+        _reviews.value = reviewsEntity.map { reviewEntity ->
+            Review(
+                reviewEntity.id,
+                reviewEntity.comment,
+                reviewEntity.rating,
+                reviewEntity.showId,
+                User(
+                    reviewEntity.userId,
+                    reviewEntity.userEmail,
+                    reviewEntity.userImageUrl
+                )
+            )
+        }
+        _reviewsRecyclerFullOrEmpty.value = reviewsEntity.isNotEmpty()
+    }
+
+    suspend fun addShowToDb(show: ShowEntity) {
+        database.showsDAO().insertAllShows(listOf(show))
+    }
+
+    suspend fun addReviewToDb(review: ReviewEntity) {
+        database.reviewsDAO().insertReview(listOf(review))
+    }
+
+    suspend fun addAllReviewsToDb(list: List<ReviewEntity>) {
+        database.reviewsDAO().insertReview(list)
+    }
+
     private fun fetchReviews(id: Int) {
         ApiModule.retrofit.showReviews(id).enqueue(object : Callback<ReviewsResponse> {
             override fun onResponse(call: Call<ReviewsResponse>, response: Response<ReviewsResponse>) {
                 if (response.isSuccessful) {
                     _reviews.value = response.body()?.reviews
                     _reviewsResponse.value = response.isSuccessful
+                    viewModelScope.launch {
+                        _reviews.value?.let { reviews ->
+                            addAllReviewsToDb(reviews.map { review ->
+                                ReviewEntity(
+                                    review.id,
+                                    review.comment ?: "",
+                                    review.rating,
+                                    review.show_id,
+                                    review.user.id,
+                                    review.user.email,
+                                    review.user.image_url.toString()
+                                )
+                            })
+                        }
+                    }
                 } else {
                     val gson = Gson()
                     val reviewsErrorResponse: ReviewsErrorResponse =
@@ -104,6 +210,22 @@ class ShowDetailsViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     if (response.body() != null) addReview(response.body()!!.review)
                     _postReviewResponse.value = response.isSuccessful
+                    val review = response.body()?.review
+                    viewModelScope.launch {
+                        if (review != null) {
+                            addReviewToDb(
+                                ReviewEntity(
+                                    review.id,
+                                    review.comment,
+                                    review.rating,
+                                    review.show_id,
+                                    review.user.id,
+                                    review.user.email,
+                                    review.user.image_url.toString()
+                                )
+                            )
+                        }
+                    }
                 } else {
                     val gson = Gson()
                     val postReviewErrorResponse: PostReviewErrorResponse =
@@ -114,6 +236,7 @@ class ShowDetailsViewModel : ViewModel() {
                     }
                 }
             }
+
             override fun onFailure(call: Call<PostReviewResponse>, t: Throwable) {
                 _postReviewResponse.value = false
             }
