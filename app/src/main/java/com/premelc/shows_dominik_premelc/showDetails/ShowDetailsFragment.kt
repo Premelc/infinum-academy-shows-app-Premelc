@@ -74,7 +74,6 @@ class ShowDetailsFragment : Fragment() {
                 getString(R.string.connection_error)
             )
             else Toast.makeText(context, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
-            dialog.dismiss()
         }
         viewModel.postReviewErrorMessage.observe(viewLifecycleOwner) { postReviewErrorMessage ->
             triggerNotificationBottomSheet(R.drawable.fail, getString(R.string.post_review_failed), postReviewErrorMessage)
