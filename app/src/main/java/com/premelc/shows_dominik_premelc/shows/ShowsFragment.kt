@@ -240,7 +240,6 @@ class ShowsFragment : Fragment() {
         cameraGalleryBottomSheetBinding.galleryButton.setOnClickListener {
             selectImageFromGallery()
             dialog.dismiss()
-            Toast.makeText(context, R.string.wip, Toast.LENGTH_SHORT).show()
         }
     }
 
