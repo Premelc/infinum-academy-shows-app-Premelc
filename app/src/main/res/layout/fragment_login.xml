@@ -96,14 +96,14 @@
             android:text="@string/in_order_to_continue_please_log_in"
             android:textColor="#ffffff"
             android:textSize="17sp"
-            app:layout_constraintBottom_toBottomOf="@id/textField"
+            app:layout_constraintBottom_toBottomOf="@id/emailLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/LoginText"/>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textField"
-            style="@style/TextInputLayout"
+            android:id="@+id/emailLayout"
+            style="@style/textInputLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -120,14 +120,16 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textField2"
-            style="@style/TextInputLayout"
+            android:id="@+id/passwordLayout"
+            style="@style/textInputLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textField"
-            app:passwordToggleEnabled="true">
+            app:layout_constraintTop_toBottomOf="@+id/emailLayout"
+            app:passwordToggleEnabled="true"
+            app:errorIconDrawable="@null"
+            >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/passwordInput"
@@ -148,7 +150,7 @@
             android:text="@string/remember_me"
             android:textColor="@color/white"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textField2"/>
+            app:layout_constraintTop_toBottomOf="@id/passwordLayout"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/loginButton"
@@ -161,7 +163,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textField2"
+            app:layout_constraintTop_toBottomOf="@+id/passwordLayout"
             app:layout_constraintVertical_bias="0.0"/>
 
         <com.google.android.material.button.MaterialButton

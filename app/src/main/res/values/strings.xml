@@ -36,7 +36,7 @@
     <string name="change_profile_picture">Change profile picture?</string>
     <string name="wip">Work in progress</string>
     <string name="invalidEmail">Invalid email address</string>
-    <string name="invalidPassword">Invalid password</string>
+    <string name="invalidPassword">Password must be at least 6 characters long</string>
     <string name="empty"/>
     <string name="register">Register</string>
     <string name="repeat_password">Repeat password</string>
