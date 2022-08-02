@@ -24,7 +24,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/cameraButton"
-            style="@style/sideBySideButton"
+            style="@style/SideBySideButton"
             android:backgroundTint="@color/white"
             android:text="@string/take_a_picture"
             android:textColor="@color/defaultPurple"
@@ -38,7 +38,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/galleryButton"
-            style="@style/sideBySideButton"
+            style="@style/SideBySideButton"
             android:backgroundTint="@color/defaultPurple"
             android:text="@string/select_from_gallery"
             android:textColor="@color/white"

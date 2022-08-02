@@ -10,7 +10,7 @@
         <item name="android:layout_height">48dp</item>
     </style>
 
-    <style name="sideBySideButton">
+    <style name="SideBySideButton">
         <item name="android:layout_width">170dp</item>
         <item name="android:layout_height">100dp</item>
         <item name="android:layout_margin">24dp</item>
@@ -24,7 +24,7 @@
         <item name="chipIconTint">@color/text_color_chip_state_list</item>
     </style>
 
-    <style name="textInputLayout" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    <style name="TextInputLayout" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:layout_marginStart">24dp</item>
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:layout_marginEnd">24dp</item>
@@ -44,7 +44,7 @@
         <item name="postSplashScreenTheme">@style/Theme.Showsdominikpremelc</item>
     </style>
 
-    <style name="ratingBarStyle">
+    <style name="RatingBarStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">24dp</item>

@@ -45,13 +45,13 @@
 
             <RatingBar
                 android:id="@+id/ratingBar"
-                style="@style/ratingBarStyle"
+                style="@style/RatingBarStyle"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bottomSheetTitle"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textField"
-                style="@style/textInputLayout"
+                style="@style/TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:minHeight="150dp"

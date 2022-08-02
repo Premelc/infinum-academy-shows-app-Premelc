@@ -123,15 +123,13 @@ class LoginFragment : Fragment() {
     }
 
     private fun animateLogo() {
-        with(binding.triangleImg) {
-            animate()
+        binding.triangleImg.animate()
                 .translationY(0F)
                 .setDuration(ANIMATION_DURATION)
                 .setInterpolator(BounceInterpolator())
                 .start()
-        }
-        with(binding.titleText) {
-            animate()
+
+        binding.titleText.animate()
                 .scaleXBy(1F)
                 .scaleYBy(1F)
                 .setDuration(ANIMATION_DURATION)
@@ -139,7 +137,6 @@ class LoginFragment : Fragment() {
                 .setStartDelay(ANIMATION_DURATION)
                 .start()
         }
-    }
 
     private fun setupLoginButton() {
         binding.loginButton.setOnClickListener {
