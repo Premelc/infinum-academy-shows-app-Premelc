@@ -162,7 +162,7 @@ class ShowsViewModel(
         val request = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("email", email)
-            .addFormDataPart("image", "avatar.jpg", file.asRequestBody(MEDIA_TYPE_JPG))
+            .addFormDataPart("image", file.name, file.asRequestBody(MEDIA_TYPE_JPG))
             .build()
 
         ApiModule.retrofit.changePhoto(request).enqueue(object : Callback<LoginResponse> {
@@ -179,6 +179,7 @@ class ShowsViewModel(
             }
 
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                t.printStackTrace()
                 _changePhotoResponse.value = false
             }
         })

@@ -58,6 +58,8 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         />
 
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/showsRecycler"
         android:layout_width="match_parent"
@@ -102,4 +104,12 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintLeft_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/emptyStateElipse"/>
+
+    <ImageView
+        android:id="@+id/imagePreview"
+        android:layout_width= "match_parent"
+        android:layout_height="match_parent"
+        tools:src="@mipmap/stranger_things"
+        android:visibility="gone"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
