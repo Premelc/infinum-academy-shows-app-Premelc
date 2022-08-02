@@ -68,10 +68,12 @@ class LoginFragment : Fragment() {
             binding.rememberMeCheckbox.isChecked = isRememberMeChecked
         }
         viewModel.emailValidityStringCode.observe(viewLifecycleOwner) { emailValidityStringCode ->
-            if (emailValidityStringCode != null) binding.emailInput.error = getString(emailValidityStringCode)
+            binding.emailLayout.error = if (emailValidityStringCode != null) getString(emailValidityStringCode)
+            else null
         }
         viewModel.passwordValidityStringCode.observe(viewLifecycleOwner) { passwordValidityStringCode ->
-            if (passwordValidityStringCode != null) binding.passwordInput.error = getString(passwordValidityStringCode)
+            binding.passwordLayout.error =  if (passwordValidityStringCode != null) getString(passwordValidityStringCode)
+            else null
         }
         viewModel.loginButtonIsEnabled.observe(viewLifecycleOwner) { loginButtonIsEnabled ->
             binding.loginButton.isEnabled = loginButtonIsEnabled

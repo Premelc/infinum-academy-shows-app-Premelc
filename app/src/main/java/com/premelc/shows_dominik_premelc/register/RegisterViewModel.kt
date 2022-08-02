@@ -38,11 +38,11 @@ class RegisterViewModel : ViewModel() {
     val registerErrorMessage: LiveData<String> = _registerErrorMessage
 
     private fun validateEmail(email: String): Boolean {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        return (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() || email.isEmpty())
     }
 
     private fun validatePassword(password: String): Boolean {
-        return password.length >= PASSWORD_MIN_LENGTH
+        return (password.length >= PASSWORD_MIN_LENGTH || password.isEmpty())
     }
 
     fun checkIfPasswordsMatch(password: String, repeatPassword: String) {

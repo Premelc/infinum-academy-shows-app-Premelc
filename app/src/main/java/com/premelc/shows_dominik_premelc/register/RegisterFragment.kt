@@ -46,16 +46,20 @@ class RegisterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.emailValidityStringCode.observe(viewLifecycleOwner) { emailValidityStringCode ->
-            if (emailValidityStringCode != null) binding.emailInput.error = getString(emailValidityStringCode)
+            binding.emailLayout.error = if (emailValidityStringCode != null) getString(emailValidityStringCode)
+            else null
         }
         viewModel.passwordValidityStringCode.observe(viewLifecycleOwner) { passwordValidityStringCode ->
-            if (passwordValidityStringCode != null) binding.passwordInput.error = getString(passwordValidityStringCode)
+            binding.passwordLayout.error = if (passwordValidityStringCode != null) getString(passwordValidityStringCode)
+            else null
         }
         viewModel.repeatPasswordValidityStringCode.observe(viewLifecycleOwner) { repeatPasswordValidityStringCode ->
-            if (repeatPasswordValidityStringCode != null) binding.repeatPasswordInput.error = getString(repeatPasswordValidityStringCode)
+            binding.repeatPasswordLayout.error = if (repeatPasswordValidityStringCode != null) getString(repeatPasswordValidityStringCode)
+            else null
         }
         viewModel.passwordsMatchStringCode.observe(viewLifecycleOwner) { passwordsMatch ->
-            if (passwordsMatch != null) binding.repeatPasswordInput.error = getString(passwordsMatch)
+            binding.repeatPasswordLayout.error = if (passwordsMatch != null) getString(passwordsMatch)
+            else null
         }
         viewModel.registerButtonIsEnabled.observe(viewLifecycleOwner) { registerButtonIsEnabled ->
             binding.registerButton.isEnabled = registerButtonIsEnabled
@@ -121,7 +125,8 @@ class RegisterFragment : Fragment() {
                 binding.emailInput.text.toString(),
                 binding.passwordInput.text.toString()
             )
-            binding.triangleImg.animate().rotation(TRIANGLE_ROTATION_DEGREES).setDuration(ANIMATION_DURATION).setInterpolator(OvershootInterpolator()).start()
+            binding.triangleImg.animate().rotation(TRIANGLE_ROTATION_DEGREES).setDuration(ANIMATION_DURATION)
+                .setInterpolator(OvershootInterpolator()).start()
             val loadingBottomSheetBinding: LoadingBottomSheetBinding = LoadingBottomSheetBinding.inflate(layoutInflater)
             dialog.setContentView(loadingBottomSheetBinding.root)
             dialog.show()
