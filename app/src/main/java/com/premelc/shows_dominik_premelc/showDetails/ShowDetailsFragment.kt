@@ -108,7 +108,7 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun initShowDetails(show: Show) {
-        binding.showTitle.text = show.title
+        binding.toolbar.title = show.title
         binding.showDescription.text = show.description
         binding.reviewsNumber.text = String.format(
             this.getString(R.string.reviewCount),
