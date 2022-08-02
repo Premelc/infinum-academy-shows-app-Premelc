@@ -18,6 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="120dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:collapsedTitleTextAppearance="@style/collapsedTitleStyle"
+            app:expandedTitleTextAppearance="@style/collapsedTitleStyle"
             >
 
             <com.google.android.material.appbar.MaterialToolbar

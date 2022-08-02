@@ -52,4 +52,9 @@
         <item name="android:progressTint">@color/defaultPurple</item>
         <item name="android:secondaryProgressTint">@color/defaultPurple</item>
     </style>
+
+    <style name="collapsedTitleStyle">
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>
