@@ -22,7 +22,12 @@ import com.premelc.shows_dominik_premelc.FileUtil.createImageFile
 import com.premelc.shows_dominik_premelc.FileUtil.getFileUri
 import com.premelc.shows_dominik_premelc.FileUtil.getImageFile
 import com.premelc.shows_dominik_premelc.R
-import com.premelc.shows_dominik_premelc.ShowApplication
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_ACCESS_TOKEN
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_CLIENT
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_EMAIL
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_FILE_NAME
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_PFP_URL
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_TOKEN_TYPE
 import com.premelc.shows_dominik_premelc.databinding.CameraGaleryBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.FragmentShowsBinding
 import com.premelc.shows_dominik_premelc.databinding.LoadingBottomSheetBinding
@@ -30,15 +35,8 @@ import com.premelc.shows_dominik_premelc.databinding.RequestResponseBottomSheetB
 import com.premelc.shows_dominik_premelc.databinding.ShowsBottomSheetBinding
 import com.premelc.shows_dominik_premelc.db.ShowsViewModelFactory
 import com.premelc.shows_dominik_premelc.getAppDatabase
-import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_ACCESS_TOKEN
-import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_CLIENT
-import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_EMAIL
-import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_FILE_NAME
-import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_PFP_URL
-import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_TOKEN_TYPE
 import com.premelc.shows_dominik_premelc.model.Show
 import com.premelc.shows_dominik_premelc.networking.ApiModule.initRetrofit
-import com.premelc.shows_dominik_premelc.views.ProfilePhotoView
 
 class ShowsFragment : Fragment() {
 

@@ -5,12 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.BounceInterpolator
+import android.view.animation.LinearInterpolator
+import android.view.animation.OvershootInterpolator
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.premelc.shows_dominik_premelc.ANIMATION_DURATION
 import com.premelc.shows_dominik_premelc.R
+import com.premelc.shows_dominik_premelc.TRIANGLE_ROTATION_DEGREES
 import com.premelc.shows_dominik_premelc.databinding.FragmentRegisterBinding
 import com.premelc.shows_dominik_premelc.databinding.LoadingBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.RequestResponseBottomSheetBinding
@@ -117,6 +121,7 @@ class RegisterFragment : Fragment() {
                 binding.emailInput.text.toString(),
                 binding.passwordInput.text.toString()
             )
+            binding.triangleImg.animate().rotation(TRIANGLE_ROTATION_DEGREES).setDuration(ANIMATION_DURATION).setInterpolator(OvershootInterpolator()).start()
             val loadingBottomSheetBinding: LoadingBottomSheetBinding = LoadingBottomSheetBinding.inflate(layoutInflater)
             dialog.setContentView(loadingBottomSheetBinding.root)
             dialog.show()
@@ -127,8 +132,17 @@ class RegisterFragment : Fragment() {
         with(binding.triangleImg) {
             animate()
                 .translationY(0F)
-                .setDuration(1000)
+                .setDuration(ANIMATION_DURATION)
                 .setInterpolator(BounceInterpolator())
+                .start()
+        }
+        with(binding.titleText) {
+            animate()
+                .scaleXBy(1F)
+                .scaleYBy(1F)
+                .setDuration(ANIMATION_DURATION)
+                .setInterpolator(LinearInterpolator())
+                .setStartDelay(ANIMATION_DURATION)
                 .start()
         }
     }

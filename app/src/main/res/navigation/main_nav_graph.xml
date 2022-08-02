@@ -32,7 +32,13 @@
         android:id="@+id/registerFragment"
         android:name="com.premelc.shows_dominik_premelc.register.RegisterFragment"
         tools:layout="@layout/fragment_register">
-        <action android:id="@+id/action_registerFragment_to_loginFragment" app:destination="@id/loginFragment"/>
+        <action android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/enter_anim"
+            app:exitAnim="@anim/exit_anim"
+            app:popEnterAnim="@anim/pop_enter_anim"
+            app:popExitAnim="@anim/pop_exit_anim"
+            />
     </fragment>
 
     <include app:graph="@navigation/shows_nav_graph"/>
