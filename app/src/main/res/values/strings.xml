@@ -54,4 +54,5 @@
     <string name="change_photo_success">Successfully changed profile photo</string>
     <string name="failed_to_load_details">Failed to load show details</string>
     <string name="failed_to_reach_server">Failed to reach server</string>
+    <string name="file_not_found">File not found</string>
 </resources>
