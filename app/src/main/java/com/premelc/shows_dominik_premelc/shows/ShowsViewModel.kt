@@ -52,6 +52,8 @@ class ShowsViewModel(
     private var _connectionEstablished = MutableLiveData<Boolean>()
     var connectionEstablished: LiveData<Boolean> = _connectionEstablished
 
+    private var _postedPendingReview = MutableLiveData<Boolean>()
+
     init {
         checkIsServerResponsive()
     }
@@ -75,6 +77,8 @@ class ShowsViewModel(
     fun submitPendingReviews(userEmail: String) {
         viewModelScope.launch {
             val pendingReviews = database.reviewsDAO().getPendingReviews(true, userEmail)
+            println("OVDJE")
+            println(pendingReviews)
             if (pendingReviews.isNotEmpty()) {
                 for (review in pendingReviews) {
                     val postReviewRequest = PostReviewRequest(
@@ -84,13 +88,15 @@ class ShowsViewModel(
                     )
                     ApiModule.retrofit.postReview(postReviewRequest).enqueue(object : Callback<PostReviewResponse> {
                         override fun onResponse(call: Call<PostReviewResponse>, response: Response<PostReviewResponse>) {
+                            viewModelScope.launch {
+                                deleteReview(review.id)
+                            }
                         }
 
                         override fun onFailure(call: Call<PostReviewResponse>, t: Throwable) {
                             _connectionEstablished.value = false
                         }
                     })
-                    deleteReview(review.id)
                 }
             }
         }
