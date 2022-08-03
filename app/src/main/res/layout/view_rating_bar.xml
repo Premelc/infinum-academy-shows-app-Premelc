@@ -6,7 +6,7 @@
 
     <RatingBar
         android:id="@+id/ratingOutline"
-        style="@style/ratingBarStyle"
+        style="@style/RatingBarStyle"
 
         />
 

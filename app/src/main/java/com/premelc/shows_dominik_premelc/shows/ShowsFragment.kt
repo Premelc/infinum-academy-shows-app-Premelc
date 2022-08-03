@@ -1,6 +1,5 @@
 package com.premelc.shows_dominik_premelc.shows
 
-import android.R.attr.data
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
@@ -10,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.URLUtil
 import android.widget.CompoundButton
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -64,7 +62,7 @@ class ShowsFragment : Fragment() {
 
     private val selectImageFromGalleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
-            var photoFile: File? = createImageFile(requireContext())
+            val photoFile: File? = createImageFile(requireContext())
             val inputStream: InputStream? = activity!!.contentResolver.openInputStream(uri)
             val fileOutputStream = FileOutputStream(photoFile)
             if (inputStream != null) {
@@ -146,7 +144,9 @@ class ShowsFragment : Fragment() {
                 R.drawable.fail,
                 getString(R.string.failed_to_reach_server),
                 getString(R.string.offline)
-            )
+            ) else {
+                viewModel.submitPendingReviews(args.username)
+            }
         }
         initializeUI()
     }
@@ -251,6 +251,7 @@ class ShowsFragment : Fragment() {
     }
 
     private fun takeImage() {
+        initLoadingBottomSheet()
         lifecycleScope.launchWhenStarted {
             getFileUri(
                 createImageFile(requireContext()),
@@ -261,7 +262,10 @@ class ShowsFragment : Fragment() {
         }
     }
 
-    private fun selectImageFromGallery() = selectImageFromGalleryResult.launch("image/*")
+    private fun selectImageFromGallery() {
+        initLoadingBottomSheet()
+        return selectImageFromGalleryResult.launch("image/*")
+    }
 
     private fun triggerNotificationBottomSheet(icon: Int, title: String, subtitle: String) {
         dialog.dismiss()

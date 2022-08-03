@@ -9,6 +9,8 @@ import com.premelc.shows_dominik_premelc.db.ShowEntity
 import com.premelc.shows_dominik_premelc.db.ShowsDatabase
 import com.premelc.shows_dominik_premelc.model.ChangePhotoErrorResponse
 import com.premelc.shows_dominik_premelc.model.LoginResponse
+import com.premelc.shows_dominik_premelc.model.PostReviewRequest
+import com.premelc.shows_dominik_premelc.model.PostReviewResponse
 import com.premelc.shows_dominik_premelc.model.Show
 import com.premelc.shows_dominik_premelc.model.ShowsErrorResponse
 import com.premelc.shows_dominik_premelc.model.ShowsResponse
@@ -68,6 +70,34 @@ class ShowsViewModel(
                 }
             }
         })
+    }
+
+    fun submitPendingReviews(userEmail: String) {
+        viewModelScope.launch {
+            val pendingReviews = database.reviewsDAO().getPendingReviews(true, userEmail)
+            if (pendingReviews.isNotEmpty()) {
+                for (review in pendingReviews) {
+                    val postReviewRequest = PostReviewRequest(
+                        review.rating,
+                        review.comment,
+                        review.showId
+                    )
+                    ApiModule.retrofit.postReview(postReviewRequest).enqueue(object : Callback<PostReviewResponse> {
+                        override fun onResponse(call: Call<PostReviewResponse>, response: Response<PostReviewResponse>) {
+                        }
+
+                        override fun onFailure(call: Call<PostReviewResponse>, t: Throwable) {
+                            _connectionEstablished.value = false
+                        }
+                    })
+                    deleteReview(review.id)
+                }
+            }
+        }
+    }
+
+    private suspend fun deleteReview(reviewId: String) {
+        database.reviewsDAO().deleteByReviewId(reviewId)
     }
 
     fun fetchShowsFromServer() {
