@@ -115,10 +115,9 @@
                 app:layout_constraintTop_toBottomOf="@id/reviewsTitle"
                 tools:text="random text"/>
 
-            <RatingBar
+            <me.zhanghai.android.materialratingbar.MaterialRatingBar
                 android:id="@+id/ratings"
                 style="@style/RatingBarStyle"
-                android:isIndicator="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/reviewsNumber"/>
 
