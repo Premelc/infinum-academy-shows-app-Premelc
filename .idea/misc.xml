@@ -27,7 +27,14 @@
         <entry key="..\:/Users/Dominik/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/shows_bottom_sheet.xml" value="0.8100407055630936" />
         <entry key="..\:/Users/Dominik/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/view_item_review.xml" value="0.3109375" />
         <entry key="..\:/Users/Dominik/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/view_show_item.xml" value="0.3109375" />
-        <entry key="..\:/Users/domin/Downloads/New folder/infinum-academy-shows-app-Premelc/app/src/main/res/layout/view_profile_photo.xml" value="0.8800000000000001" />
+        <entry key="..\:/Users/domin/Downloads/New folder/infinum-academy-shows-app-Premelc/app/src/main/res/drawable/circular.xml" value="0.1" />
+        <entry key="..\:/Users/domin/Downloads/New folder/infinum-academy-shows-app-Premelc/app/src/main/res/drawable/image.xml" value="0.1" />
+        <entry key="..\:/Users/domin/Downloads/New folder/infinum-academy-shows-app-Premelc/app/src/main/res/layout/circular.xml" value="0.1" />
+        <entry key="..\:/Users/domin/Downloads/New folder/infinum-academy-shows-app-Premelc/app/src/main/res/layout/fragment_shows.xml" value="0.25" />
+        <entry key="..\:/Users/domin/Downloads/New folder/infinum-academy-shows-app-Premelc/app/src/main/res/layout/show_details_bottom_sheet.xml" value="0.1" />
+        <entry key="..\:/Users/domin/Downloads/New folder/infinum-academy-shows-app-Premelc/app/src/main/res/layout/shows_bottom_sheet.xml" value="0.4" />
+        <entry key="..\:/Users/domin/Downloads/New folder/infinum-academy-shows-app-Premelc/app/src/main/res/layout/view_item_review.xml" value="0.25" />
+        <entry key="..\:/Users/domin/Downloads/New folder/infinum-academy-shows-app-Premelc/app/src/main/res/layout/view_profile_photo.xml" value="0.2" />
         <entry key="..\:/Users/domin/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/activity_main.xml" value="0.234375" />
         <entry key="..\:/Users/domin/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/camera_galery_bottom_sheet.xml" value="0.264" />
         <entry key="..\:/Users/domin/Downloads/proj/infinum-academy-shows-app-Premelc/app/src/main/res/layout/fragment_login.xml" value="0.264" />

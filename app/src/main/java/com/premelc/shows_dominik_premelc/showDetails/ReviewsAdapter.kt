@@ -30,7 +30,6 @@ class ReviewsAdapter(
                 username.text = item.user.email.substringBefore('@')
                 reviewMsg.text = item.comment
                 gradeValue.text = item.rating.toString()
-                binding.profilePhoto.setDimensions(binding.root.context.resources.getDimensionPixelSize(R.dimen.reviewProfilePicture))
                 binding.profilePhoto.setPicture(item.user.image_url.toString())
             }
         }

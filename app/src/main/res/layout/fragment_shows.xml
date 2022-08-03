@@ -20,8 +20,8 @@
 
         <com.premelc.shows_dominik_premelc.views.ProfilePhotoView
             android:id="@+id/profilePhoto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_gravity="end"
             android:layout_marginEnd="24dp"
             />

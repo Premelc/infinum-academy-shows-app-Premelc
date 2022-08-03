@@ -4,31 +4,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     >
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/profilePicHolder"
-        android:layout_width="102dp"
-        android:layout_height="102dp"
-        android:backgroundTint="@color/defaultPurple"
-        app:cardCornerRadius="100dp"
-        >
-
         <androidx.cardview.widget.CardView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:elevation="15dp"
             app:cardCornerRadius="100dp"
             >
-
             <ImageView
                 android:id="@+id/profilePic"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:contentDescription="@string/profile_picture"
                 android:scaleType="centerCrop"
+                android:foreground="@drawable/circular"
                 tools:src="@mipmap/krv_nije_voda"/>
         </androidx.cardview.widget.CardView>
-    </androidx.cardview.widget.CardView>
-
 </merge>

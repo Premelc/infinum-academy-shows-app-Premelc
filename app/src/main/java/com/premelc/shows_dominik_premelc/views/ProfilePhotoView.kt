@@ -14,7 +14,7 @@ class ProfilePhotoView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
-    private lateinit  var binding: ViewProfilePhotoBinding
+    private lateinit var binding: ViewProfilePhotoBinding
 
     init {
         binding = ViewProfilePhotoBinding.inflate(LayoutInflater.from(context), this)
@@ -36,18 +36,4 @@ class ProfilePhotoView @JvmOverloads constructor(
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .into(binding.profilePic)
     }
-
-    fun setDimensions(size: Int) {
-        val picOutline = binding.profilePicHolder
-        val pic = binding.profilePic
-        var params = binding.profilePicHolder.layoutParams
-        params.width = size + 4
-        params.height = size + 4
-        picOutline.layoutParams = params
-        params = binding.profilePic.layoutParams
-        params.width = size
-        params.height = size
-        pic.layoutParams = params
-    }
-
 }

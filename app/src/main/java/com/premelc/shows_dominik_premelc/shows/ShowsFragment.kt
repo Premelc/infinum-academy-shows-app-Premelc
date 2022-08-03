@@ -180,7 +180,6 @@ class ShowsFragment : Fragment() {
 
     private fun initProfileButton() {
         binding.profilePhoto.setPicture(sharedPreferences.getString(SHARED_PREFERENCES_PFP_URL, "default").toString())
-        binding.profilePhoto.setDimensions(requireContext().resources.getDimensionPixelSize(R.dimen.profileButton))
         binding.profilePhoto.setOnClickListener {
             val dialog = BottomSheetDialog(requireContext())
             initProfileBottomSheet(dialog)

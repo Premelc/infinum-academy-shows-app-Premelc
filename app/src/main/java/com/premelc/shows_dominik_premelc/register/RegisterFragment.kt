@@ -121,7 +121,8 @@ class RegisterFragment : Fragment() {
                 binding.emailInput.text.toString(),
                 binding.passwordInput.text.toString()
             )
-            binding.triangleImg.animate().rotation(TRIANGLE_ROTATION_DEGREES).setDuration(ANIMATION_DURATION).setInterpolator(OvershootInterpolator()).start()
+            binding.triangleImg.animate().rotation(TRIANGLE_ROTATION_DEGREES).setDuration(ANIMATION_DURATION)
+                .setInterpolator(OvershootInterpolator()).start()
             val loadingBottomSheetBinding: LoadingBottomSheetBinding = LoadingBottomSheetBinding.inflate(layoutInflater)
             dialog.setContentView(loadingBottomSheetBinding.root)
             dialog.show()
@@ -130,19 +131,19 @@ class RegisterFragment : Fragment() {
 
     private fun animateLogo() {
         binding.triangleImg.animate()
-                .translationY(0F)
-                .setDuration(ANIMATION_DURATION)
-                .setInterpolator(BounceInterpolator())
-                .start()
+            .translationY(0F)
+            .setDuration(ANIMATION_DURATION)
+            .setInterpolator(BounceInterpolator())
+            .start()
 
         binding.titleText.animate()
-                .scaleXBy(1F)
-                .scaleYBy(1F)
-                .setDuration(ANIMATION_DURATION)
-                .setInterpolator(LinearInterpolator())
-                .setStartDelay(ANIMATION_DURATION)
-                .start()
-        }
+            .scaleXBy(1F)
+            .scaleYBy(1F)
+            .setDuration(ANIMATION_DURATION)
+            .setInterpolator(LinearInterpolator())
+            .setStartDelay(ANIMATION_DURATION)
+            .start()
+    }
 
     private fun triggerNotificationBottomSheet(icon: Int, title: String, subtitle: String) {
         dialog.dismiss()
