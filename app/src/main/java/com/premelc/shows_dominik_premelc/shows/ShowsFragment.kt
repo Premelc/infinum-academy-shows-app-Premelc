@@ -37,6 +37,7 @@ import com.premelc.shows_dominik_premelc.db.ShowsViewModelFactory
 import com.premelc.shows_dominik_premelc.getAppDatabase
 import com.premelc.shows_dominik_premelc.model.Show
 import com.premelc.shows_dominik_premelc.networking.ApiModule.initRetrofit
+import com.premelc.shows_dominik_premelc.shows.viewModel.ShowsViewModel
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -102,6 +103,7 @@ class ShowsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.shows.observe(viewLifecycleOwner) { shows ->
             updateRecycler(shows)
+            viewModel.loadShowsToDb(shows)
         }
         viewModel.showsRecyclerFullOrEmpty.observe(viewLifecycleOwner) { fullOrEmpty ->
             setShowsRecyclerFullOrEmpty(!fullOrEmpty)
@@ -114,6 +116,7 @@ class ShowsFragment : Fragment() {
                     getString(R.string.shows_fetch_failed),
                     getString(R.string.connection_error)
                 )
+                viewModel.fetchShows()
             }
         }
         viewModel.showsErrorMessage.observe(viewLifecycleOwner) { showsErrorMessage ->
@@ -163,6 +166,7 @@ class ShowsFragment : Fragment() {
 
     private fun initializeUI() {
         initLoadingBottomSheet()
+        viewModel.initialFetchShows()
         initShowsRecycler()
         initProfileButton()
         initTopRatedChip()
@@ -171,8 +175,8 @@ class ShowsFragment : Fragment() {
     private fun initTopRatedChip() {
         val chip = binding.topRatedChip
         chip.setOnCheckedChangeListener { chip: CompoundButton, chipIsChecked: Boolean ->
-            if (chipIsChecked) viewModel.fetchTopRatedShowsFromServer()
-            else viewModel.fetchShowsFromServer()
+            if (chipIsChecked) viewModel.fetchTopRatedShows()
+            else viewModel.fetchShows()
         }
     }
 

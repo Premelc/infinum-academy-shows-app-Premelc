@@ -20,6 +20,7 @@ import com.premelc.shows_dominik_premelc.model.ShowDetailsErrorResponse
 import com.premelc.shows_dominik_premelc.model.ShowDetailsResponse
 import com.premelc.shows_dominik_premelc.model.User
 import com.premelc.shows_dominik_premelc.networking.ApiModule
+import java.util.concurrent.Executors
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -152,7 +153,7 @@ class ShowDetailsViewModel(
     }
 
     suspend fun addShowToDb(show: ShowEntity) {
-        database.showsDAO().insertAllShows(listOf(show))
+            database.showsDAO().insertAllShows(listOf(show))
     }
 
     suspend fun addReviewToDb(review: ReviewEntity) {
