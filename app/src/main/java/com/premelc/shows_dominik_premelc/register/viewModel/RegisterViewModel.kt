@@ -56,6 +56,6 @@ class RegisterViewModel : ViewModel() {
     }
 
     fun onRegisterButtonClicked(email: String, password: String) {
-        repo.onRegisterButtonClicked(email, password)
+        repo.RegisterUser(email, password)
     }
 }

@@ -61,17 +61,17 @@ class ShowDetailsViewModelRepository(private val database: ShowsDatabase) {
         })
     }
 
-    suspend fun initDetails(id: String) {
+    suspend fun fetchShowDetailsAndReviews(id: String) {
         if (getConnectionEstablished().value == true) {
-            fetchShow(id)
-            fetchReviews(id.toInt())
+            fetchShowFromServer(id)
+            fetchReviewsFromServer(id.toInt())
         } else {
             fetchShowFromDb(id)
             fetchReviewsFromDb(id.toInt())
         }
     }
 
-    private fun fetchShow(id: String) {
+    private fun fetchShowFromServer(id: String) {
         ApiModule.retrofit.specificShow(id).enqueue(object : Callback<ShowDetailsResponse> {
             override fun onResponse(call: Call<ShowDetailsResponse>, response: Response<ShowDetailsResponse>) {
                 if (response.isSuccessful) {
@@ -92,7 +92,7 @@ class ShowDetailsViewModelRepository(private val database: ShowsDatabase) {
         })
     }
 
-    private fun fetchReviews(id: Int) {
+    private fun fetchReviewsFromServer(id: Int) {
         ApiModule.retrofit.showReviews(id).enqueue(object : Callback<ReviewsResponse> {
             override fun onResponse(call: Call<ReviewsResponse>, response: Response<ReviewsResponse>) {
                 if (response.isSuccessful) {
@@ -112,7 +112,7 @@ class ShowDetailsViewModelRepository(private val database: ShowsDatabase) {
         })
     }
 
-    suspend fun loadReviewsToDb(reviews: List<Review>) {
+    fun loadReviewsToDb(reviews: List<Review>) {
         addAllReviewsToDb(reviews.map { review ->
             ReviewEntity(
                 review.id,
@@ -126,7 +126,7 @@ class ShowDetailsViewModelRepository(private val database: ShowsDatabase) {
         })
     }
 
-    private suspend fun addAllReviewsToDb(list: List<ReviewEntity>) {
+    private fun addAllReviewsToDb(list: List<ReviewEntity>) {
         Executors.newSingleThreadExecutor().execute {
             database.reviewsDAO().insertReview(list)
         }
@@ -162,7 +162,7 @@ class ShowDetailsViewModelRepository(private val database: ShowsDatabase) {
         _reviewsRecyclerFullOrEmpty.value = reviewsEntity.isNotEmpty()
     }
 
-    fun postReview(rating: Int, comment: String, showId: Int, userId: String) {
+    fun submitReviewToServer(rating: Int, comment: String, showId: Int, userId: String) {
         val postReviewRequest = PostReviewRequest(
             rating,
             comment,

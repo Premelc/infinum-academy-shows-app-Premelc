@@ -56,7 +56,7 @@ class LoginViewModel : ViewModel() {
     }
 
     fun onLoginButtonClicked(email: String, password: String) {
-        repo.onLoginButtonClicked(email , password)
+        repo.loginUser(email , password)
     }
 
 }

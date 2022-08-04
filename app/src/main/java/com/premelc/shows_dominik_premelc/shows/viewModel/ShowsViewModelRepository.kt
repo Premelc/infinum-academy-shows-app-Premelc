@@ -60,7 +60,7 @@ class ShowsViewModelRepository(private val database: ShowsDatabase) {
         if (getConnectionEstablished().value == true) {
             fetchShowsFromServer()
         } else {
-            fetchAllShowsFromDb()
+            fetchShowsFromDb()
         }
     }
 
@@ -117,11 +117,11 @@ class ShowsViewModelRepository(private val database: ShowsDatabase) {
         })
     }
 
-    suspend fun addToDb(list: List<ShowEntity>) {
+    private suspend fun addShowsToDb(list: List<ShowEntity>) {
         database.showsDAO().insertAllShows(list)
     }
 
-    private suspend fun fetchAllShowsFromDb() {
+    private suspend fun fetchShowsFromDb() {
         _shows.value = database.showsDAO().getAllShows().map { showEntity ->
             Show(
                 showEntity.id,
@@ -138,12 +138,12 @@ class ShowsViewModelRepository(private val database: ShowsDatabase) {
     suspend fun fetchTopRatedShows() {
         fetchTopRatedShowsFromServer()
         if (getConnectionEstablished().value == false) {
-            fetchAllShowsFromDb()
+            fetchShowsFromDb()
         }
     }
 
     suspend fun loadShowsToDb(shows: List<Show>) {
-        addToDb(shows.map { show ->
+        addShowsToDb(shows.map { show ->
             ShowEntity(
                 show.id,
                 show.average_rating,
@@ -178,7 +178,7 @@ class ShowsViewModelRepository(private val database: ShowsDatabase) {
         })
     }
 
-    fun uploadImage(email: String, file: File) {
+    fun uploadImageToServer(email: String, file: File) {
         val request = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("email", email)

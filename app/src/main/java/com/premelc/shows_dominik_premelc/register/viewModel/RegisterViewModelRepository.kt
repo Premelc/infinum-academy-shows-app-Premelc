@@ -18,7 +18,7 @@ class RegisterViewModelRepository {
     fun getRegisterResponse() = _registerResponse
     fun getRegisterErrorMessage() = _registerErrorMessage
 
-    fun onRegisterButtonClicked(email: String, password: String) {
+    fun RegisterUser(email: String, password: String) {
         val registerRequest = RegisterRequest(
             email = email,
             password = password,

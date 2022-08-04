@@ -23,7 +23,7 @@ class LoginViewModelRepository {
     fun getLoginErrorMessage() = _loginErrorMessage
     fun getHeaderValues() = _headerValues
 
-    fun onLoginButtonClicked(email: String, password: String) {
+    fun loginUser(email: String, password: String) {
         val loginRequest = LoginRequest(
             email = email,
             password = password

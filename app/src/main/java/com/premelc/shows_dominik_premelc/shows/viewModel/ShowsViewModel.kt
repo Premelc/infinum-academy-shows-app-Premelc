@@ -7,7 +7,6 @@ import com.premelc.shows_dominik_premelc.db.ShowsDatabase
 import com.premelc.shows_dominik_premelc.model.Show
 import java.io.File
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaType
 
 class ShowsViewModel(
     private val database: ShowsDatabase
@@ -39,7 +38,7 @@ class ShowsViewModel(
     }
 
     fun uploadImage(email: String, file: File) {
-        repo.uploadImage(email, file)
+        repo.uploadImageToServer(email, file)
     }
 
     fun loadShowsToDb(shows: List<Show>) {
