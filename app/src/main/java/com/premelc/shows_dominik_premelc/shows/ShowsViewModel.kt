@@ -52,8 +52,6 @@ class ShowsViewModel(
     private var _connectionEstablished = MutableLiveData<Boolean>()
     var connectionEstablished: LiveData<Boolean> = _connectionEstablished
 
-    private var _postedPendingReview = MutableLiveData<Boolean>()
-
     init {
         checkIsServerResponsive()
     }

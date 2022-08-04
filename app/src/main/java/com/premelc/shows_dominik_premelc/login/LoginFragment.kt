@@ -30,6 +30,7 @@ import com.premelc.shows_dominik_premelc.TRIANGLE_ROTATION_DEGREES
 import com.premelc.shows_dominik_premelc.databinding.FragmentLoginBinding
 import com.premelc.shows_dominik_premelc.databinding.LoadingBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.RequestResponseBottomSheetBinding
+import com.premelc.shows_dominik_premelc.login.viewModel.LoginViewModel
 import com.premelc.shows_dominik_premelc.networking.ApiModule
 
 class LoginFragment : Fragment() {
@@ -118,7 +119,9 @@ class LoginFragment : Fragment() {
 
     private fun initializeUI() {
         animateLogo()
-        viewModel.initRememberMeCheckboxListener(binding.rememberMeCheckbox)
+        binding.rememberMeCheckbox.setOnCheckedChangeListener{ _ , isChecked ->
+            viewModel.initRememberMeCheckboxListener(isChecked)
+        }
         setupLoginValidation()
         setupLoginButton()
         setupRegisterButton()

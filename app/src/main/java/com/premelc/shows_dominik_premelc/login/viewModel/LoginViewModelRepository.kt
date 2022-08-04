@@ -1,10 +1,8 @@
-package com.premelc.shows_dominik_premelc.login
+package com.premelc.shows_dominik_premelc.login.viewModel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.gson.Gson
+import com.premelc.shows_dominik_premelc.PASSWORD_MIN_LENGTH
 import com.premelc.shows_dominik_premelc.R
 import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_ACCESS_TOKEN
 import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_CLIENT
@@ -18,42 +16,25 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-const val PASSWORD_MIN_LENGTH = 6
-
-class LoginViewModel : ViewModel() {
+class LoginViewModelRepository {
     private val _isRememberMeChecked = MutableLiveData(false)
-    val isRememberMeChecked: LiveData<Boolean> = _isRememberMeChecked
-
     private val _emailValidityStringCode = MutableLiveData<Int>()
-    val emailValidityStringCode: LiveData<Int> = _emailValidityStringCode
-
     private val _passwordValidityStringCode = MutableLiveData<Int>()
-    val passwordValidityStringCode: LiveData<Int> = _passwordValidityStringCode
-
     private val _loginButtonIsEnabled = MutableLiveData<Boolean>()
-    val loginButtonIsEnabled: LiveData<Boolean> = _loginButtonIsEnabled
-
     private val _loginResponse = MutableLiveData<Boolean>()
-    val loginResponse: LiveData<Boolean> = _loginResponse
-
     private val _loginErrorMessage = MutableLiveData<String>()
-    val loginErrorMessage: LiveData<String> = _loginErrorMessage
-
     private val _headerValues = MutableLiveData<Map<String, String>>()
-    val headerValues: LiveData<Map<String, String>> = _headerValues
 
-    fun initRememberMeCheckboxListener(checkbox: MaterialCheckBox) {
-        checkbox.setOnCheckedChangeListener { _, isChecked ->
-            _isRememberMeChecked.value = isChecked
-        }
-    }
+    fun getIsRememberMeChecked() = _isRememberMeChecked
+    fun getEmailValidityStringCode() = _emailValidityStringCode
+    fun getPasswordValidityStringCode() = _passwordValidityStringCode
+    fun getLoginButtonIsEnabled() = _loginButtonIsEnabled
+    fun getLoginResponse() = _loginResponse
+    fun getLoginErrorMessage() = _loginErrorMessage
+    fun getHeaderValues() = _headerValues
 
-    private fun validateEmail(email: String): Boolean {
-        return (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() || email.isEmpty())
-    }
-
-    private fun validatePassword(password: String): Boolean {
-        return (password.length >= PASSWORD_MIN_LENGTH || password.isEmpty())
+    fun initRememberMeCheckboxListener(isChecked: Boolean) {
+        _isRememberMeChecked.value = isChecked
     }
 
     fun checkEmailValidity(emailText: String) {
@@ -68,6 +49,14 @@ class LoginViewModel : ViewModel() {
             validatePassword(passwordText) -> null
             else -> R.string.invalidPassword
         }
+    }
+
+    private fun validateEmail(email: String): Boolean {
+        return (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() || email.isEmpty())
+    }
+
+    private fun validatePassword(password: String): Boolean {
+        return (password.length >= PASSWORD_MIN_LENGTH || password.isEmpty())
     }
 
     fun validateLoginData(email: String, password: String) {
@@ -102,5 +91,4 @@ class LoginViewModel : ViewModel() {
             }
         })
     }
-
 }
