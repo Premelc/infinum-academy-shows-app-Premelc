@@ -4,13 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<androidx.cardview.widget.CardView
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -43,31 +45,24 @@
 
             <RatingBar
                 android:id="@+id/ratingBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="40dp"
-                android:progressTint="@color/defaultPurple"
-                android:secondaryProgressTint="@color/defaultPurple"
+                style="@style/RatingBarStyle"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bottomSheetTitle"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textField"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="24dp"
                 android:minHeight="150dp"
                 android:textColor="@color/defaultPurple"
                 android:textColorHint="@color/defaultPurple"
                 app:boxStrokeColor="@color/defaultPurple"
-                app:cornerRadius="20dp"
                 app:hintTextColor="@color/defaultPurple"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/submitReviewButton"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ratingBar"
-                app:layout_constraintBottom_toTopOf="@id/submitReviewButton">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ratingBar">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/reviewInput"
@@ -81,17 +76,13 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/submitReviewButton"
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_margin="10dp"
-                android:backgroundTint="#3D1D72"
-                android:elevation="4dp"
+                style="@style/MaterialButtonStyle"
+                android:backgroundTint="@color/defaultPurple"
                 android:text="@string/submitReviewButtonText"
-                android:textColor="#FFFFFF"
-                app:cornerRadius="20dp"
-                app:layout_constraintStart_toStartOf="parent"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textField"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.cardview.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

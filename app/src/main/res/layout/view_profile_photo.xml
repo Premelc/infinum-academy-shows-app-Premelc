@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+            <ImageView
+                android:id="@+id/profilePic"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/profile_picture"
+                android:scaleType="centerCrop"
+                tools:src="@mipmap/the_office"/>
+            <ImageView
+                android:id="@+id/profilePicOutline"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/profile_picture"
+                android:src="@drawable/circular"/>
+</merge>

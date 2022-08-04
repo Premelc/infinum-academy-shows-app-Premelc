@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,26 +12,22 @@
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/change_profile_picture"
-            android:textAlignment="center"
             android:textColor="@color/defaultPurple"
             android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/cameraButton"
-            android:layout_width="170dp"
-            android:layout_height="100dp"
-            android:layout_margin="24dp"
+            style="@style/SideBySideButton"
             android:backgroundTint="@color/white"
             android:text="@string/take_a_picture"
             android:textColor="@color/defaultPurple"
-            android:textSize="12sp"
-            app:cornerRadius="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/galleryButton"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,15 +38,10 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/galleryButton"
-            android:layout_width="170dp"
-            android:layout_height="100dp"
-            android:layout_margin="24dp"
-            android:layout_marginStart="4dp"
+            style="@style/SideBySideButton"
             android:backgroundTint="@color/defaultPurple"
             android:text="@string/select_from_gallery"
             android:textColor="@color/white"
-            android:textSize="12sp"
-            app:cornerRadius="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/cameraButton"

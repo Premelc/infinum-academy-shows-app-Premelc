@@ -18,27 +18,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.cardview.widget.CardView
+        <com.premelc.shows_dominik_premelc.views.ProfilePhotoView
+            android:id="@+id/profilePhoto"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="end"
             android:layout_marginEnd="24dp"
-            android:backgroundTint="@color/defaultPurple"
-            app:cardCornerRadius="100dp">
+            />
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                app:cardCornerRadius="100dp">
-
-                <ImageView
-                    android:id="@+id/profileButton"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    tools:src="@mipmap/pfp"/>
-            </androidx.cardview.widget.CardView>
-        </androidx.cardview.widget.CardView>
     </com.google.android.material.appbar.MaterialToolbar>
 
     <TextView

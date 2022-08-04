@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.BounceInterpolator
+import android.view.animation.LinearInterpolator
+import android.view.animation.OvershootInterpolator
 import androidx.core.content.edit
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -14,19 +17,20 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.premelc.shows_dominik_premelc.ANIMATION_DURATION
 import com.premelc.shows_dominik_premelc.R
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_ACCESS_TOKEN
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_CLIENT
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_EMAIL
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_FILE_NAME
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_PFP_URL
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_REMEMBER_ME
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_TOKEN_TYPE
+import com.premelc.shows_dominik_premelc.TRIANGLE_ROTATION_DEGREES
 import com.premelc.shows_dominik_premelc.databinding.FragmentLoginBinding
 import com.premelc.shows_dominik_premelc.databinding.LoadingBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.RequestResponseBottomSheetBinding
 import com.premelc.shows_dominik_premelc.networking.ApiModule
-
-const val SHARED_PREFERENCES_FILE_NAME = "SHOWS"
-const val SHARED_PREFERENCES_REMEMBER_ME = "REMEMBER_ME"
-const val SHARED_PREFERENCES_EMAIL = "EMAIL"
-const val SHARED_PREFERENCES_PFP_URL = "URL"
-const val SHARED_PREFERENCES_ACCESS_TOKEN = "ACCESS_TOKEN"
-const val SHARED_PREFERENCES_CLIENT = "CLIENT"
-const val SHARED_PREFERENCES_TOKEN_TYPE = "TOKEN_TYPE"
 
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
@@ -111,10 +115,27 @@ class LoginFragment : Fragment() {
     }
 
     private fun initializeUI() {
+        animateLogo()
         viewModel.initRememberMeCheckboxListener(binding.rememberMeCheckbox)
         setupLoginValidation()
         setupLoginButton()
         setupRegisterButton()
+    }
+
+    private fun animateLogo() {
+        binding.triangleImg.animate()
+            .translationY(0F)
+            .setDuration(ANIMATION_DURATION)
+            .setInterpolator(BounceInterpolator())
+            .start()
+
+        binding.titleText.animate()
+            .scaleXBy(1F)
+            .scaleYBy(1F)
+            .setDuration(ANIMATION_DURATION)
+            .setInterpolator(LinearInterpolator())
+            .setStartDelay(ANIMATION_DURATION)
+            .start()
     }
 
     private fun setupLoginButton() {
@@ -127,7 +148,8 @@ class LoginFragment : Fragment() {
                 binding.emailInput.text.toString(),
                 binding.passwordInput.text.toString()
             )
-
+            binding.triangleImg.animate().rotation(TRIANGLE_ROTATION_DEGREES).setDuration(ANIMATION_DURATION)
+                .setInterpolator(OvershootInterpolator()).start()
             val loadingBottomSheetBinding: LoadingBottomSheetBinding = LoadingBottomSheetBinding.inflate(layoutInflater)
             dialog.setContentView(loadingBottomSheetBinding.root)
             dialog.show()

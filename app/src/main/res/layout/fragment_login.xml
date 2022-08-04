@@ -44,6 +44,7 @@
             android:layout_marginTop="180dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="80dp"
+            android:translationY="-500dp"
             android:contentDescription="@string/triangleDescText"
             android:src="@drawable/triangle"
             app:layout_constraintBottom_toTopOf="@+id/LoginText"
@@ -63,6 +64,8 @@
             android:textColor="@color/white"
             android:textSize="34sp"
             android:textStyle="bold"
+            android:scaleX="0"
+            android:scaleY="0"
             app:layout_constraintBottom_toTopOf="@+id/LoginText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/triangleImg"
@@ -100,22 +103,12 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textField"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/TextInputLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            app:boxStrokeColor="@color/edit_text_box_border"
-            app:cornerRadius="20dp"
-            app:hintTextColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/LoginCaption"
-            app:passwordToggleTint="@color/white"
-            app:placeholderTextColor="@color/white">
+            app:layout_constraintTop_toBottomOf="@+id/LoginCaption">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/emailInput"
@@ -123,28 +116,18 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/email"
                 android:singleLine="true"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                app:boxStrokeColor="@color/white"/>
+                android:textColor="@color/white"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textField2"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/TextInputLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            app:boxStrokeColor="@color/edit_text_box_border"
-            app:hintTextColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textField"
-            app:passwordToggleEnabled="true"
-            app:passwordToggleTint="@color/white">
+            app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/passwordInput"
@@ -153,9 +136,7 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:singleLine="true"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                app:boxStrokeColor="@color/white"/>
+                android:textColor="@color/white"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.checkbox.MaterialCheckBox
@@ -172,16 +153,11 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/loginButton"
             style="@style/MaterialButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="24dp"
             android:layout_marginTop="80dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="8dp"
             android:enabled="false"
             android:text="@string/login"
-            app:cornerRadius="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/registerButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -190,19 +166,14 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/registerButton"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_margin="24dp"
+            style="@style/MaterialButtonStyle"
             android:backgroundTint="@color/defaultPurple"
             android:textColor="@color/white"
             android:text="@string/register"
-            app:cornerRadius="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/loginButton"
-            app:layout_constraintVertical_bias="0.0"/>
+            app:layout_constraintTop_toBottomOf="@+id/loginButton"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

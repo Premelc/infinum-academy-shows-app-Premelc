@@ -4,10 +4,10 @@ import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_ACCESS_TOKEN
-import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_CLIENT
-import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_EMAIL
-import com.premelc.shows_dominik_premelc.login.SHARED_PREFERENCES_TOKEN_TYPE
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_ACCESS_TOKEN
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_CLIENT
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_EMAIL
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_TOKEN_TYPE
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

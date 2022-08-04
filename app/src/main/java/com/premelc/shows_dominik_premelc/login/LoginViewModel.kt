@@ -6,6 +6,10 @@ import androidx.lifecycle.ViewModel
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.gson.Gson
 import com.premelc.shows_dominik_premelc.R
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_ACCESS_TOKEN
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_CLIENT
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_PFP_URL
+import com.premelc.shows_dominik_premelc.SHARED_PREFERENCES_TOKEN_TYPE
 import com.premelc.shows_dominik_premelc.model.LoginErrorResponse
 import com.premelc.shows_dominik_premelc.model.LoginRequest
 import com.premelc.shows_dominik_premelc.model.LoginResponse

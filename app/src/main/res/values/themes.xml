@@ -13,15 +13,4 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
-    <style name="MaterialButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
-        <item name="android:backgroundTint">@color/material_button_states_background</item>
-        <item name="android:textColor">@color/material_button_states_text</item>
-    </style>
-
-    <style name="CustomChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">
-        <item name="chipBackgroundColor">@color/background_color_chip_state_list</item>
-        <item name="android:textColor">@color/text_color_chip_state_list</item>
-        <item name="chipIconTint">@color/text_color_chip_state_list</item>
-    </style>
-
 </resources>

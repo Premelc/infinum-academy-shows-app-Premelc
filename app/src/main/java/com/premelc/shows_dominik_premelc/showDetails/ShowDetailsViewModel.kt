@@ -170,18 +170,33 @@ class ShowDetailsViewModel(
                     _reviews.value = response.body()?.reviews
                     _reviewsResponse.value = response.isSuccessful
                     viewModelScope.launch {
-                        _reviews.value?.let { reviews ->
-                            addAllReviewsToDb(reviews.map { review ->
-                                ReviewEntity(
-                                    review.id,
-                                    review.comment ?: "",
-                                    review.rating,
-                                    review.show_id,
-                                    review.user.id,
-                                    review.user.email,
-                                    review.user.image_url.toString()
-                                )
-                            })
+                        _reviews.value.let { reviews ->
+                            if (reviews != null) {
+                                addAllReviewsToDb(reviews.map { review ->
+                                    ReviewEntity(
+                                        review.id,
+                                        review.comment ?: "",
+                                        review.rating,
+                                        review.show_id,
+                                        review.user.id,
+                                        review.user.email,
+                                        review.user.image_url.toString()
+                                    )
+                                })
+                            }
+                            _reviews.value?.let { reviews ->
+                                addAllReviewsToDb(reviews.map { review ->
+                                    ReviewEntity(
+                                        review.id,
+                                        review.comment ?: "",
+                                        review.rating,
+                                        review.show_id,
+                                        review.user.id,
+                                        review.user.email,
+                                        review.user.image_url.toString()
+                                    )
+                                })
+                            }
                         }
                     }
                 } else {
