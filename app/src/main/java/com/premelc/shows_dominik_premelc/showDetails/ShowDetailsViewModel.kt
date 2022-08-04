@@ -213,7 +213,7 @@ class ShowDetailsViewModel(
         })
     }
 
-    fun postReview(rating: Int, comment: String, showId: Int) {
+    fun postReview(rating: Int, comment: String, showId: Int, userId: String) {
         val postReviewRequest = PostReviewRequest(
             rating,
             comment,
@@ -254,6 +254,20 @@ class ShowDetailsViewModel(
 
             override fun onFailure(call: Call<PostReviewResponse>, t: Throwable) {
                 _postReviewResponse.value = false
+                viewModelScope.launch {
+                    addReviewToDb(
+                        ReviewEntity(
+                            (comment + userId + showId.toString()),
+                            comment,
+                            rating,
+                            showId,
+                            userId.substringBefore('@'),
+                            userId,
+                            "default",
+                            true
+                        )
+                    )
+                }
             }
         })
     }

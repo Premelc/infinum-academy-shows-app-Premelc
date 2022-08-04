@@ -48,8 +48,15 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">24dp</item>
+        <item name="android:stepSize">1</item>
         <item name="android:progressTint">@color/defaultPurple</item>
+        <item name="mrb_secondaryProgressTint">@color/defaultPurple</item>
+        <item name="android:progressBackgroundTint">@color/defaultPurple</item>
         <item name="android:secondaryProgressTint">@color/defaultPurple</item>
+    </style>
+
+    <style name="CollapsedTitleStyle">
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

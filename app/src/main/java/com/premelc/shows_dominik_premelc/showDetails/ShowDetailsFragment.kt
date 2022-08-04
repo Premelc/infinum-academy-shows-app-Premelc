@@ -71,10 +71,12 @@ class ShowDetailsFragment : Fragment() {
             if (!postReviewResponse) triggerNotificationBottomSheet(
                 R.drawable.fail,
                 getString(R.string.post_review_failed),
-                getString(R.string.connection_error)
+                getString(R.string.offline_review)
             )
-            else Toast.makeText(context, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
-            dialog.dismiss()
+            else {
+                dialog.dismiss()
+                Toast.makeText(context, R.string.toast_make_review, Toast.LENGTH_SHORT).show()
+            }
         }
         viewModel.postReviewErrorMessage.observe(viewLifecycleOwner) { postReviewErrorMessage ->
             triggerNotificationBottomSheet(R.drawable.fail, getString(R.string.post_review_failed), postReviewErrorMessage)
@@ -108,7 +110,7 @@ class ShowDetailsFragment : Fragment() {
     }
 
     private fun initShowDetails(show: Show) {
-        binding.showTitle.text = show.title
+        binding.toolbar.title = show.title
         binding.showDescription.text = show.description
         binding.reviewsNumber.text = String.format(
             this.getString(R.string.reviewCount),
@@ -166,7 +168,7 @@ class ShowDetailsFragment : Fragment() {
             btnSubmit.setOnClickListener {
                 val comment = bottomSheetBinding.reviewInput.text.toString()
                 val rating = bottomSheetBinding.ratingBar.rating.toInt()
-                viewModel.postReview(rating, comment, args.id.toInt())
+                viewModel.postReview(rating, comment, args.id.toInt(), args.username)
                 dialog.dismiss()
                 initLoadingBottomSheet()
             }

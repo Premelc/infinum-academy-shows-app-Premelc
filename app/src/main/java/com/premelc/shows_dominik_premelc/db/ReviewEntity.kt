@@ -12,5 +12,6 @@ data class ReviewEntity(
     @ColumnInfo(name = "showId") val showId: Int,
     @ColumnInfo(name = "userId") val userId: String,
     @ColumnInfo(name = "userEmail") val userEmail: String,
-    @ColumnInfo(name = "UserImage") val userImageUrl: String
+    @ColumnInfo(name = "UserImage") val userImageUrl: String,
+    @ColumnInfo(name = "pending") val pending: Boolean = false
 )

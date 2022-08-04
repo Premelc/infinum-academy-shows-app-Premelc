@@ -2,13 +2,13 @@ package com.premelc.shows_dominik_premelc.shows
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.URLUtil
 import android.widget.CompoundButton
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -37,6 +37,9 @@ import com.premelc.shows_dominik_premelc.db.ShowsViewModelFactory
 import com.premelc.shows_dominik_premelc.getAppDatabase
 import com.premelc.shows_dominik_premelc.model.Show
 import com.premelc.shows_dominik_premelc.networking.ApiModule.initRetrofit
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 
 class ShowsFragment : Fragment() {
 
@@ -56,6 +59,28 @@ class ShowsFragment : Fragment() {
                 viewModel.uploadImage(args.username, getImageFile(requireContext())!!)
             }
         }
+
+    private val selectImageFromGalleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            val photoFile: File? = createImageFile(requireContext())
+            val inputStream: InputStream? = activity?.contentResolver?.openInputStream(uri)
+            val fileOutputStream = FileOutputStream(photoFile)
+            if (inputStream != null) {
+                inputStream.copyTo(fileOutputStream)
+                inputStream.close()
+            }
+            fileOutputStream.close()
+            if (photoFile != null) {
+                viewModel.uploadImage(args.username, photoFile)
+            } else {
+                triggerNotificationBottomSheet(
+                    R.drawable.fail,
+                    getString(R.string.change_photo_error),
+                    getString(R.string.file_not_found)
+                )
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,7 +144,9 @@ class ShowsFragment : Fragment() {
                 R.drawable.fail,
                 getString(R.string.failed_to_reach_server),
                 getString(R.string.offline)
-            )
+            ) else {
+                viewModel.submitPendingReviews(args.username)
+            }
         }
         initializeUI()
     }
@@ -211,7 +238,8 @@ class ShowsFragment : Fragment() {
             dialog.dismiss()
         }
         cameraGalleryBottomSheetBinding.galleryButton.setOnClickListener {
-            Toast.makeText(context, R.string.wip, Toast.LENGTH_SHORT).show()
+            selectImageFromGallery()
+            dialog.dismiss()
         }
     }
 
@@ -223,6 +251,7 @@ class ShowsFragment : Fragment() {
     }
 
     private fun takeImage() {
+        initLoadingBottomSheet()
         lifecycleScope.launchWhenStarted {
             getFileUri(
                 createImageFile(requireContext()),
@@ -231,6 +260,11 @@ class ShowsFragment : Fragment() {
                 takeImageResult.launch(uri)
             }
         }
+    }
+
+    private fun selectImageFromGallery() {
+        initLoadingBottomSheet()
+        return selectImageFromGalleryResult.launch("image/*")
     }
 
     private fun triggerNotificationBottomSheet(icon: Int, title: String, subtitle: String) {

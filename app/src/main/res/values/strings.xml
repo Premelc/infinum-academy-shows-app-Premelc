@@ -36,7 +36,7 @@
     <string name="change_profile_picture">Change profile picture?</string>
     <string name="wip">Work in progress</string>
     <string name="invalidEmail">Invalid email address</string>
-    <string name="invalidPassword">Invalid password</string>
+    <string name="invalidPassword">Password must be at least 6 characters long</string>
     <string name="empty"/>
     <string name="register">Register</string>
     <string name="repeat_password">Repeat password</string>
@@ -54,4 +54,6 @@
     <string name="change_photo_success">Successfully changed profile photo</string>
     <string name="failed_to_load_details">Failed to load show details</string>
     <string name="failed_to_reach_server">Failed to reach server</string>
+    <string name="file_not_found">File not found</string>
+    <string name="offline_review">Reviews will be posted when connection is established</string>
 </resources>

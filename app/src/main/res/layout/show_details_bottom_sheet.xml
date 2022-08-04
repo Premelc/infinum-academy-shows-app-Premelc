@@ -43,7 +43,7 @@
                 app:layout_constraintStart_toEndOf="@id/bottomSheetTitle"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-            <RatingBar
+            <me.zhanghai.android.materialratingbar.MaterialRatingBar
                 android:id="@+id/ratingBar"
                 style="@style/RatingBarStyle"
                 app:layout_constraintStart_toStartOf="parent"
