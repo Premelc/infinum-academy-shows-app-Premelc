@@ -19,6 +19,7 @@ import com.premelc.shows_dominik_premelc.databinding.FragmentRegisterBinding
 import com.premelc.shows_dominik_premelc.databinding.LoadingBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.RequestResponseBottomSheetBinding
 import com.premelc.shows_dominik_premelc.networking.ApiModule
+import com.premelc.shows_dominik_premelc.register.viewModel.RegisterViewModel
 
 class RegisterFragment : Fragment() {
     private var _binding: FragmentRegisterBinding? = null

@@ -1,8 +1,6 @@
-package com.premelc.shows_dominik_premelc.register
+package com.premelc.shows_dominik_premelc.register.viewModel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import com.premelc.shows_dominik_premelc.PASSWORD_MIN_LENGTH
 import com.premelc.shows_dominik_premelc.R
@@ -14,29 +12,23 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
-class RegisterViewModel : ViewModel() {
+class RegisterViewModelRepository {
 
     private val _emailValidityStringCode = MutableLiveData<Int>()
-    val emailValidityStringCode: LiveData<Int> = _emailValidityStringCode
-
     private val _passwordValidityStringCode = MutableLiveData<Int>()
-    val passwordValidityStringCode: LiveData<Int> = _passwordValidityStringCode
-
     private val _repeatPasswordValidityStringCode = MutableLiveData<Int>()
-    val repeatPasswordValidityStringCode: LiveData<Int> = _repeatPasswordValidityStringCode
-
     private val _registerButtonIsEnabled = MutableLiveData<Boolean>()
-    val registerButtonIsEnabled: LiveData<Boolean> = _registerButtonIsEnabled
-
     private val _passwordsMatchStringCode = MutableLiveData<Int>()
-    val passwordsMatchStringCode: LiveData<Int> = _passwordsMatchStringCode
-
     private val _registerResponse = MutableLiveData<Boolean>()
-    val registerResponse: LiveData<Boolean> = _registerResponse
-
     private val _registerErrorMessage = MutableLiveData<String>()
-    val registerErrorMessage: LiveData<String> = _registerErrorMessage
+
+    fun getEmailValidityStringCode() = _emailValidityStringCode
+    fun getPasswordValidityStringCode() = _passwordValidityStringCode
+    fun getRepeatPasswordValidityStringCode() = _repeatPasswordValidityStringCode
+    fun getRegisterButtonIsEnabled() = _registerButtonIsEnabled
+    fun getPasswordsMatchStringCode() = _passwordsMatchStringCode
+    fun getRegisterResponse() = _registerResponse
+    fun getRegisterErrorMessage() = _registerErrorMessage
 
     private fun validateEmail(email: String): Boolean {
         return (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() || email.isEmpty())
