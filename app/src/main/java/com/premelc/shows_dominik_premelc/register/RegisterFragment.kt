@@ -27,11 +27,6 @@ class RegisterFragment : Fragment() {
     private val viewModel by viewModels<RegisterViewModel>()
     private lateinit var dialog: BottomSheetDialog
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        ApiModule.initRetrofit(requireContext(), emptyMap())
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
