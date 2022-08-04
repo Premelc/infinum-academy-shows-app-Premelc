@@ -1,37 +1,62 @@
 package com.premelc.shows_dominik_premelc.login.viewModel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.premelc.shows_dominik_premelc.PASSWORD_MIN_LENGTH
+import com.premelc.shows_dominik_premelc.R
 
 class LoginViewModel : ViewModel() {
 
+    private val _isRememberMeChecked = MutableLiveData(false)
+    val isRememberMeChecked: LiveData<Boolean> = _isRememberMeChecked
+
+    private val _emailValidityStringCode = MutableLiveData<Int>()
+    val emailValidityStringCode: LiveData<Int> = _emailValidityStringCode
+
+    private val _passwordValidityStringCode = MutableLiveData<Int>()
+    val passwordValidityStringCode: LiveData<Int> = _passwordValidityStringCode
+
+    private val _loginButtonIsEnabled = MutableLiveData<Boolean>()
+    val loginButtonIsEnabled: LiveData<Boolean> = _loginButtonIsEnabled
+
     private val repo = LoginViewModelRepository()
-    val isRememberMeChecked: LiveData<Boolean> = repo.getIsRememberMeChecked()
-    val emailValidityStringCode: LiveData<Int> = repo.getEmailValidityStringCode()
-    val passwordValidityStringCode: LiveData<Int> = repo.getPasswordValidityStringCode()
-    val loginButtonIsEnabled: LiveData<Boolean> = repo.getLoginButtonIsEnabled()
     val loginResponse: LiveData<Boolean> = repo.getLoginResponse()
     val loginErrorMessage: LiveData<String> = repo.getLoginErrorMessage()
     val headerValues: LiveData<Map<String, String>> = repo.getHeaderValues()
 
     fun initRememberMeCheckboxListener(isChecked: Boolean) {
-        repo.initRememberMeCheckboxListener(isChecked)
+        _isRememberMeChecked.value = isChecked
     }
 
-    fun onLoginButtonClicked(email: String, password: String) {
-        repo.onLoginButtonClicked(email, password)
+    private fun validateEmail(email: String): Boolean {
+        return (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() || email.isEmpty())
+    }
+
+    private fun validatePassword(password: String): Boolean {
+        return (password.length >= PASSWORD_MIN_LENGTH || password.isEmpty())
     }
 
     fun checkEmailValidity(emailText: String) {
-        repo.checkEmailValidity(emailText)
+        _emailValidityStringCode.value = when {
+            validateEmail(emailText) -> null
+            else -> R.string.invalidEmail
+        }
     }
 
     fun checkPasswordValidity(passwordText: String) {
-        repo.checkPasswordValidity(passwordText)
+        _passwordValidityStringCode.value = when {
+            validatePassword(passwordText) -> null
+            else -> R.string.invalidPassword
+        }
     }
 
     fun validateLoginData(email: String, password: String) {
-        repo.validateLoginData(email, password)
+        _loginButtonIsEnabled.value = validateEmail(email) && validatePassword(password)
+    }
+
+    fun onLoginButtonClicked(email: String, password: String) {
+        repo.onLoginButtonClicked(email , password)
     }
 
 }
