@@ -24,6 +24,7 @@ import com.premelc.shows_dominik_premelc.db.ShowsViewModelFactory
 import com.premelc.shows_dominik_premelc.getAppDatabase
 import com.premelc.shows_dominik_premelc.model.Review
 import com.premelc.shows_dominik_premelc.model.Show
+import com.premelc.shows_dominik_premelc.showDetails.viewModel.ShowDetailsViewModel
 
 class ShowDetailsFragment : Fragment() {
     private var _binding: FragmentShowDetailsBinding? = null
@@ -52,6 +53,7 @@ class ShowDetailsFragment : Fragment() {
         }
         viewModel.reviews.observe(viewLifecycleOwner) { reviews ->
             updateReviewRecycler(reviews)
+            viewModel.loadReviewsToDb(reviews)
         }
         viewModel.reviewsRecyclerFullOrEmpty.observe(viewLifecycleOwner) { toggleReviewsRecyclerFullOrEmpty ->
             toggleReviewsRecyclerFullOrEmpty(toggleReviewsRecyclerFullOrEmpty)

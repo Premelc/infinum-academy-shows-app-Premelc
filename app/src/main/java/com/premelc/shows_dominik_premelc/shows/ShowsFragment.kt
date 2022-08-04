@@ -116,7 +116,6 @@ class ShowsFragment : Fragment() {
                     getString(R.string.shows_fetch_failed),
                     getString(R.string.connection_error)
                 )
-                viewModel.fetchShows()
             }
         }
         viewModel.showsErrorMessage.observe(viewLifecycleOwner) { showsErrorMessage ->
@@ -149,6 +148,7 @@ class ShowsFragment : Fragment() {
                 getString(R.string.offline)
             ) else {
                 viewModel.submitPendingReviews(args.username)
+                dialog.dismiss()
             }
         }
         initializeUI()
@@ -166,7 +166,7 @@ class ShowsFragment : Fragment() {
 
     private fun initializeUI() {
         initLoadingBottomSheet()
-        viewModel.initialFetchShows()
+        viewModel.fetchShows()
         initShowsRecycler()
         initProfileButton()
         initTopRatedChip()

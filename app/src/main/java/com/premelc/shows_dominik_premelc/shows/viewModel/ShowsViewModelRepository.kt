@@ -2,6 +2,7 @@ package com.premelc.shows_dominik_premelc.shows.viewModel
 
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
+import com.premelc.shows_dominik_premelc.MEDIA_TYPE_JPG
 import com.premelc.shows_dominik_premelc.db.ShowEntity
 import com.premelc.shows_dominik_premelc.db.ShowsDatabase
 import com.premelc.shows_dominik_premelc.model.ChangePhotoErrorResponse
@@ -39,16 +40,27 @@ class ShowsViewModelRepository(private val database: ShowsDatabase) {
     fun getChangePhotoResponseMessage() = _changePhotoResponseMessage
     fun getConnectionEstablished() = _connectionEstablished
 
-    fun initialFetchShows() {
-        fetchShowsFromServer()
+    init {
+        checkIsServerResponsive()
+    }
+
+    private fun checkIsServerResponsive() {
+        ApiModule.retrofit.getMe().enqueue(object : Callback<LoginResponse> {
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                _connectionEstablished.value = true
+            }
+
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                _connectionEstablished.value = false
+            }
+        })
     }
 
     suspend fun fetchShows() {
-        if (getConnectionEstablished().value == false) {
-            println("OVDJEEEE")
-            fetchAllShowsFromDb()
-        } else {
+        if (getConnectionEstablished().value == true) {
             fetchShowsFromServer()
+        } else {
+            fetchAllShowsFromDb()
         }
     }
 

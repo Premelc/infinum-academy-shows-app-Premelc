@@ -9,8 +9,6 @@ import java.io.File
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 
-val MEDIA_TYPE_JPG = "image/png".toMediaType()
-
 class ShowsViewModel(
     private val database: ShowsDatabase
 ) : ViewModel() {
@@ -23,10 +21,6 @@ class ShowsViewModel(
     val changePhotoResponse: LiveData<Boolean> = repo.getChangePhotoResponse()
     val changePhotoResponseMessage: LiveData<String> = repo.getChangePhotoResponseMessage()
     var connectionEstablished: LiveData<Boolean> = repo.getConnectionEstablished()
-
-    fun initialFetchShows() {
-        repo.initialFetchShows()
-    }
 
     fun fetchShows() {
         viewModelScope.launch {

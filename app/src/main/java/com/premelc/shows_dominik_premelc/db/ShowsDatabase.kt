@@ -10,7 +10,7 @@ import androidx.room.RoomDatabase
         ShowEntity::class,
         ReviewEntity::class
     ],
-    version = 7
+    version = 8
 )
 abstract class ShowsDatabase : RoomDatabase() {
 
