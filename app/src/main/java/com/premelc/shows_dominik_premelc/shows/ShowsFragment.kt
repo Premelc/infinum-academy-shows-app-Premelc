@@ -63,7 +63,7 @@ class ShowsFragment : Fragment() {
     private val selectImageFromGalleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             val photoFile: File? = createImageFile(requireContext())
-            val inputStream: InputStream? = activity!!.contentResolver.openInputStream(uri)
+            val inputStream: InputStream? = activity?.contentResolver?.openInputStream(uri)
             val fileOutputStream = FileOutputStream(photoFile)
             if (inputStream != null) {
                 inputStream.copyTo(fileOutputStream)

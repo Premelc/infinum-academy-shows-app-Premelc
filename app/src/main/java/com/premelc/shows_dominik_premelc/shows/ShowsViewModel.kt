@@ -77,8 +77,6 @@ class ShowsViewModel(
     fun submitPendingReviews(userEmail: String) {
         viewModelScope.launch {
             val pendingReviews = database.reviewsDAO().getPendingReviews(true, userEmail)
-            println("OVDJE")
-            println(pendingReviews)
             if (pendingReviews.isNotEmpty()) {
                 for (review in pendingReviews) {
                     val postReviewRequest = PostReviewRequest(
