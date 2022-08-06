@@ -101,6 +101,10 @@ class ShowDetailsFragment : Fragment() {
             )
             viewModel.initDetails(args.id)
         }
+
+        viewModel.postedReview.observe(viewLifecycleOwner) { postedReview ->
+            viewModel.handleReview(postedReview)
+        }
         initializeUI()
     }
 

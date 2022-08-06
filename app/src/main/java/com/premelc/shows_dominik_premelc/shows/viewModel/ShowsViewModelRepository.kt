@@ -3,6 +3,7 @@ package com.premelc.shows_dominik_premelc.shows.viewModel
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.premelc.shows_dominik_premelc.MEDIA_TYPE_JPG
+import com.premelc.shows_dominik_premelc.db.ReviewEntity
 import com.premelc.shows_dominik_premelc.db.ShowEntity
 import com.premelc.shows_dominik_premelc.db.ShowsDatabase
 import com.premelc.shows_dominik_premelc.model.ChangePhotoErrorResponse
@@ -15,7 +16,6 @@ import com.premelc.shows_dominik_premelc.model.ShowsResponse
 import com.premelc.shows_dominik_premelc.model.TopRatedShowsResponse
 import com.premelc.shows_dominik_premelc.networking.ApiModule
 import java.io.File
-import java.util.concurrent.Executors
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
@@ -31,6 +31,7 @@ class ShowsViewModelRepository(private val database: ShowsDatabase) {
     private val _changePhotoResponse = MutableLiveData<Boolean>()
     private val _changePhotoResponseMessage = MutableLiveData<String>()
     private var _connectionEstablished = MutableLiveData<Boolean>()
+    private val _reviewForDeletion = MutableLiveData<String>()
 
     fun getShows() = _shows
     fun getShowsRecyclerFullOrEmpty() = _showsRecyclerFullOrEmpty
@@ -39,6 +40,7 @@ class ShowsViewModelRepository(private val database: ShowsDatabase) {
     fun getChangePhotoResponse() = _changePhotoResponse
     fun getChangePhotoResponseMessage() = _changePhotoResponseMessage
     fun getConnectionEstablished() = _connectionEstablished
+    fun getReviewForDeletion() = _reviewForDeletion
 
     init {
         checkIsServerResponsive()
@@ -64,33 +66,32 @@ class ShowsViewModelRepository(private val database: ShowsDatabase) {
         }
     }
 
-    fun submitPendingReviews(userEmail: String) {
-        Executors.newSingleThreadExecutor().execute {
-            val pendingReviews = database.reviewsDAO().getPendingReviews(true, userEmail)
-            if (pendingReviews.isNotEmpty()) {
-                for (review in pendingReviews) {
-                    val postReviewRequest = PostReviewRequest(
-                        review.rating,
-                        review.comment,
-                        review.showId
-                    )
-                    ApiModule.retrofit.postReview(postReviewRequest).enqueue(object : Callback<PostReviewResponse> {
-                        override fun onResponse(call: Call<PostReviewResponse>, response: Response<PostReviewResponse>) {
-                            Executors.newSingleThreadExecutor().execute {
-                                deleteReview(review.id)
-                            }
+    suspend fun submitPendingReviews(userEmail: String) {
+        val pendingReviews = database.reviewsDAO().getPendingReviews(true, userEmail)
+        if (pendingReviews.isNotEmpty()) {
+            for (review in pendingReviews) {
+                val postReviewRequest = PostReviewRequest(
+                    review.rating,
+                    review.comment,
+                    review.showId
+                )
+                ApiModule.retrofit.postReview(postReviewRequest).enqueue(object : Callback<PostReviewResponse> {
+                    override fun onResponse(call: Call<PostReviewResponse>, response: Response<PostReviewResponse>) {
+                        val review = response.body()?.review
+                        if (review != null) {
+                            _reviewForDeletion.value = review.id
                         }
+                    }
 
-                        override fun onFailure(call: Call<PostReviewResponse>, t: Throwable) {
-                            _connectionEstablished.value = false
-                        }
-                    })
-                }
+                    override fun onFailure(call: Call<PostReviewResponse>, t: Throwable) {
+                        _connectionEstablished.value = false
+                    }
+                })
             }
         }
     }
 
-    private fun deleteReview(reviewId: String) {
+    suspend fun deleteReview(reviewId: String) {
         database.reviewsDAO().deleteByReviewId(reviewId)
     }
 

@@ -19,7 +19,8 @@ class ShowsViewModel(
     val showsErrorMessage: LiveData<String> = repo.getShowsErrorMessage()
     val changePhotoResponse: LiveData<Boolean> = repo.getChangePhotoResponse()
     val changePhotoResponseMessage: LiveData<String> = repo.getChangePhotoResponseMessage()
-    var connectionEstablished: LiveData<Boolean> = repo.getConnectionEstablished()
+    val connectionEstablished: LiveData<Boolean> = repo.getConnectionEstablished()
+    val reviewForDeletion: LiveData<String> = repo.getReviewForDeletion()
 
     fun fetchShows() {
         viewModelScope.launch {
@@ -27,8 +28,16 @@ class ShowsViewModel(
         }
     }
 
+    fun deleteReview(id: String) {
+        viewModelScope.launch {
+            repo.deleteReview(id)
+        }
+    }
+
     fun submitPendingReviews(userEmail: String) {
-        repo.submitPendingReviews(userEmail)
+        viewModelScope.launch {
+            repo.submitPendingReviews(userEmail)
+        }
     }
 
     fun fetchTopRatedShows() {

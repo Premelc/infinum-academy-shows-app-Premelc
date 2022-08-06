@@ -3,6 +3,7 @@ package com.premelc.shows_dominik_premelc.showDetails.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.premelc.shows_dominik_premelc.db.ReviewEntity
 import com.premelc.shows_dominik_premelc.db.ShowsDatabase
 import com.premelc.shows_dominik_premelc.model.Review
 import com.premelc.shows_dominik_premelc.model.Show
@@ -23,6 +24,7 @@ class ShowDetailsViewModel(
     val postReviewResponse: LiveData<Boolean> = repo.getPostReviewResponse()
     var postReviewErrorMessage: LiveData<String> = repo.getPostReviewErrorMessage()
     var connectionEstablished: LiveData<Boolean> = repo.getConnectionEstablished()
+    var postedReview: LiveData<ReviewEntity> = repo.getPostedReview()
 
     fun initDetails(id: String) {
         viewModelScope.launch {
@@ -30,13 +32,19 @@ class ShowDetailsViewModel(
         }
     }
 
-    fun loadReviewsToDb(reviews:List<Review>){
+    fun loadReviewsToDb(reviews: List<Review>) {
         viewModelScope.launch {
             repo.loadReviewsToDb(reviews)
         }
     }
 
     fun postReview(rating: Int, comment: String, showId: Int, userId: String) {
-        repo.submitReviewToServer(rating, comment , showId , userId)
+        repo.submitReviewToServer(rating, comment, showId, userId)
+    }
+
+    fun handleReview(review: ReviewEntity) {
+        viewModelScope.launch {
+            repo.addReviewToDb(review)
+        }
     }
 }

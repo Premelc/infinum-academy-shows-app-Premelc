@@ -16,7 +16,6 @@ import com.premelc.shows_dominik_premelc.model.ShowDetailsErrorResponse
 import com.premelc.shows_dominik_premelc.model.ShowDetailsResponse
 import com.premelc.shows_dominik_premelc.model.User
 import com.premelc.shows_dominik_premelc.networking.ApiModule
-import java.util.concurrent.Executors
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,6 +25,7 @@ class ShowDetailsViewModelRepository(private val database: ShowsDatabase) {
     private var _connectionEstablished = MutableLiveData<Boolean>()
     private var _postReviewErrorMessage = MutableLiveData<String>()
     private var _postReviewResponse = MutableLiveData<Boolean>()
+    private var _postedReview = MutableLiveData<ReviewEntity>()
     private var _reviewsErrorMessage = MutableLiveData<String>()
     private var _reviewsResponse = MutableLiveData<Boolean>()
     private var _showsDetailErrorMessage = MutableLiveData<String>()
@@ -44,6 +44,7 @@ class ShowDetailsViewModelRepository(private val database: ShowsDatabase) {
     fun getPostReviewResponse() = _postReviewResponse
     fun getPostReviewErrorMessage() = _postReviewErrorMessage
     fun getConnectionEstablished() = _connectionEstablished
+    fun getPostedReview() = _postedReview
 
     init {
         checkIsServerResponsive()
@@ -112,7 +113,7 @@ class ShowDetailsViewModelRepository(private val database: ShowsDatabase) {
         })
     }
 
-    fun loadReviewsToDb(reviews: List<Review>) {
+    suspend fun loadReviewsToDb(reviews: List<Review>) {
         addAllReviewsToDb(reviews.map { review ->
             ReviewEntity(
                 review.id,
@@ -126,10 +127,8 @@ class ShowDetailsViewModelRepository(private val database: ShowsDatabase) {
         })
     }
 
-    private fun addAllReviewsToDb(list: List<ReviewEntity>) {
-        Executors.newSingleThreadExecutor().execute {
-            database.reviewsDAO().insertReview(list)
-        }
+    private suspend fun addAllReviewsToDb(list: List<ReviewEntity>) {
+        database.reviewsDAO().insertReview(list)
     }
 
     private suspend fun fetchShowFromDb(id: String) {
@@ -176,19 +175,15 @@ class ShowDetailsViewModelRepository(private val database: ShowsDatabase) {
                     _postReviewResponse.value = response.isSuccessful
                     val review = response.body()?.review
                     if (review != null) {
-                        Executors.newSingleThreadExecutor().execute {
-                            addReviewToDb(
-                                ReviewEntity(
-                                    review.id,
-                                    review.comment,
-                                    review.rating,
-                                    review.show_id,
-                                    review.user.id,
-                                    review.user.email,
-                                    review.user.image_url.toString()
-                                )
-                            )
-                        }
+                        _postedReview.value = ReviewEntity(
+                            review.id,
+                            review.comment,
+                            review.rating,
+                            review.show_id,
+                            review.user.id,
+                            review.user.email,
+                            review.user.image_url.toString()
+                        )
                     }
                 } else {
                     val gson = Gson()
@@ -203,25 +198,21 @@ class ShowDetailsViewModelRepository(private val database: ShowsDatabase) {
 
             override fun onFailure(call: Call<PostReviewResponse>, t: Throwable) {
                 _postReviewResponse.value = false
-                Executors.newSingleThreadExecutor().execute {
-                    addReviewToDb(
-                        ReviewEntity(
-                            (comment + userId + showId.toString()),
-                            comment,
-                            rating,
-                            showId,
-                            userId.substringBefore('@'),
-                            userId,
-                            "default",
-                            true
-                        )
-                    )
-                }
+                _postedReview.value = ReviewEntity(
+                    (comment + userId + showId.toString()),
+                    comment,
+                    rating,
+                    showId,
+                    userId.substringBefore('@'),
+                    userId,
+                    "default",
+                    true
+                )
             }
         })
     }
 
-    fun addReviewToDb(review: ReviewEntity) {
+    suspend fun addReviewToDb(review: ReviewEntity) {
         database.reviewsDAO().insertReview(listOf(review))
     }
 

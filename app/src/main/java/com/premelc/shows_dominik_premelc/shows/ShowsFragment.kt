@@ -152,6 +152,9 @@ class ShowsFragment : Fragment() {
             }
             viewModel.fetchShows()
         }
+        viewModel.reviewForDeletion.observe(viewLifecycleOwner) { reviewForDeletionId ->
+            viewModel.deleteReview(reviewForDeletionId)
+        }
         initializeUI()
     }
 
