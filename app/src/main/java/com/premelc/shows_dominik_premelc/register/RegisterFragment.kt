@@ -19,17 +19,13 @@ import com.premelc.shows_dominik_premelc.databinding.FragmentRegisterBinding
 import com.premelc.shows_dominik_premelc.databinding.LoadingBottomSheetBinding
 import com.premelc.shows_dominik_premelc.databinding.RequestResponseBottomSheetBinding
 import com.premelc.shows_dominik_premelc.networking.ApiModule
+import com.premelc.shows_dominik_premelc.register.viewModel.RegisterViewModel
 
 class RegisterFragment : Fragment() {
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModels<RegisterViewModel>()
     private lateinit var dialog: BottomSheetDialog
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        ApiModule.initRetrofit(requireContext(), emptyMap())
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

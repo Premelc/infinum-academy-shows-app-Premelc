@@ -24,6 +24,6 @@ interface ReviewsDao {
     suspend fun insertReview(reviewList: List<ReviewEntity>)
 
     @Query("DELETE FROM review WHERE id = :reviewId")
-    suspend fun  deleteByReviewId(reviewId: String)
+    suspend fun deleteByReviewId(reviewId: String)
 
 }

@@ -1,10 +1,9 @@
-package com.premelc.shows_dominik_premelc.shows
+package com.premelc.shows_dominik_premelc.shows.viewModel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.premelc.shows_dominik_premelc.MEDIA_TYPE_JPG
+import com.premelc.shows_dominik_premelc.db.ReviewEntity
 import com.premelc.shows_dominik_premelc.db.ShowEntity
 import com.premelc.shows_dominik_premelc.db.ShowsDatabase
 import com.premelc.shows_dominik_premelc.model.ChangePhotoErrorResponse
@@ -17,42 +16,31 @@ import com.premelc.shows_dominik_premelc.model.ShowsResponse
 import com.premelc.shows_dominik_premelc.model.TopRatedShowsResponse
 import com.premelc.shows_dominik_premelc.networking.ApiModule
 import java.io.File
-import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-val MEDIA_TYPE_JPG = "image/png".toMediaType()
-
-class ShowsViewModel(
-    private val database: ShowsDatabase
-) : ViewModel() {
+class ShowsViewModelRepository(private val database: ShowsDatabase) {
 
     private val _shows = MutableLiveData<List<Show>>(emptyList())
-    val shows: LiveData<List<Show>> = _shows
-
     private val _showsRecyclerFullOrEmpty = MutableLiveData<Boolean>()
-    val showsRecyclerFullOrEmpty: LiveData<Boolean> = _showsRecyclerFullOrEmpty
-
     private val _showsResponse = MutableLiveData<Boolean>()
-    val showsResponse: LiveData<Boolean> = _showsResponse
-
     private val _showsErrorMessage = MutableLiveData<String>()
-    val showsErrorMessage: LiveData<String> = _showsErrorMessage
-
     private val _changePhotoResponse = MutableLiveData<Boolean>()
-    val changePhotoResponse: LiveData<Boolean> = _changePhotoResponse
-
     private val _changePhotoResponseMessage = MutableLiveData<String>()
-    val changePhotoResponseMessage: LiveData<String> = _changePhotoResponseMessage
-
     private var _connectionEstablished = MutableLiveData<Boolean>()
-    var connectionEstablished: LiveData<Boolean> = _connectionEstablished
+    private val _reviewForDeletion = MutableLiveData<String>()
 
-    private var _postedPendingReview = MutableLiveData<Boolean>()
+    fun getShows() = _shows
+    fun getShowsRecyclerFullOrEmpty() = _showsRecyclerFullOrEmpty
+    fun getShowsResponse() = _showsResponse
+    fun getShowsErrorMessage() = _showsErrorMessage
+    fun getChangePhotoResponse() = _changePhotoResponse
+    fun getChangePhotoResponseMessage() = _changePhotoResponseMessage
+    fun getConnectionEstablished() = _connectionEstablished
+    fun getReviewForDeletion() = _reviewForDeletion
 
     init {
         checkIsServerResponsive()
@@ -62,69 +50,58 @@ class ShowsViewModel(
         ApiModule.retrofit.getMe().enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 _connectionEstablished.value = true
-                fetchShowsFromServer()
             }
 
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 _connectionEstablished.value = false
-                viewModelScope.launch {
-                    fetchAllShowsFromDb()
-                }
             }
         })
     }
 
-    fun submitPendingReviews(userEmail: String) {
-        viewModelScope.launch {
-            val pendingReviews = database.reviewsDAO().getPendingReviews(true, userEmail)
-            if (pendingReviews.isNotEmpty()) {
-                for (review in pendingReviews) {
-                    val postReviewRequest = PostReviewRequest(
-                        review.rating,
-                        review.comment,
-                        review.showId
-                    )
-                    ApiModule.retrofit.postReview(postReviewRequest).enqueue(object : Callback<PostReviewResponse> {
-                        override fun onResponse(call: Call<PostReviewResponse>, response: Response<PostReviewResponse>) {
-                            viewModelScope.launch {
-                                deleteReview(review.id)
-                            }
-                        }
+    suspend fun fetchShows() {
+        if (_connectionEstablished.value == true) {
+            fetchShowsFromServer()
+        } else {
+            fetchShowsFromDb()
+        }
+    }
 
-                        override fun onFailure(call: Call<PostReviewResponse>, t: Throwable) {
-                            _connectionEstablished.value = false
+    suspend fun submitPendingReviews(userEmail: String) {
+        val pendingReviews = database.reviewsDAO().getPendingReviews(true, userEmail)
+        if (pendingReviews.isNotEmpty()) {
+            for (review in pendingReviews) {
+                val postReviewRequest = PostReviewRequest(
+                    review.rating,
+                    review.comment,
+                    review.showId
+                )
+                ApiModule.retrofit.postReview(postReviewRequest).enqueue(object : Callback<PostReviewResponse> {
+                    override fun onResponse(call: Call<PostReviewResponse>, response: Response<PostReviewResponse>) {
+                        val review = response.body()?.review
+                        if (review != null) {
+                            _reviewForDeletion.value = review.id
                         }
-                    })
-                }
+                    }
+
+                    override fun onFailure(call: Call<PostReviewResponse>, t: Throwable) {
+                        _connectionEstablished.value = false
+                    }
+                })
             }
         }
     }
 
-    private suspend fun deleteReview(reviewId: String) {
+    suspend fun deleteReview(reviewId: String) {
         database.reviewsDAO().deleteByReviewId(reviewId)
     }
 
-    fun fetchShowsFromServer() {
+    private fun fetchShowsFromServer() {
         ApiModule.retrofit.shows().enqueue(object : Callback<ShowsResponse> {
             override fun onResponse(call: Call<ShowsResponse>, response: Response<ShowsResponse>) {
                 if (response.isSuccessful) {
                     _showsResponse.value = response.isSuccessful
                     _shows.value = response.body()?.shows
-                    _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
-                    viewModelScope.launch {
-                        _shows.value?.let { shows ->
-                            addToDb(shows.map { show ->
-                                ShowEntity(
-                                    show.id,
-                                    show.average_rating,
-                                    show.description.toString(),
-                                    show.image_url,
-                                    show.no_of_reviews,
-                                    show.title
-                                )
-                            })
-                        }
-                    }
+                    _showsRecyclerFullOrEmpty.value = getShows().value?.isEmpty()
                 } else {
                     val gson = Gson()
                     val showsErrorResponse: ShowsErrorResponse =
@@ -134,16 +111,17 @@ class ShowsViewModel(
             }
 
             override fun onFailure(call: Call<ShowsResponse>, t: Throwable) {
+                _connectionEstablished.value = false
                 _showsResponse.value = false
             }
         })
     }
 
-    suspend fun addToDb(list: List<ShowEntity>) {
+    private suspend fun addShowsToDb(list: List<ShowEntity>) {
         database.showsDAO().insertAllShows(list)
     }
 
-    suspend fun fetchAllShowsFromDb() {
+    private suspend fun fetchShowsFromDb() {
         _shows.value = database.showsDAO().getAllShows().map { showEntity ->
             Show(
                 showEntity.id,
@@ -154,30 +132,36 @@ class ShowsViewModel(
                 showEntity.title
             )
         }
-        _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
+        _showsRecyclerFullOrEmpty.value = getShows().value?.isEmpty()
     }
 
-    fun fetchTopRatedShowsFromServer() {
+    suspend fun fetchTopRatedShows() {
+        fetchTopRatedShowsFromServer()
+        if (getConnectionEstablished().value == false) {
+            fetchShowsFromDb()
+        }
+    }
+
+    suspend fun loadShowsToDb(shows: List<Show>) {
+        addShowsToDb(shows.map { show ->
+            ShowEntity(
+                show.id,
+                show.average_rating,
+                show.description.toString(),
+                show.image_url,
+                show.no_of_reviews,
+                show.title
+            )
+        })
+    }
+
+    private fun fetchTopRatedShowsFromServer() {
         ApiModule.retrofit.topRatedShows().enqueue(object : Callback<TopRatedShowsResponse> {
             override fun onResponse(call: Call<TopRatedShowsResponse>, response: Response<TopRatedShowsResponse>) {
                 if (response.isSuccessful) {
                     _showsResponse.value = response.isSuccessful
                     _shows.value = response.body()?.shows
-                    _showsRecyclerFullOrEmpty.value = shows.value?.isEmpty()
-                    viewModelScope.launch {
-                        _shows.value?.let { shows ->
-                            addToDb(shows.map { show ->
-                                ShowEntity(
-                                    show.id,
-                                    show.average_rating,
-                                    show.description.toString(),
-                                    show.image_url,
-                                    show.no_of_reviews,
-                                    show.title
-                                )
-                            })
-                        }
-                    }
+                    _showsRecyclerFullOrEmpty.value = getShows().value?.isEmpty()
                 } else {
                     val gson = Gson()
                     val showsErrorResponse: ShowsErrorResponse =
@@ -192,7 +176,7 @@ class ShowsViewModel(
         })
     }
 
-    fun uploadImage(email: String, file: File) {
+    fun uploadImageToServer(email: String, file: File) {
         val request = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("email", email)
@@ -218,4 +202,5 @@ class ShowsViewModel(
             }
         })
     }
+
 }
