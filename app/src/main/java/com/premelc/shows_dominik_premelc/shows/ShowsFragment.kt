@@ -150,6 +150,7 @@ class ShowsFragment : Fragment() {
                 viewModel.submitPendingReviews(args.username)
                 dialog.dismiss()
             }
+            viewModel.fetchShows()
         }
         initializeUI()
     }
@@ -166,7 +167,6 @@ class ShowsFragment : Fragment() {
 
     private fun initializeUI() {
         initLoadingBottomSheet()
-        viewModel.fetchShows()
         initShowsRecycler()
         initProfileButton()
         initTopRatedChip()

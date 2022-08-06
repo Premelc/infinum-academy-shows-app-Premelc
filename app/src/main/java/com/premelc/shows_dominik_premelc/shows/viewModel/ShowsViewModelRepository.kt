@@ -57,7 +57,7 @@ class ShowsViewModelRepository(private val database: ShowsDatabase) {
     }
 
     suspend fun fetchShows() {
-        if (getConnectionEstablished().value == true) {
+        if (_connectionEstablished.value == true) {
             fetchShowsFromServer()
         } else {
             fetchShowsFromDb()
@@ -101,7 +101,6 @@ class ShowsViewModelRepository(private val database: ShowsDatabase) {
                     _showsResponse.value = response.isSuccessful
                     _shows.value = response.body()?.shows
                     _showsRecyclerFullOrEmpty.value = getShows().value?.isEmpty()
-                    _connectionEstablished.value = true
                 } else {
                     val gson = Gson()
                     val showsErrorResponse: ShowsErrorResponse =
@@ -162,7 +161,6 @@ class ShowsViewModelRepository(private val database: ShowsDatabase) {
                     _showsResponse.value = response.isSuccessful
                     _shows.value = response.body()?.shows
                     _showsRecyclerFullOrEmpty.value = getShows().value?.isEmpty()
-                    _connectionEstablished.value = true
                 } else {
                     val gson = Gson()
                     val showsErrorResponse: ShowsErrorResponse =
@@ -173,7 +171,6 @@ class ShowsViewModelRepository(private val database: ShowsDatabase) {
 
             override fun onFailure(call: Call<TopRatedShowsResponse>, t: Throwable) {
                 _showsResponse.value = false
-                _connectionEstablished.value = false
             }
         })
     }
